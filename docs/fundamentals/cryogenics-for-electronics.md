@@ -87,7 +87,21 @@ Superconducting qubits and some ultra-sensitive experiments need much colder sta
 
 **Prompt:** A quantum system needs thousands of control lines from room temperature.
 
-**Electronics intuition:** each line can inject heat and noise. That pushes architectures toward **multiplexing, proximal classical logic (SFQ or cryo-CMOS), and careful filtering** — which is why [landscape](superconducting-electronics-landscape.md) terminals meet in the cryostat.
+**Moral:** each line can inject heat and noise. That pushes architectures toward **multiplexing, proximal classical logic (SFQ or cryo-CMOS), and careful filtering** — which is why [landscape](superconducting-electronics-landscape.md) terminals meet in the cryostat.
+
+### Worked example 3 — Who sits at which stage?
+
+**Prompt:** A block diagram shows an RSFQ ALU, a cryo-CMOS sense amp, and a room-temperature FPGA.
+
+**Partition sketch (teaching):**
+
+| Block | Typical thermal home | Why |
+|-------|----------------------|-----|
+| Nb RSFQ datapath | ~4 K | Needs superconducting Nb margin |
+| Cryo-CMOS helper | Often tens of K → ~4 K | Cold FETs, not Josephson pulses |
+| FPGA / servers | ~300 K | Ecosystem, density, bring-up |
+
+**Moral:** “In the fridge” is not one temperature. Crossing stages is an [I/O](../bridge/sfq-pulse-to-volt-level.md) and cabling problem — practice the pulse↔volt gap in the [I/O lab](../labs/sfq-pulse-to-volt-level.html) later.
 
 ## Comparison table — thermal homes
 
@@ -168,9 +182,15 @@ No — refrigeration and bias/I/O can dominate the wall-plug story.
 </details>
 
 <details>
-<summary>6. What should you learn next?</summary>
+<summary>6. Place RSFQ ALU, cryo-CMOS amp, and warm FPGA on a thermal stack — what problem appears between them?</summary>
 
-[How to read SFQ notation](reading-sfq-notation.md), then superconductivity and Josephson device fundamentals.
+Stage crossings (cables, heat, encoding). The ALU wants ~4 K Nb; the FPGA is warm; helpers may sit in between — I/O and thermalization become architecture.
+</details>
+
+<details>
+<summary>7. What should you learn next?</summary>
+
+[SFQ symbol card](sfq-symbol-card.md) / [How to read SFQ notation](reading-sfq-notation.md), then superconductivity and Josephson device fundamentals.
 </details>
 
 ## Glossary spot-links

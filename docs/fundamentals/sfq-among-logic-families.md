@@ -113,6 +113,20 @@ You will see additional acronyms in papers (reciprocal quantum logic styles, var
 
 **Answer for this curriculum:** **No.** Learn shared Josephson/flux intuition, then RSFQ pulse tokens (the densest classical literature for digital SFQ), then ERSFQ bias story, then AQFP as a deliberate second dialect. “Advanced” is not the same as “first.”
 
+## Worked example 3 — Three “efficiency” words that are not synonyms
+
+**Prompt:** A slide says the chip is “efficient” because it uses ERSFQ, serial biasing, and AQFP ideas.
+
+**Separate the jobs:**
+
+| Word | Main problem attacked | Interactive check |
+|------|----------------------|-------------------|
+| **ERSFQ** | Static heat in classical bias **resistors** | [ERSFQ lab](../labs/ersfq-logic.html) |
+| **Serial biasing / recycling** | Total **amperes** into the cryostat (islands) | [Serial biasing lab](../labs/serial-biasing-current-recycling.html) |
+| **AQFP** | Different **logic dialect** (often multiphase AC) | [AQFP lab](../labs/aqfp-logic.html) |
+
+**Moral:** one chip project may combine stories, but newcomers must not merge the words. Pulse encoding (RSFQ/ERSFQ) ≠ AC parametron encoding (AQFP) ≠ ampere recycling (serial bias).
+
 ## Comparison table — families at teaching resolution
 
 | Family | Bit / event style | Excitation sketch | Role in this curriculum |
