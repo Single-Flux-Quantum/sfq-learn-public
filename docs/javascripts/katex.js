@@ -1,21 +1,26 @@
-/* KaTeX for arithmatex (generic) — render .arithmatex nodes directly. */
+/* KaTeX for arithmatex — client fallback + instant-navigation re-render. */
+function stripDelimiters(raw) {
+  let tex = (raw || "").trim();
+  if (tex.startsWith("\\(") && tex.endsWith("\\)")) return tex.slice(2, -2).trim();
+  if (tex.startsWith("\\[") && tex.endsWith("\\]")) return tex.slice(2, -2).trim();
+  if (tex.startsWith("$$") && tex.endsWith("$$")) return tex.slice(2, -2).trim();
+  if (tex.startsWith("$") && tex.endsWith("$")) return tex.slice(1, -1).trim();
+  return tex;
+}
+
 function renderArithmatex(root) {
-  if (!window.katex) return;
+  if (!window.katex) return false;
   const scope = root || document.body;
+  if (!scope || !scope.querySelectorAll) return false;
   scope.querySelectorAll("span.arithmatex, div.arithmatex").forEach((el) => {
     if (el.getAttribute("data-katex-done") === "1") return;
-    let tex = (el.textContent || "").trim();
-    const display = el.tagName.toLowerCase() === "div";
-    // Strip delimiters left by pymdownx.arithmatex
-    if (tex.startsWith("\\(") && tex.endsWith("\\)")) {
-      tex = tex.slice(2, -2).trim();
-    } else if (tex.startsWith("\\[") && tex.endsWith("\\]")) {
-      tex = tex.slice(2, -2).trim();
-    } else if (tex.startsWith("$$") && tex.endsWith("$$")) {
-      tex = tex.slice(2, -2).trim();
-    } else if (tex.startsWith("$") && tex.endsWith("$")) {
-      tex = tex.slice(1, -1).trim();
+    // Already contains KaTeX HTML from build-time prerender
+    if (el.querySelector(".katex")) {
+      el.setAttribute("data-katex-done", "1");
+      return;
     }
+    const display = el.tagName.toLowerCase() === "div";
+    const tex = stripDelimiters(el.textContent || "");
     try {
       katex.render(tex, el, {
         displayMode: display,
@@ -25,16 +30,27 @@ function renderArithmatex(root) {
       });
       el.setAttribute("data-katex-done", "1");
     } catch (err) {
-      // Keep raw TeX visible if something unexpected fails
       el.setAttribute("title", String(err));
     }
   });
+  return true;
+}
+
+function scheduleRender(root) {
+  if (renderArithmatex(root)) return;
+  let tries = 0;
+  const id = setInterval(() => {
+    tries += 1;
+    if (renderArithmatex(root) || tries > 40) clearInterval(id);
+  }, 50);
 }
 
 if (window.document$) {
-  document$.subscribe(({ body }) => {
-    renderArithmatex(body || document.body);
+  document$.subscribe((event) => {
+    const body = event && event.body ? event.body : document.body;
+    scheduleRender(body);
   });
-} else {
-  document.addEventListener("DOMContentLoaded", () => renderArithmatex(document.body));
 }
+
+document.addEventListener("DOMContentLoaded", () => scheduleRender(document.body));
+window.addEventListener("load", () => scheduleRender(document.body));

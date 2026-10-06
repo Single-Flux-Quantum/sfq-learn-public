@@ -27,6 +27,11 @@ jobs:
         run: pip install -r requirements.txt
       - name: Build site
         run: mkdocs build --strict
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Prerender KaTeX equations into HTML
+        run: node scripts/prerender-katex.mjs
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
