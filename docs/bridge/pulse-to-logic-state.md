@@ -106,13 +106,13 @@ Try this in place (same idea as the text above). Prefer full-screen? Open the [l
 2. Enable **timing skew** and generate again. Some pulses arrive early/late (or a spurious pulse leaks into the window). The receiver still decodes only what is *inside* the window — so the decoded bit can disagree with the intended bit. That is a **timing error**, not a free bonus 1.
 
 <iframe
-  src="../labs/pulse-to-logic-state.html"
+  src="../../labs/pulse-to-logic-state.html"
   title="RSFQ windowed encoding lab"
   style="width:100%;height:720px;border:1px solid #2a3548;border-radius:8px;background:#0c1222;"
   loading="lazy"
 ></iframe>
 
-Convention for more demos: [labs/README.md](../labs/README.md).
+Convention for more demos: [labs hub](../labs/README.md).
 
 ## Storage: circulating flux as a parked bit
 

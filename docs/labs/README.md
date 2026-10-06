@@ -28,12 +28,14 @@ In the teaching page, add a short section after the core idea (MkDocs keeps raw 
 Short how-to (2 steps). Prefer full-screen? Open the [lab page](../labs/<topic-id>.html).
 
 <iframe
-  src="../labs/<topic-id>.html"
+  src="../../labs/<topic-id>.html"
   title="…"
   style="width:100%;height:720px;border:1px solid #2a3548;border-radius:8px;"
   loading="lazy"
 ></iframe>
 ```
+
+**Path rule:** MkDocs serves each page as `/section/page/` (trailing slash). Markdown links like `../labs/…` are rewritten correctly, but **raw `<iframe src>` is not**. From a bridge/concept/fundamental page, use `../../labs/<file>.html` (two levels up). From a nested page (e.g. `fundamentals/fields/…`), use three levels (`../../../labs/…`). Wrong depth → iframe 404 under `/bridge/labs/…`.
 
 Use height ≥ 700px so controls, stats, and the table fit without clipping.
 
