@@ -1,25 +1,25 @@
-﻿# Why Superconducting Electronics?
+# Why Superconducting Electronics?
 
 **Prereqs:** none  
-**Next:** [History of superconducting electronics](history-of-superconducting-electronics.md) Â· [Coming from CMOS?](../concepts/cmos-vs-sfq.md) (preview)
+**Next:** [History of superconducting electronics](history-of-superconducting-electronics.md) · [Coming from CMOS?](../concepts/cmos-vs-sfq.md) (preview)
 
-**In one minute.** Superconducting electronics is a specialty for **device** speed (picosecond Josephson switching), cryo co-location, and careful energy stories â€” not a laptop replacement. That is different from **algorithmic** quantum speedup (superposition / entanglement / interference). Cooling is a real tax. Next: history.
+**In one minute.** Superconducting electronics is a specialty for **device** speed (picosecond Josephson switching), cryo co-location, and careful energy stories — not a laptop replacement. That is different from **algorithmic** quantum speedup (superposition / entanglement / interference). Cooling is a real tax. Next: history.
 
-**Learning goals.** After this page you should be able to (1) say what problem superconducting electronics is trying to solve relative to ordinary CMOS computing, (2) separate three motivations â€” speed, energy, and cryogenic co-location â€” without treating any one as a magic slogan, (3) distinguish **device-fast SFQ** from **algorithmic quantum speedup**, (4) name honest costs (cooling, fabrication, maturity) that keep the field specialized, and (5) know where this curriculum is heading before any Josephson-junction math begins.
+**Learning goals.** After this page you should be able to (1) say what problem superconducting electronics is trying to solve relative to ordinary CMOS computing, (2) separate three motivations — speed, energy, and cryogenic co-location — without treating any one as a magic slogan, (3) distinguish **device-fast SFQ** from **algorithmic quantum speedup**, (4) name honest costs (cooling, fabrication, maturity) that keep the field specialized, and (5) know where this curriculum is heading before any Josephson-junction math begins.
 
 ## Why this matters
 
-Most people meet computing as **CMOS**: silicon transistors, voltage levels, room-temperature chips. That platform won for good reasons â€” density, tooling, cost, and a huge software stack. So why does a whole research community still build circuits from **superconducting metals**, **Josephson junctions**, and **liquid-helium refrigerators**?
+Most people meet computing as **CMOS**: silicon transistors, voltage levels, room-temperature chips. That platform won for good reasons — density, tooling, cost, and a huge software stack. So why does a whole research community still build circuits from **superconducting metals**, **Josephson junctions**, and **liquid-helium refrigerators**?
 
 Because CMOS is not universally optimal. In some niches, physics pushes you toward devices that:
 
 - switch in **picoseconds** with very different energy accounting,
-- sit **next to** other cryogenic hardware (sensors, detectors, qubits) instead of fighting a warmâ€“cold interface, and
+- sit **next to** other cryogenic hardware (sensors, detectors, qubits) instead of fighting a warm–cold interface, and
 - encode information as **magnetic flux packets** rather than held voltage rails.
 
-This page is the orientation layer. You do **not** need $\Phi_0$, $I_c$, or RSFQ cell names yet. You need a clear â€œwhy bother?â€ so later fundamentals feel motivated rather than arbitrary.
+This page is the orientation layer. You do **not** need $\Phi_0$, $I_c$, or RSFQ cell names yet. You need a clear “why bother?” so later fundamentals feel motivated rather than arbitrary.
 
-If you already design CMOS digital chips, skim for contrast, then peek at the [CMOS vs SFQ cheat-sheet](../concepts/cmos-vs-sfq.md) anytime â€” that page goes deeper after you have pulse/flux intuition. If you are brand new, stay on this orientation path; symbols come next after history and landscape.
+If you already design CMOS digital chips, skim for contrast, then peek at the [CMOS vs SFQ cheat-sheet](../concepts/cmos-vs-sfq.md) anytime — that page goes deeper after you have pulse/flux intuition. If you are brand new, stay on this orientation path; symbols come next after history and landscape.
 
 ## Analogy: choosing a vehicle for the road you are on
 
@@ -30,18 +30,18 @@ Think of computing platforms as vehicles:
 
 Nobody claims the specialized truck replaces every car. The honest claim is narrower:
 
-> For some workloads and some system contexts â€” especially ultra-high-speed digital logic, cryogenic interfaces, and precision flux-based circuits â€” superconducting devices can offer advantages that silicon transistors do not get for free.
+> For some workloads and some system contexts — especially ultra-high-speed digital logic, cryogenic interfaces, and precision flux-based circuits — superconducting devices can offer advantages that silicon transistors do not get for free.
 
 The rest of this curriculum teaches the device and circuit vocabulary of one major branch of that specialty: **Single Flux Quantum (SFQ)** digital electronics. First, though, we stay at the system motivation level.
 
 ```text
   Everyday computing          Specialized cryogenic niches
   ------------------------    --------------------------------
-  CMOS / room temp     â†’      SFQ logic, SQUID sensors,
+  CMOS / room temp     →      SFQ logic, SQUID sensors,
   voltage-level bits          detectors, qubit I/O, metrology
 ```
 
-## Picture 1 â€” Three motivations (not one slogan)
+## Picture 1 — Three motivations (not one slogan)
 
 ```mermaid
 flowchart TD
@@ -57,24 +57,24 @@ flowchart TD
   SE --> Other[Sensors, metrology, detectors, hybrids - see landscape]
 ```
 
-### Motivation A â€” Speed and timing texture
+### Motivation A — Speed and timing texture
 
-Josephson junctions can switch extremely quickly. Research SFQ logic has long been discussed in the language of **tens of gigahertz** pipeline stages and picosecond pulses. That does **not** mean â€œevery SFQ chip is faster than every CMOS chip you can buy.â€ It means the **device switching mechanism** and the **pulse-pipeline style** of RSFQ-like logic open a different timing texture than static CMOS gates with held voltage levels.
+Josephson junctions can switch extremely quickly. Research SFQ logic has long been discussed in the language of **tens of gigahertz** pipeline stages and picosecond pulses. That does **not** mean “every SFQ chip is faster than every CMOS chip you can buy.” It means the **device switching mechanism** and the **pulse-pipeline style** of RSFQ-like logic open a different timing texture than static CMOS gates with held voltage levels.
 
 Teaching takeaway: SFQ is interesting when your problem cares about **very fine-grained timed events**, not only about average transistor FO4 delay at room temperature.
 
-#### Two meanings of â€œquantumâ€ + speed (do not mix)
+#### Two meanings of “quantum” + speed (do not mix)
 
-| Meaning | What â€œfasterâ€ refers to | Where taught |
+| Meaning | What “faster” refers to | Where taught |
 |---------|-------------------------|--------------|
 | **Device-fast classical SFQ** | Josephson junctions switch in picoseconds; dense pulse pipelines | This page (Motivation A) + device fundamentals |
-| **Algorithmic quantum speedup** | Superposition + entanglement + interference for *some* problems | [Qubits & QC â€” three properties](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations) |
+| **Algorithmic quantum speedup** | Superposition + entanglement + interference for *some* problems | [Qubits & QC — three properties](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations) |
 
 Classical SFQ in this curriculum uses the **first** row. It does **not** claim Grover/Shor-style speedup from superposition.
 
-### Motivation B â€” Energy (with the cooling asterisk)
+### Motivation B — Energy (with the cooling asterisk)
 
-A popular elevator pitch is â€œsuperconducting = zero resistance = free energy.â€ That pitch is **wrong** as stated. Zero DC resistance in a wire does not erase:
+A popular elevator pitch is “superconducting = zero resistance = free energy.” That pitch is **wrong** as stated. Zero DC resistance in a wire does not erase:
 
 - the energy of switching events,
 - bias-network dissipation (especially older resistive-bias RSFQ styles),
@@ -82,9 +82,9 @@ A popular elevator pitch is â€œsuperconducting = zero resistance = free ener
 
 A more careful pitch is: at cryogenic temperatures, Josephson devices can perform logical switching with **very small energy per event**, and some modern families (ERSFQ, AQFP, and related ideas) specifically attack **static bias power**. Whether the *system* wins depends on workload, duty cycle, and how you account for the cryostat.
 
-Teaching takeaway: energy claims need a **boundary** â€” device? chip? including cooler? This curriculum will keep reminding you of that boundary.
+Teaching takeaway: energy claims need a **boundary** — device? chip? including cooler? This curriculum will keep reminding you of that boundary.
 
-### Motivation C â€” Co-location with cold things
+### Motivation C — Co-location with cold things
 
 Some systems are already cold:
 
@@ -97,7 +97,7 @@ Moving digital control, readout serialization, or interface logic **into the col
 
 Teaching takeaway: sometimes you choose superconducting electronics because **the rest of the instrument forced you into the cold**, not because you hate CMOS.
 
-## Picture 2 â€” Honest cost stack
+## Picture 2 — Honest cost stack
 
 ```text
   Benefits people advertise          Costs you must budget
@@ -108,57 +108,57 @@ Teaching takeaway: sometimes you choose superconducting electronics because **th
   natural fit next to cryo sensors   I/O to room temperature is hard
 ```
 
-### Worked example 1 â€” â€œIs SFQ â€˜more energy efficientâ€™?â€
+### Worked example 1 — “Is SFQ ‘more energy efficient’?”
 
-**Prompt:** A slide says â€œSFQ gates use orders of magnitude less energy than CMOS.â€
+**Prompt:** A slide says “SFQ gates use orders of magnitude less energy than CMOS.”
 
 **Careful answer checklist:**
 
-1. Energy of **what** â€” one junction switch, one logic operation, one chip, or one rack including the cryocooler?
+1. Energy of **what** — one junction switch, one logic operation, one chip, or one rack including the cryocooler?
 2. At **what temperature** and **what activity factor**?
 3. Compared with **which** CMOS node and **which** CMOS style (high-performance server vs low-power MCU)?
 4. Does the design use **resistive bias** (static power) or a low-static family?
 
-**Teaching result:** treat absolute slogans as unfinished claims. This curriculum will give you the vocabulary (pulse area $\Phi_0$, bias networks, overdamped switching) to ask better questions â€” after orientation.
+**Teaching result:** treat absolute slogans as unfinished claims. This curriculum will give you the vocabulary (pulse area $\Phi_0$, bias networks, overdamped switching) to ask better questions — after orientation.
 
-### Worked example 2 â€” â€œWhy not just cool CMOS?â€
+### Worked example 2 — “Why not just cool CMOS?”
 
 **Prompt:** If cold operation helps, why invent Josephson logic instead of cooling silicon?
 
-**Short answer:** people *do* research cryo-CMOS. Cooling CMOS can help leakage and noise in some regimes, and cryo-CMOS is a real sibling field. Josephson SFQ is a different device physics: superconducting weak links, flux quantization, and pulse tokens. You pick it when that physics matches the job (ultra-fast pulse logic, flux sensors, certain quantum interfaces), not because â€œcoldâ€ alone requires Josephson junctions.
+**Short answer:** people *do* research cryo-CMOS. Cooling CMOS can help leakage and noise in some regimes, and cryo-CMOS is a real sibling field. Josephson SFQ is a different device physics: superconducting weak links, flux quantization, and pulse tokens. You pick it when that physics matches the job (ultra-fast pulse logic, flux sensors, certain quantum interfaces), not because “cold” alone requires Josephson junctions.
 
-## Comparison table â€” CMOS default vs superconducting specialty
+## Comparison table — CMOS default vs superconducting specialty
 
 | Question | Typical CMOS answer | Superconducting-electronics answer |
 |----------|---------------------|------------------------------------|
-| Operating temperature | Room temperature (usually) | Cryogenic (often ~4â€¯K for Nb SFQ; colder for some quantum stacks) |
+| Operating temperature | Room temperature (usually) | Cryogenic (often ~4 K for Nb SFQ; colder for some quantum stacks) |
 | Bit representation | Voltage / charge on nodes | Often flux packets / phase configurations (SFQ digital) |
 | Fabrication ecosystem | Huge, global | Smaller specialty processes |
 | Best-known strength | Density + software stack | Extreme switching speed + cryo co-location |
 | Biggest practical tax | Power/thermal at scale; Dennard-era limits | Cooling, I/O, tooling maturity |
-| This curriculumâ€™s focus | Assumed background contrast | SFQ digital path after orientation |
+| This curriculum’s focus | Assumed background contrast | SFQ digital path after orientation |
 
 ## Common misconceptions
 
-1. **â€œSuperconducting computers will replace laptops.â€**  
-   No. The cooling and specialty ecosystem make consumer replacement a non-goal for this fieldâ€™s near-term reality.
+1. **“Superconducting computers will replace laptops.”**  
+   No. The cooling and specialty ecosystem make consumer replacement a non-goal for this field’s near-term reality.
 
-2. **â€œZero resistance means zero power.â€**  
+2. **“Zero resistance means zero power.”**  
    False. Switching, bias, and refrigeration remain.
 
-3. **â€œSFQ is the only superconducting electronics.â€**  
-   False. Sensors, metrology, detectors, and qubit hardware are huge siblings â€” see the [landscape](superconducting-electronics-landscape.md) page next after history.
+3. **“SFQ is the only superconducting electronics.”**  
+   False. Sensors, metrology, detectors, and qubit hardware are huge siblings — see the [landscape](superconducting-electronics-landscape.md) page next after history.
 
-4. **â€œIf it is cold and superconducting, it must be quantum computing.â€**  
+4. **“If it is cold and superconducting, it must be quantum computing.”**  
    False. Classical SFQ logic is classical digital engineering that happens to use superconducting devices.
 
-5. **â€œSFQ is fast because of superposition / entanglement / interference.â€**  
-   False for the classical SFQ path. Those three power *algorithmic* QC speedups; SFQâ€™s pitch here is picosecond **device** switching. Details: [qubits page](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations).
+5. **“SFQ is fast because of superposition / entanglement / interference.”**  
+   False for the classical SFQ path. Those three power *algorithmic* QC speedups; SFQ’s pitch here is picosecond **device** switching. Details: [qubits page](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations).
 
-6. **â€œMotivation is only energy.â€**  
+6. **“Motivation is only energy.”**  
    Speed and co-location matter at least as often in real proposals.
 
-7. **â€œYou must master BCS theory before caring.â€**  
+7. **“You must master BCS theory before caring.”**  
    No. This path starts with systems motivation and device *intuition*, not microscopic many-body physics.
 
 ## CMOS contrast (preview)
@@ -176,14 +176,14 @@ Full cheat-sheet: [CMOS vs SFQ](../concepts/cmos-vs-sfq.md). Use it as a preview
 
 This page argued **why a specialty platform exists**. The next pages answer:
 
-1. **How did the field get here?** â†’ [History](history-of-superconducting-electronics.md)  
-2. **What else sits in the same cryogenic toolbox?** â†’ [Landscape](superconducting-electronics-landscape.md)  
-3. **Where does SFQ sit among Josephson logic styles?** â†’ [Logic families](sfq-among-logic-families.md)  
-4. **What does â€œcryogenicâ€ cost in practice?** â†’ [Cryogenics for electronics](cryogenics-for-electronics.md)  
+1. **How did the field get here?** → [History](history-of-superconducting-electronics.md)  
+2. **What else sits in the same cryogenic toolbox?** → [Landscape](superconducting-electronics-landscape.md)  
+3. **Where does SFQ sit among Josephson logic styles?** → [Logic families](sfq-among-logic-families.md)  
+4. **What does “cryogenic” cost in practice?** → [Cryogenics for electronics](cryogenics-for-electronics.md)  
 
-If you came for **algorithmic quantum speedup** (superposition / entanglement / interference), peek at [Qubits & QC](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations) â€” then return here for the classical SFQ path.
+If you came for **algorithmic quantum speedup** (superposition / entanglement / interference), peek at [Qubits & QC](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations) — then return here for the classical SFQ path.
 
-Only then do we teach symbols and Josephson device intuition â€” so $\Phi_0$ arrives as a tool, not a surprise.
+Only then do we teach symbols and Josephson device intuition — so $\Phi_0$ arrives as a tool, not a surprise.
 
 ## Check yourself
 
@@ -194,7 +194,7 @@ Speed / fine-grained timed switching; energy story at cryogenic temperatures (wi
 </details>
 
 <details markdown="1">
-<summary markdown="span">2. Why is â€œzero resistance â‡’ free computingâ€ misleading?</summary>
+<summary markdown="span">2. Why is “zero resistance ⇒ free computing” misleading?</summary>
 
 Zero DC resistance in a superconducting wire does not remove switching energy, bias dissipation, or the power cost of refrigeration.
 </details>
@@ -212,21 +212,21 @@ Put digital/interface circuitry in the cold so you are not shipping every signal
 </details>
 
 <details markdown="1">
-<summary markdown="span">5. If someone cools CMOS, have they â€œdone SFQâ€?</summary>
+<summary markdown="span">5. If someone cools CMOS, have they “done SFQ”?</summary>
 
 No. Cryo-CMOS is related but different device physics; SFQ uses Josephson junctions and (typically) flux-quantum tokens.
 </details>
 
 <details markdown="1">
-<summary markdown="span">6. Name two different meanings of â€œquantum + speed.â€</summary>
+<summary markdown="span">6. Name two different meanings of “quantum + speed.”</summary>
 
-(1) Device-fast classical SFQ: picosecond Josephson switching / pulse pipelines. (2) Algorithmic QC speedup: superposition + entanglement + interference for some problems â€” see the [qubits page](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations).
+(1) Device-fast classical SFQ: picosecond Josephson switching / pulse pipelines. (2) Algorithmic QC speedup: superposition + entanglement + interference for some problems — see the [qubits page](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations).
 </details>
 
 <details markdown="1">
 <summary markdown="span">7. Where should a CMOS designer peek for contrast without leaving orientation forever?</summary>
 
-The [CMOS vs SFQ](../concepts/cmos-vs-sfq.md) cheat-sheet â€” as a preview now, more deeply after pulse/flux fundamentals.
+The [CMOS vs SFQ](../concepts/cmos-vs-sfq.md) cheat-sheet — as a preview now, more deeply after pulse/flux fundamentals.
 </details>
 
 <details markdown="1">

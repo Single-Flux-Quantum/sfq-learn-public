@@ -1,9 +1,9 @@
-﻿# Field: Cryo-CMOS & Hybrid Systems
+# Field: Cryo-CMOS & Hybrid Systems
 
-**Prereqs:** [Photon detectors](superconducting-photon-detectors.md) Â· [Field map hub](README.md)  
-**Next:** [Logic families](../sfq-among-logic-families.md) Â· [Cryogenics](../cryogenics-for-electronics.md)
+**Prereqs:** [Photon detectors](superconducting-photon-detectors.md) · [Field map hub](README.md)  
+**Next:** [Logic families](../sfq-among-logic-families.md) · [Cryogenics](../cryogenics-for-electronics.md)
 
-**In one minute.** Cryo-CMOS = silicon electronics run **cold**. Hybrids mix SFQ + CMOS + warm FPGAs by stage. â€œAt 4â€¯Kâ€ is placement, not a technology name.
+**In one minute.** Cryo-CMOS = silicon electronics run **cold**. Hybrids mix SFQ + CMOS + warm FPGAs by stage. “At 4 K” is placement, not a technology name.
 
 ## Job
 
@@ -18,7 +18,7 @@ Put CMOS closer to cold payloads (sensors, detectors, qubits) to cut cables/heat
 | Sketch strength | Density, IP, mixed-signal | Ultra-fast timed flux logic |
 
 ```text
-  Pattern examples: SFQ â†” CMOS memory | qubit â†” cryo-CMOS â†” FPGA | SNSPD â†” SFQ tagger
+  Pattern examples: SFQ ↔ CMOS memory | qubit ↔ cryo-CMOS ↔ FPGA | SNSPD ↔ SFQ tagger
 ```
 
 ## Relevance to this curriculum
@@ -34,9 +34,9 @@ CMOS operated at cryogenic temperatures near cold payloads.
 </details>
 
 <details markdown="1">
-<summary markdown="span">2. Does â€œ4â€¯K controllerâ€ tell you SFQ vs CMOS?</summary>
+<summary markdown="span">2. Does “4 K controller” tell you SFQ vs CMOS?</summary>
 
-No â€” ask which device.
+No — ask which device.
 </details>
 
 <details markdown="1">
@@ -47,4 +47,4 @@ Different blocks prefer different physics and ecosystems under thermal constrain
 
 ## Next steps
 
-Express lane: [Logic families](../sfq-among-logic-families.md) â†’ [Cryogenics](../cryogenics-for-electronics.md).
+Express lane: [Logic families](../sfq-among-logic-families.md) → [Cryogenics](../cryogenics-for-electronics.md).

@@ -1,8 +1,8 @@
-﻿# SFQ Splitters and Confluence Buffers
+# SFQ Splitters and Confluence Buffers
 
 **Prereqs:** [JTL Interconnects](jtl-interconnects.md)  
-**Next:** [RSFQ DFF and Retiming](rsfq-dff-and-retiming.md) Â· [Concurrent-Flow and Counter-Flow Clocking](concurrent-and-counter-flow-clocking.md)  
-**Tracks:** `sfq-logic-primitives` Â· `clocking-biasing-power`
+**Next:** [RSFQ DFF and Retiming](rsfq-dff-and-retiming.md) · [Concurrent-Flow and Counter-Flow Clocking](concurrent-and-counter-flow-clocking.md)  
+**Tracks:** `sfq-logic-primitives` · `clocking-biasing-power`
 
 **Learning goals.** After this page you should be able to (1) use **splitters** as the native fanout mechanism for SFQ pulses, (2) describe **confluence** (merger) cells and why simultaneous arrivals are hazardous, (3) reason about splitter-tree depth, delay, and skew for clocks, (4) connect fanout/merge choices to later [clocking](concurrent-and-counter-flow-clocking.md) and [STA](sfq-static-timing-analysis.md) pages, and (5) budget tree cost in order-of-magnitude thinking without PDK numbers.
 
@@ -10,14 +10,14 @@
 
 CMOS gates tolerate capacitive fanout within reason; you add buffers when load grows. RSFQ pulses are **discrete tokens**. One junction output does not magically become eight clean $\Phi_0$ pulses on eight wires. The standard library answer is the **splitter**: typically one pulse in, two pulses out.
 
-The dual problem is **merging**: bringing pulses from two lines onto one. That is a **confluence** (merger) cell â€” safe only with timing discipline. Clock trees, data broadcast, and reconvergent datapaths all lean on these two plumbing cells.
+The dual problem is **merging**: bringing pulses from two lines onto one. That is a **confluence** (merger) cell — safe only with timing discipline. Clock trees, data broadcast, and reconvergent datapaths all lean on these two plumbing cells.
 
 Glossary: [Splitter](../glossary.md), [Confluence](../glossary.md), [Clock window](../glossary.md), [JTL](../glossary.md), [SFQ pulse](../glossary.md).
 
 ## Intuition
 
 - **Splitter:** copy one SFQ pulse onto two outputs (fanout-2). Cascaded splitters build binary trees for clocks and wide data fanout.
-- **Confluence:** accept pulses from two inputs and emit onto one output when the cellâ€™s timing rules are satisfied. It is **not** a CMOS wired-OR you can abuse casually.
+- **Confluence:** accept pulses from two inputs and emit onto one output when the cell’s timing rules are satisfied. It is **not** a CMOS wired-OR you can abuse casually.
 
 Together with [JTLs](jtl-interconnects.md) and [DFFs](rsfq-dff-and-retiming.md), splitters and confluence cells are the plumbing of pulse logic.
 
@@ -31,7 +31,7 @@ to reach $N$ leaves in a balanced binary tree (plus matching delay cells on bran
 
 ## Analogy
 
-- **Splitter** = a photocopier for batons: one token in â†’ two tokens out (energy and junctions paid at the machine).
+- **Splitter** = a photocopier for batons: one token in → two tokens out (energy and junctions paid at the machine).
 - **Confluence** = two on-ramps onto one highway lane: safe if cars are staggered; disaster if two occupy the same asphalt at once.
 - **Clock tree** = a tournament bracket run in reverse: one root pulse becomes many leaf pulses.
 
@@ -42,8 +42,8 @@ The analogy is about **token duplication and merge hazards**, not about literal 
 ```text
 Splitter:                    Confluence (cartoon):
 
-   inâ”€â”€Xâ”€â”€â”¬â”€â”€out1               inAâ”€â”€Xâ”€â”€â”
-          â””â”€â”€out2               inBâ”€â”€Xâ”€â”€â”¼â”€â”€out
+   in──X──┬──out1               inA──X──┐
+          └──out2               inB──X──┼──out
 ```
 
 ```mermaid
@@ -60,7 +60,7 @@ flowchart LR
 ```text
 Fanout tree depth (fanout-2 splitters):
 
-  leaves N = 8  â‡’  need at least ceil(log2 N) = 3 splitter levels
+  leaves N = 8  ⇒  need at least ceil(log2 N) = 3 splitter levels
   (plus JTLs/matching on branches)
 
   full binary tree: N-1 = 7 splitters for 8 leaves
@@ -75,7 +75,7 @@ sequenceDiagram
   Src->>Sp: one SFQ pulse
   Sp->>A: copy 1
   Sp->>B: copy 2
-  Note over A,B: delays may differ â†’ skew
+  Note over A,B: delays may differ → skew
 ```
 
 ## Interactive lab
@@ -83,7 +83,7 @@ sequenceDiagram
 Try this in place. Prefer full-screen? Open the [lab page](../labs/splitter-and-confluence.html).
 
 1. **Splitter tab:** fire a pulse; raise **extra delay on branch B** and watch leaf skew grow. Check how $N$ leaves set tree depth $\lceil\log_2 N\rceil$ and $N-1$ splitters.
-2. **Confluence tab:** set arrival offset, then launch. Large stagger â†’ merge OK; nearly simultaneous â†’ hazard (pedagogical window, not a PDK number).
+2. **Confluence tab:** set arrival offset, then launch. Large stagger → merge OK; nearly simultaneous → hazard (pedagogical window, not a PDK number).
 
 <iframe
   src="../../labs/splitter-and-confluence.html"
@@ -92,7 +92,7 @@ Try this in place. Prefer full-screen? Open the [lab page](../labs/splitter-and-
   loading="lazy"
 ></iframe>
 
-## Splitter trees â€” depth, delay, skew
+## Splitter trees — depth, delay, skew
 
 For fanout-2 splitters, reaching $N$ leaves needs tree depth at least
 
@@ -127,20 +127,20 @@ If branch A after the last common splitter has delay $t_A$ and branch B has $t_B
 
 Those times include splitter internals **plus** [JTL](jtl-interconnects.md) stubs. [STA](sfq-static-timing-analysis.md) treats $\Delta t_{\mathrm{skew}}$ as part of every setup-/hold-like check at the leaves.
 
-## Confluence â€” merge with rules
+## Confluence — merge with rules
 
 A confluence cell is the pulse-world cousin of a merger. Field-fundamental cautions:
 
-1. **Do not assume** two pulses arriving in the same tiny interval produce two neat outputs later â€” behavior is cell-specific; treat collisions as **hazards** until a library card says otherwise.
+1. **Do not assume** two pulses arriving in the same tiny interval produce two neat outputs later — behavior is cell-specific; treat collisions as **hazards** until a library card says otherwise.
 2. Merging is often used when mutually exclusive pulses share a wire (protocol-level exclusivity), or when timing guarantees separation.
-3. After a merge, downstream timing still sees **one** line â€” path balancing and STA still apply at the next sinks.
+3. After a merge, downstream timing still sees **one** line — path balancing and STA still apply at the next sinks.
 4. Confluence is **not** a substitute for an OR/XOR datasheet unless the library explicitly defines Boolean behavior that way.
 
 ```text
 Hazard cartoon:
 
-  inA: â˜…
-  inB:  â˜…   â† too close
+  inA: ★
+  inB:  ★   ← too close
   out: ???  (library-defined; not a free CMOS OR)
 ```
 
@@ -153,9 +153,9 @@ Hazard cartoon:
 | Clock tree | Buffered H-tree / mesh | Splitter tree (+ JTL stubs) |
 | Merge hazard | Contention / X on bus | Pulse collision / illegal double arrival |
 | Skew | Buffer mismatch / RC | Splitter + JTL branch mismatch |
-| â€œWire to N loadsâ€ | Often legal until load fails | Illegal mental model â€” tree required |
+| “Wire to N loads” | Often legal until load fails | Illegal mental model — tree required |
 
-## Worked example 1 â€” Clocking eight DFFs
+## Worked example 1 — Clocking eight DFFs
 
 You need a clock pulse at eight DFFs.
 
@@ -172,18 +172,18 @@ Cost sketch (order-of-magnitude thinking, not a PDK):
 
 Exact junction counts are library-private; the **tree arithmetic** is public.
 
-## Worked example 2 â€” Unbalanced tree creates skew
+## Worked example 2 — Unbalanced tree creates skew
 
 Suppose one clock branch has 2 JTL stages after its last splitter and the other has 5. If $\tau_{\mathrm{JTL}}$ is comparable on both, the skew is about $3\tau_{\mathrm{JTL}}$.
 
 Effects:
 
-- one DFF may see clock early â†’ hold pressure on its data,
-- the other may see clock late â†’ setup pressure,
+- one DFF may see clock early → hold pressure on its data,
+- the other may see clock late → setup pressure,
 
-even if Boolean logic is identical. Fix by matching delays or redesigning the tree â€” the same theme as [path balancing](path-balancing-overhead.md) applied to **clock** rather than data.
+even if Boolean logic is identical. Fix by matching delays or redesigning the tree — the same theme as [path balancing](path-balancing-overhead.md) applied to **clock** rather than data.
 
-## Worked example 3 â€” When confluence is appropriate
+## Worked example 3 — When confluence is appropriate
 
 Two mutually exclusive event pulses (never both in the same epoch by protocol) share a monitor line through a confluence into one SFQ/DC converter.
 
@@ -196,39 +196,39 @@ Safe pattern:
 Unsafe pattern:
 
 - two independent data paths that can both fire in one window,
-- hope the confluence â€œORsâ€ them like CMOS.
+- hope the confluence “ORs” them like CMOS.
 
 Public rule: **exclusivity or separation first; confluence second.**
 
-## Worked example 4 â€” Data broadcast of one pulse to four sinks
+## Worked example 4 — Data broadcast of one pulse to four sinks
 
 A rare event pulse must reach four monitors. Build a depth-$2$ splitter tree ($3$ splitters for 4 leaves in a full binary tree). Match branch JTLs. Do **not** tie four loads to one junction pin and hope for four clean $\Phi_0$ copies.
 
-## Worked example 5 â€” Clock style still needs trees
+## Worked example 5 — Clock style still needs trees
 
 Whether the chip uses [concurrent-flow or counter-flow](concurrent-and-counter-flow-clocking.md) clocking, leaves still come from splitter trees. Style changes the geography of clock vs data; it does not invent infinite fanout.
 
-## Worked example 6 â€” Padding DFFs multiply clock leaves
+## Worked example 6 — Padding DFFs multiply clock leaves
 
 A reconvergent merge needs $k=4$ padding DFFs on a short path ([path balancing](path-balancing-overhead.md)). Those four DFFs each need a clock pin. Public cascade:
 
-1. Boolean imbalance â†’ pad DFFs,
-2. pad DFFs â†’ more clock leaves,
-3. more leaves â†’ deeper or bushier splitter tree,
-4. bushier tree â†’ more skew management and bias.
+1. Boolean imbalance → pad DFFs,
+2. pad DFFs → more clock leaves,
+3. more leaves → deeper or bushier splitter tree,
+4. bushier tree → more skew management and bias.
 
-Overhead is not â€œjust four DFFsâ€ â€” it pulls the clock network with it.
+Overhead is not “just four DFFs” — it pulls the clock network with it.
 
 ## Common misconceptions
 
-- **â€œFanout is free like a Verilog wire.â€** Physical fanout is splitter cells.
-- **â€œOne big junction drives everything.â€** Trees exist because pulses are regenerated/copied locally.
-- **â€œConfluence = XOR or OR of Booleans.â€** It is a pulse merger with timing rules, not a substitute for a logic gate datasheet.
-- **â€œBalanced clock tree means zero skew forever.â€** Layout, bias, and JTL mismatch still create skew; STA must see it.
-- **â€œSplitters only matter for clocks.â€** Data broadcast and multi-sink nets use them too.
-- **â€œConfluence removes path balancing.â€** Downstream sinks still need epoch discipline.
-- **â€œDepth formula $d=\lceil\log_2 N\rceil$ includes matching JTLs.â€** It counts splitter levels; stubs are extra.
-- **â€œCounter-flow clocking deletes the tree.â€** Direction changes; fanout physics does not.
+- **“Fanout is free like a Verilog wire.”** Physical fanout is splitter cells.
+- **“One big junction drives everything.”** Trees exist because pulses are regenerated/copied locally.
+- **“Confluence = XOR or OR of Booleans.”** It is a pulse merger with timing rules, not a substitute for a logic gate datasheet.
+- **“Balanced clock tree means zero skew forever.”** Layout, bias, and JTL mismatch still create skew; STA must see it.
+- **“Splitters only matter for clocks.”** Data broadcast and multi-sink nets use them too.
+- **“Confluence removes path balancing.”** Downstream sinks still need epoch discipline.
+- **“Depth formula $d=\lceil\log_2 N\rceil$ includes matching JTLs.”** It counts splitter levels; stubs are extra.
+- **“Counter-flow clocking deletes the tree.”** Direction changes; fanout physics does not.
 
 ## Bridge to SFQ circuits
 
@@ -237,11 +237,11 @@ Overhead is not â€œjust four DFFsâ€ â€” it pulls the clock network
 - Skew and windows in tools: [SFQ STA](sfq-static-timing-analysis.md).
 - Active segments on branches: [JTL](jtl-interconnects.md).
 - Pads that need clock taps: [Path balancing](path-balancing-overhead.md).
-- Long trunks feeding local trees: [Hybrid JTLâ€“PTL](hybrid-jtl-ptl-routing.md).
+- Long trunks feeding local trees: [Hybrid JTL–PTL](hybrid-jtl-ptl-routing.md).
 
 ## What stays private
 
-Named confluence hazard tables, exact splitter schematics per PDK, and CAD clock-tree synthesis algorithms â†’ private explainers.
+Named confluence hazard tables, exact splitter schematics per PDK, and CAD clock-tree synthesis algorithms → private explainers.
 
 ## Check yourself
 
@@ -290,13 +290,13 @@ $7$ ($N-1$ for $N=8$).
 <details markdown="1">
 <summary markdown="span">8. Can you safely treat confluence as a CMOS wired-OR for two independent data paths?</summary>
 
-No â€” without exclusivity or guaranteed separation, collisions are hazards.
+No — without exclusivity or guaranteed separation, collisions are hazards.
 </details>
 
 <details markdown="1">
 <summary markdown="span">9. Why do path-balancing DFFs grow the clock tree?</summary>
 
-Each padding DFF needs a clock leaf, so more pads â‡’ more splitter fanout work.
+Each padding DFF needs a clock leaf, so more pads ⇒ more splitter fanout work.
 </details>
 
 <details markdown="1">

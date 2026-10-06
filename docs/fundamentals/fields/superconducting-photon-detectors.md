@@ -1,6 +1,6 @@
-﻿# Field: Superconducting Photon Detectors (SNSPD / SSPD)
+# Field: Superconducting Photon Detectors (SNSPD / SSPD)
 
-**Prereqs:** [Josephson metrology](josephson-metrology-voltage-standards.md) Â· [Field map hub](README.md)  
+**Prereqs:** [Josephson metrology](josephson-metrology-voltage-standards.md) · [Field map hub](README.md)  
 **Next:** [Cryo-CMOS & hybrids](cryo-cmos-and-hybrids.md)
 
 **In one minute.** SNSPDs detect **single photons** (efficiency, dark counts, jitter). That click is not an RSFQ logic token. SFQ/cryo-CMOS may appear later as **readout helpers**.
@@ -16,10 +16,10 @@ A biased superconducting nanowire can fire an electrical pulse when a photon is 
 | PDE / efficiency | Photons caught |
 | Dark counts | False clicks |
 | Jitter | Timing uncertainty |
-| Array scale | Many pixels â†’ cable/readout problem |
+| Array scale | Many pixels → cable/readout problem |
 
 ```text
-  Photon â†’ SNSPD click â†’ amp â†’ (optional SFQ time-tag) â†’ warm FPGA
+  Photon → SNSPD click → amp → (optional SFQ time-tag) → warm FPGA
 ```
 
 ## Relevance to this curriculum
@@ -48,4 +48,4 @@ As classical cryogenic readout / time-encoding helpers.
 
 ## Next steps
 
-[Cryo-CMOS & hybrids](cryo-cmos-and-hybrids.md) Â· [Hub](README.md)
+[Cryo-CMOS & hybrids](cryo-cmos-and-hybrids.md) · [Hub](README.md)

@@ -1,25 +1,25 @@
-﻿# SFQ Static Timing Analysis (STA Intuition)
+# SFQ Static Timing Analysis (STA Intuition)
 
-**Prereqs:** [Path Balancing Overhead](path-balancing-overhead.md) Â· [Concurrent-Flow and Counter-Flow Clocking](concurrent-and-counter-flow-clocking.md)  
-**Next:** [Hybrid JTLâ€“PTL Routing](hybrid-jtl-ptl-routing.md)  
+**Prereqs:** [Path Balancing Overhead](path-balancing-overhead.md) · [Concurrent-Flow and Counter-Flow Clocking](concurrent-and-counter-flow-clocking.md)  
+**Next:** [Hybrid JTL–PTL Routing](hybrid-jtl-ptl-routing.md)  
 **Tracks:** `eda-timing-verification`
 
 **Learning goals.** After this page you should be able to (1) map CMOS-like **setup** and **hold** ideas onto SFQ pulse logic, (2) list what an SFQ STA tool checks at a newcomer level, (3) see how clock skew, path balance, and JTL/PTL delays enter the picture, and (4) separate public timing intuition from private tool algorithms (qSTA, CPPR, named flows).
 
 ## Why this matters
 
-**Static timing analysis (STA)** asks: given delays on gates and wires, will every pulse arrive in the **legal timing window** relative to clocks â€” **without** simulating every input pattern?
+**Static timing analysis (STA)** asks: given delays on gates and wires, will every pulse arrive in the **legal timing window** relative to clocks — **without** simulating every input pattern?
 
-In RSFQ, the â€œsignalâ€ is an **SFQ pulse** and many cells are themselves clocked stages. STA (and cousins like **qSTA** in the literature) checks pulse arrival times against clock pulses at each cell. Without this mindset, chip bring-up becomes endless waveform guessing â€” and path-balance bugs masquerade as â€œmysteriousâ€ logic errors.
+In RSFQ, the “signal” is an **SFQ pulse** and many cells are themselves clocked stages. STA (and cousins like **qSTA** in the literature) checks pulse arrival times against clock pulses at each cell. Without this mindset, chip bring-up becomes endless waveform guessing — and path-balance bugs masquerade as “mysterious” logic errors.
 
 Glossary: [STA](../glossary.md), [Clock window](../glossary.md), [Path balancing](../glossary.md), [JTL](../glossary.md), [PTL](../glossary.md).
 
-## Intuition â€” windows, not infinite pattern sim
+## Intuition — windows, not infinite pattern sim
 
 In CMOS, STA tracks data arrival vs clock edges at flip-flops:
 
-- **Setup** â‰ˆ arrive early enough before the capturing edge,
-- **Hold** â‰ˆ do not arrive so early that the previous state is corrupted.
+- **Setup** ≈ arrive early enough before the capturing edge,
+- **Hold** ≈ do not arrive so early that the previous state is corrupted.
 
 In RSFQ the same English words appear, but:
 
@@ -36,25 +36,25 @@ t_{\mathrm{data}} \;\text{vs}\; t_{\mathrm{clk}} \pm \text{(setup-/hold-like mar
 
 with $t_{\mathrm{data}}$ and $t_{\mathrm{clk}}$ built from library delays along their paths.
 
-## Analogy â€” subway clerk
+## Analogy — subway clerk
 
-A subway system publishes schedules (timing libraries). STA is the clerk who checks whether every transfer still works if each train is a bit slow or fast â€” **without** simulating every passengerâ€™s day.
+A subway system publishes schedules (timing libraries). STA is the clerk who checks whether every transfer still works if each train is a bit slow or fast — **without** simulating every passenger’s day.
 
-- Setup-like = â€œarrive before the doors close.â€
-- Hold-like = â€œdonâ€™t board so early that you spoil the previous trainâ€™s boarding.â€
+- Setup-like = “arrive before the doors close.”
+- Hold-like = “don’t board so early that you spoil the previous train’s boarding.”
 
-Bad analogy: â€œSTA = full SPICE of the whole chip.â€ STA uses **abstract delays**; device-level sim is a different tool.
+Bad analogy: “STA = full SPICE of the whole chip.” STA uses **abstract delays**; device-level sim is a different tool.
 
 ## Picture
 
 ```text
-Clock pulse at cell:     â˜…
+Clock pulse at cell:     ★
 Legal data window:          [====]
-Too early (hold risk):   â˜…
-Too late (setup risk):                â˜…
+Too early (hold risk):   ★
+Too late (setup risk):                ★
 
 SFQ STA walks paths:
-  source â†’ delays â†’ sink cell vs local clock
+  source → delays → sink cell vs local clock
 ```
 
 ```mermaid
@@ -69,9 +69,9 @@ flowchart LR
 ```text
 Delay sum cartoon:
 
-  t_data = Î£ (gate delays) + Î£ (JTL stages) + (PTL flight if any)
-  t_clk  = Î£ (splitter / clock path delays) + skew terms
-  check t_data against t_clk Â± window constraints
+  t_data = Σ (gate delays) + Σ (JTL stages) + (PTL flight if any)
+  t_clk  = Σ (splitter / clock path delays) + skew terms
+  check t_data against t_clk ± window constraints
 ```
 
 ```mermaid
@@ -90,8 +90,8 @@ sequenceDiagram
 
 Try this in place. Prefer full-screen? Open the [lab page](../labs/sfq-static-timing-analysis.html).
 
-1. Click **Preset: setup fail** â€” data arrives too late vs the clock; setup slack goes negative. Raise **JTL pads** until setup clears (watch hold).
-2. Click **Preset: hold fail** â€” data is too early; add pads or reduce skew. Toggle **Epoch mismatch** to see balance flagged *before* blaming window numbers.
+1. Click **Preset: setup fail** — data arrives too late vs the clock; setup slack goes negative. Raise **JTL pads** until setup clears (watch hold).
+2. Click **Preset: hold fail** — data is too early; add pads or reduce skew. Toggle **Epoch mismatch** to see balance flagged *before* blaming window numbers.
 
 <iframe
   src="../../labs/sfq-static-timing-analysis.html"
@@ -127,7 +127,7 @@ Try this in place. Prefer full-screen? Open the [lab page](../labs/sfq-static-ti
 - intentional deskew cells,
 - (sometimes) PTL trunks for long clock distribution.
 
-Skew between two leaves is roughly the difference of their clock-path delays. Both [concurrent-flow and counter-flow](concurrent-and-counter-flow-clocking.md) styles still need this accounting â€” only the geography of pain changes.
+Skew between two leaves is roughly the difference of their clock-path delays. Both [concurrent-flow and counter-flow](concurrent-and-counter-flow-clocking.md) styles still need this accounting — only the geography of pain changes.
 
 ## CMOS contrast
 
@@ -140,20 +140,20 @@ Skew between two leaves is roughly the difference of their clock-path delays. Bo
 | Fix actions | Upsize, retime, pipeline | Add JTL/DFF pads, rebalance, retune tree |
 | Balance | Optional architectural | Often mandatory at reconvergence |
 
-## Worked example 1 â€” Illustrative setup check
+## Worked example 1 — Illustrative setup check
 
-Data path delay to a DFF is $20\,\text{ps}$; the clock arrives $5\,\text{ps}$ after the previous stageâ€™s clock (skew). Suppose the cell needs data at least $8\,\text{ps}$ before its clock pulse (setup-like constraint â€” **numbers illustrative only**).
+Data path delay to a DFF is $20\,\text{ps}$; the clock arrives $5\,\text{ps}$ after the previous stage’s clock (skew). Suppose the cell needs data at least $8\,\text{ps}$ before its clock pulse (setup-like constraint — **numbers illustrative only**).
 
 Public reasoning pattern:
 
 1. Compute data arrival relative to the capturing clock pulse.
 2. Subtract required setup-like margin.
-3. If negative slack â†’ shorten data path, move clocks, or relax constraints.
+3. If negative slack → shorten data path, move clocks, or relax constraints.
 4. Re-check hold on the same corner after the fix.
 
-Real tools use characterized tables â€” private/tool depth.
+Real tools use characterized tables — private/tool depth.
 
-## Worked example 2 â€” Illustrative hold check
+## Worked example 2 — Illustrative hold check
 
 A short path is only $2\,\text{ps}$ of data delay into the next stage while clock skew makes the capturing clock relatively late. Hold-like risk appears: data may race through.
 
@@ -164,38 +164,38 @@ Fixes (public menu):
 - rematch [splitter](splitter-and-confluence.md) branches if skew is the villain,
 - revisit [clock-flow style](concurrent-and-counter-flow-clocking.md) geography.
 
-## Worked example 3 â€” Balance failure looks like â€œtimingâ€
+## Worked example 3 — Balance failure looks like “timing”
 
-Two inputs to a gate come from epoch 3 and epoch 5 because pads were forgotten. Pattern simulation might show â€œwrong XOR resultsâ€ intermittently. STA/balancing analysis classifies it as **epoch mismatch**, not mysterious device physics.
+Two inputs to a gate come from epoch 3 and epoch 5 because pads were forgotten. Pattern simulation might show “wrong XOR results” intermittently. STA/balancing analysis classifies it as **epoch mismatch**, not mysterious device physics.
 
 Public lesson: run balance + window checks before blaming junctions.
 
-## Worked example 4 â€” Hybrid net underestimates
+## Worked example 4 — Hybrid net underestimates
 
-An engineer models a long net as â€œ$8\times\tau_{\mathrm{JTL}}$â€ but the router actually inserted driverâ€“PTLâ€“receiver. True delay includes flight and interfaces. Setup slack that looked positive becomes negative in silicon-minded STA.
+An engineer models a long net as “$8\times\tau_{\mathrm{JTL}}$” but the router actually inserted driver–PTL–receiver. True delay includes flight and interfaces. Setup slack that looked positive becomes negative in silicon-minded STA.
 
-Fix the **timing graph model**, not only the Boolean netlist. See [Hybrid JTLâ€“PTL](hybrid-jtl-ptl-routing.md).
+Fix the **timing graph model**, not only the Boolean netlist. See [Hybrid JTL–PTL](hybrid-jtl-ptl-routing.md).
 
-## Worked example 5 â€” Fix loop that newcomers should expect
+## Worked example 5 — Fix loop that newcomers should expect
 
 ```text
 1. Check path balance at reconvergences
 2. Run setup-/hold-like window checks
-3. If hold fails â†’ add JTL/DFF or fix skew
-4. If setup fails â†’ shorten data, retime, or adjust clock
+3. If hold fails → add JTL/DFF or fix skew
+4. If setup fails → shorten data, retime, or adjust clock
 5. Re-check the other constraint (fixes interact)
 6. Re-check balance if stages were added/removed
 ```
 
-This loop is the public â€œSTA lifestyle,â€ independent of any named academic tool.
+This loop is the public “STA lifestyle,” independent of any named academic tool.
 
 ## Slack language without a tool vendor
 
 Borrowed CMOS words still help:
 
-- **Slack** â‰ˆ how much margin remains before a window fails.
-- **Critical path** â‰ˆ the chain with the worst setup-like slack (or the tightest hold-like path, depending on report).
-- **Corner** â‰ˆ a consistent pessimistic or optimistic delay assumption set (bias, temp, process abstract) â€” exact corner tables are private/PDK.
+- **Slack** ≈ how much margin remains before a window fails.
+- **Critical path** ≈ the chain with the worst setup-like slack (or the tightest hold-like path, depending on report).
+- **Corner** ≈ a consistent pessimistic or optimistic delay assumption set (bias, temp, process abstract) — exact corner tables are private/PDK.
 
 Public setup-like cartoon at one capturing cell:
 
@@ -203,7 +203,7 @@ Public setup-like cartoon at one capturing cell:
 t_{\mathrm{slack,setup}} \approx \bigl(t_{\mathrm{clk}} - t_{\mathrm{data}}\bigr) - t_{\mathrm{setup,req}}
 \]
 
-(sign conventions vary by tool; learn the **idea**, not a universal equation). Hold-like checks flip the early-arrival worry. After any fix, re-check **both** families â€” shortening a path to help setup can create hold, and adding [JTL](jtl-interconnects.md) delay to help hold can create setup.
+(sign conventions vary by tool; learn the **idea**, not a universal equation). Hold-like checks flip the early-arrival worry. After any fix, re-check **both** families — shortening a path to help setup can create hold, and adding [JTL](jtl-interconnects.md) delay to help hold can create setup.
 
 ## Multi-clock and multi-domain cautions (field-fundamental)
 
@@ -211,7 +211,7 @@ Large SFQ chips may have:
 
 - multiple clock frequencies or gated regions,
 - [concurrent-flow vs counter-flow](concurrent-and-counter-flow-clocking.md) regions side by side,
-- [hybrid JTLâ€“PTL](hybrid-jtl-ptl-routing.md) trunks with different delay models,
+- [hybrid JTL–PTL](hybrid-jtl-ptl-routing.md) trunks with different delay models,
 - [serial-bias](serial-biasing-current-recycling.md) islands that also constrain where clocks and data may cross.
 
 Public discipline at a domain boundary:
@@ -226,8 +226,8 @@ STA that only sees Boolean connectivity without those annotations is incomplete 
 ```text
 Boundary checklist:
 
-  [domain A] â”€â”€â–º (model?) â”€â”€â–º [domain B]
-       â†‘                          â†‘
+  [domain A] ──► (model?) ──► [domain B]
+       ↑                          ↑
     clk leaf A                 clk leaf B
     balance?                   balance?
 ```
@@ -245,31 +245,31 @@ Ignore vendor chrome; hunt for:
 | Reconvergent inputs | Epoch counts matched? |
 | Suggested fix pads | Often JTL delay or DFF retiming |
 
-If the report never mentions balance or pulse windows, you may be looking at a CMOS-shaped flow incorrectly applied to SFQ â€” or at a summary that hid the SFQ-specific checks. Ask for the pulse/epoch view.
+If the report never mentions balance or pulse windows, you may be looking at a CMOS-shaped flow incorrectly applied to SFQ — or at a summary that hid the SFQ-specific checks. Ask for the pulse/epoch view.
 
 ## Common misconceptions
 
-- **â€œSTA means full SPICE of the chip.â€** STA uses delay abstracts; transistor/JJ-level sim is different.
-- **â€œSFQ STA = CMOS STA with a cold PDK.â€** Pulses, pervasive clocks, balance, JTL/PTL differ.
-- **â€œIf functional sim passes one vector, timing is fine.â€** Static checks cover corners vectors miss.
-- **â€œSkew is negligible.â€** Splitter trees make skew first-class.
-- **â€œqSTA / CPPR details belong on this page.â€** Named algorithms â†’ private explainers when tied to papers.
-- **â€œHold only happens in concurrent-flow.â€** Both styles can create early/late problems with bad delays.
-- **â€œBalance is separate from STA.â€** In SFQ practice, epoch match is part of timing legality.
-- **â€œOne global clock edge like CMOS is the model.â€** Many cells each see a **local clock pulse leaf**.
+- **“STA means full SPICE of the chip.”** STA uses delay abstracts; transistor/JJ-level sim is different.
+- **“SFQ STA = CMOS STA with a cold PDK.”** Pulses, pervasive clocks, balance, JTL/PTL differ.
+- **“If functional sim passes one vector, timing is fine.”** Static checks cover corners vectors miss.
+- **“Skew is negligible.”** Splitter trees make skew first-class.
+- **“qSTA / CPPR details belong on this page.”** Named algorithms → private explainers when tied to papers.
+- **“Hold only happens in concurrent-flow.”** Both styles can create early/late problems with bad delays.
+- **“Balance is separate from STA.”** In SFQ practice, epoch match is part of timing legality.
+- **“One global clock edge like CMOS is the model.”** Many cells each see a **local clock pulse leaf**.
 
 ## Bridge to SFQ circuits
 
-- Timing â†” [gate-level pipelining](../bridge/gate-level-pipelining.md) and [clock flow](concurrent-and-counter-flow-clocking.md).
-- Wire delay choice â†” [JTL vs PTL](hybrid-jtl-ptl-routing.md).
-- Pads â†” [path balancing](path-balancing-overhead.md).
-- Clock fanout â†” [splitters](splitter-and-confluence.md).
-- Paper tool flows (ColdFlux, qSTA variants) â†’ private explainers.
+- Timing ↔ [gate-level pipelining](../bridge/gate-level-pipelining.md) and [clock flow](concurrent-and-counter-flow-clocking.md).
+- Wire delay choice ↔ [JTL vs PTL](hybrid-jtl-ptl-routing.md).
+- Pads ↔ [path balancing](path-balancing-overhead.md).
+- Clock fanout ↔ [splitters](splitter-and-confluence.md).
+- Paper tool flows (ColdFlux, qSTA variants) → private explainers.
 - Track map: [EDA Timing & Verification](../tracks/eda-timing-verification/ROADMAP.md).
 
 ## What stays private
 
-Characterized `.lib`-like tables, CPPR internals, qSTA formulations, and named industrial/academic tool chains â†’ private paper explainers.
+Characterized `.lib`-like tables, CPPR internals, qSTA formulations, and named industrial/academic tool chains → private paper explainers.
 
 ## Check yourself
 
@@ -306,24 +306,24 @@ Add JTL delay on the short path; rematch clock-tree branches; or insert a DFF ep
 <details markdown="1">
 <summary markdown="span">6. How can a path-balance bug appear in the lab?</summary>
 
-As wrong logic at reconvergent gates even when devices are â€œhealthyâ€ â€” inputs from mismatched epochs.
+As wrong logic at reconvergent gates even when devices are “healthy” — inputs from mismatched epochs.
 </details>
 
 <details markdown="1">
 <summary markdown="span">7. Why must hybrid PTL nets appear explicitly in the timing graph?</summary>
 
-Because delay includes driver, flight, and receiver â€” not only JTL stage sums.
+Because delay includes driver, flight, and receiver — not only JTL stage sums.
 </details>
 
 <details markdown="1">
 <summary markdown="span">8. After fixing setup by shortening a path, what should you re-check?</summary>
 
-Hold-like margins (and path balance if stages changed) â€” fixes interact.
+Hold-like margins (and path balance if stages changed) — fixes interact.
 </details>
 
 ## Next steps
 
-- When to use passive lines: [Hybrid JTLâ€“PTL Routing](hybrid-jtl-ptl-routing.md).
+- When to use passive lines: [Hybrid JTL–PTL Routing](hybrid-jtl-ptl-routing.md).
 - Padding cost: [Path Balancing Overhead](path-balancing-overhead.md).
 - Clock directions: [Concurrent-Flow and Counter-Flow Clocking](concurrent-and-counter-flow-clocking.md).
 - Track roadmap: [EDA Timing & Verification](../tracks/eda-timing-verification/ROADMAP.md).

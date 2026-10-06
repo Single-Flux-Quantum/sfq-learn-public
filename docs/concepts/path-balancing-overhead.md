@@ -1,24 +1,24 @@
-﻿# Path Balancing Overhead
+# Path Balancing Overhead
 
-**Prereqs:** [Gate-Level Pipelining](../bridge/gate-level-pipelining.md) Â· [Concurrent-Flow and Counter-Flow Clocking](concurrent-and-counter-flow-clocking.md) Â· [RSFQ DFF and Retiming](rsfq-dff-and-retiming.md)  
+**Prereqs:** [Gate-Level Pipelining](../bridge/gate-level-pipelining.md) · [Concurrent-Flow and Counter-Flow Clocking](concurrent-and-counter-flow-clocking.md) · [RSFQ DFF and Retiming](rsfq-dff-and-retiming.md)  
 **Next:** [SFQ Static Timing Analysis](sfq-static-timing-analysis.md)  
-**Tracks:** `eda-timing-verification` Â· `sfq-logic-primitives`
+**Tracks:** `eda-timing-verification` · `sfq-logic-primitives`
 
 **Learning goals.** After this page you should be able to (1) explain why reconvergent SFQ paths must be **balanced**, (2) define **overhead** as extra DFFs/JTLs that synchronize rather than compute new Boolean function, (3) estimate pad count from stage imbalance, and (4) list chip costs (area, bias, latency, design effort) without quoting paper-specific percentages.
 
 ## Why this matters
 
-Because RSFQ is [gate-level pipelined](../bridge/gate-level-pipelining.md), a pulseâ€™s **meaning** depends on which clock epoch it belongs to. When two paths meet at a gate, both inputs must present pulses from the **same** epoch. If one path is shorter, designers insert **padding** â€” usually DFFs or delay JTLs â€” until stage counts (or delays) match.
+Because RSFQ is [gate-level pipelined](../bridge/gate-level-pipelining.md), a pulse’s **meaning** depends on which clock epoch it belongs to. When two paths meet at a gate, both inputs must present pulses from the **same** epoch. If one path is shorter, designers insert **padding** — usually DFFs or delay JTLs — until stage counts (or delays) match.
 
-That padding is **path-balancing overhead**: cells that do not compute new Boolean function; they only wait. Large SFQ blocks can spend a startling fraction of junctions on waiting. EDA research obsesses over this tax for good reason â€” it is not a buzzword; it follows from pulse-window encoding ([Pulse to Logic State](../bridge/pulse-to-logic-state.md)).
+That padding is **path-balancing overhead**: cells that do not compute new Boolean function; they only wait. Large SFQ blocks can spend a startling fraction of junctions on waiting. EDA research obsesses over this tax for good reason — it is not a buzzword; it follows from pulse-window encoding ([Pulse to Logic State](../bridge/pulse-to-logic-state.md)).
 
 Glossary: [Path balancing](../glossary.md), [DFF](../glossary.md), [Gate-level pipelining](../glossary.md), [Clock window](../glossary.md).
 
-## Intuition â€” same beat at the merge
+## Intuition — same beat at the merge
 
 Epoch alignment is not optional decoration:
 
-- Path depth mismatch â‡’ inputs from different â€œbeatsâ€ of the song,
+- Path depth mismatch ⇒ inputs from different “beats” of the song,
 - the merge gate cannot interpret mixed epochs as one Boolean operation,
 - insert waits on the fast path until the slow path catches up in stage count.
 
@@ -32,22 +32,22 @@ k = n_{\mathrm{long}} - n_{\mathrm{short}}
 
 padding stages on the short path into a shared sink, when both counts are measured from a common reference epoch.
 
-## Analogy â€” cafÃ© meetup
+## Analogy — café meetup
 
-Two friends agree to meet at a cafÃ© after walking different routes. The friend with the short route must **sit and wait** (padding stages) so they arrive in the same time slot. The chairs they occupy are overhead â€” useful for synchronization, not for sightseeing.
+Two friends agree to meet at a café after walking different routes. The friend with the short route must **sit and wait** (padding stages) so they arrive in the same time slot. The chairs they occupy are overhead — useful for synchronization, not for sightseeing.
 
-Bad analogy: â€œJust walk slower without sittingâ€ as if continuous CMOS cloud delay were free. In RSFQ you usually insert **clocked waits** (DFFs) or discrete JTL delays with timing intent â€” not an unsynchronized fog of gates.
+Bad analogy: “Just walk slower without sitting” as if continuous CMOS cloud delay were free. In RSFQ you usually insert **clocked waits** (DFFs) or discrete JTL delays with timing intent — not an unsynchronized fog of gates.
 
 ## Picture
 
 ```text
 Unbalanced:                         Balanced:
 
-  A --1 stage--------â”                A --1--[DFF]--[DFF]--â”
-                     +â†’ GATE                              +â†’ GATE
-  B --3 stages-------â”˜                B --3 stages---------â”˜
+  A --1 stage--------┐                A --1--[DFF]--[DFF]--┐
+                     +→ GATE                              +→ GATE
+  B --3 stages-------┘                B --3 stages---------┘
 
-  Short path needs 2 padding DFFs â†’ overhead
+  Short path needs 2 padding DFFs → overhead
 ```
 
 ```mermaid
@@ -62,7 +62,7 @@ flowchart TD
 Cost stack cartoon:
 
   Boolean logic JJ
-  + padding DFFs / JTLs     â† overhead
+  + padding DFFs / JTLs     ← overhead
   + clock splitters for pads
   + bias for all of the above
 ```
@@ -80,7 +80,7 @@ flowchart LR
 
 Try this in place. Prefer full-screen? Open the [lab page](../labs/path-balancing-overhead.html).
 
-1. Set long/short depths (e.g. 5 vs 2). Read **k = nâ‚— âˆ’ nâ‚›**. Click **Apply pads** â€” orange boxes are overhead, not Boolean logic.
+1. Set long/short depths (e.g. 5 vs 2). Read **k = nₗ − nₛ**. Click **Apply pads** — orange boxes are overhead, not Boolean logic.
 2. Watch the illustrative **f_pad** stack and cost counters (clock leaves, bias taps, latency). Numbers are teaching sketches, not paper percentages.
 
 <iframe
@@ -121,7 +121,7 @@ padding stages (DFFs or equivalent epoch delays). Per reconvergent sink, sum pad
 | Align whole epochs at reconvergence | DFF pads | Moves tokens into the correct window by construction |
 | Both | Mix | Common in real chips |
 
-Choosing only JTLs when you are a full epoch short will not invent a missing clocked stage â€” you still need storage retiming for epoch match. See [JTL](jtl-interconnects.md) and [DFF](rsfq-dff-and-retiming.md).
+Choosing only JTLs when you are a full epoch short will not invent a missing clocked stage — you still need storage retiming for epoch match. See [JTL](jtl-interconnects.md) and [DFF](rsfq-dff-and-retiming.md).
 
 ## CMOS contrast
 
@@ -129,11 +129,11 @@ Choosing only JTLs when you are a full epoch short will not invent a missing clo
 |-------|------|-------------------------|
 | Multi-cycle combinational path | Common | Rare as a deep unsynchronized cloud |
 | Register insertion | Architectural / retiming choice | Often **mandatory** for epoch match |
-| â€œOverheadâ€ language | Pipeline regs, FIFO slack | Padding DFFs/JTLs at reconvergence |
+| “Overhead” language | Pipeline regs, FIFO slack | Padding DFFs/JTLs at reconvergence |
 | Timing closure | Setup/hold at FFs | Windows at many clocked cells + balance |
 | Depth metric | Logic levels between FFs | Clocked stage / epoch counts |
 
-## Worked example 1 â€” XOR inputs 1 vs 4
+## Worked example 1 — XOR inputs 1 vs 4
 
 Left input reaches an XOR after **1** clocked stage; right after **4**. Insert **3** DFFs on the left (same clocking scheme) so both arrive in epoch 4.
 
@@ -147,50 +147,50 @@ Checklist:
 
 Junction counts are library-specific (private); the **$k = \Delta$ stages** rule is public.
 
-## Worked example 2 â€” Two merges in series
+## Worked example 2 — Two merges in series
 
-Path depths into gate $G_1$: $2$ vs $5$ â‡’ $3$ pads on the short side.  
+Path depths into gate $G_1$: $2$ vs $5$ ⇒ $3$ pads on the short side.  
 Outputs of $G_1$ then meet another path of depth $8$ at $G_2$. Recount depths **including** the pads you already inserted; balancing is incremental and global, not a one-local-fix mindset.
 
-Public warning: fixing one merge can change relative depths downstream â€” STA/balancing passes iterate.
+Public warning: fixing one merge can change relative depths downstream — STA/balancing passes iterate.
 
 ```text
 After balancing G1:
 
-  shortâ†’G1 now matches longâ†’G1
-  that outputâ€™s depth into G2 must be recounted vs the other G2 input
+  short→G1 now matches long→G1
+  that output’s depth into G2 must be recounted vs the other G2 input
 ```
 
-## Worked example 3 â€” JTL delay vs DFF pad
+## Worked example 3 — JTL delay vs DFF pad
 
-A hold-like race needs $\sim 12\,\text{ps}$ (illustrative) of delay on a short path; $\tau_{\mathrm{JTL}}\sim 4\,\text{ps}$ (illustrative) â‡’ about **3** JTL stages. No full epoch was missing â€” fine delay suffices.
+A hold-like race needs $\sim 12\,\text{ps}$ (illustrative) of delay on a short path; $\tau_{\mathrm{JTL}}\sim 4\,\text{ps}$ (illustrative) ⇒ about **3** JTL stages. No full epoch was missing — fine delay suffices.
 
-Separately, a reconvergent merge is short by **two epochs** â€” insert **2** DFFs even if JTLs could add picoseconds. Epoch match and hold trim are different jobs that often coexist on one chip.
+Separately, a reconvergent merge is short by **two epochs** — insert **2** DFFs even if JTLs could add picoseconds. Epoch match and hold trim are different jobs that often coexist on one chip.
 
-## Worked example 4 â€” Overhead budget sketch (no fake percentages)
+## Worked example 4 — Overhead budget sketch (no fake percentages)
 
-Suppose a block has $N_{\mathrm{logic}}$ junctions in â€œusefulâ€ Boolean/pipeline cells and adds $N_{\mathrm{pad}}$ junctions in padding DFFs/JTLs/clock taps for those pads. Public overhead fraction sketch:
+Suppose a block has $N_{\mathrm{logic}}$ junctions in “useful” Boolean/pipeline cells and adds $N_{\mathrm{pad}}$ junctions in padding DFFs/JTLs/clock taps for those pads. Public overhead fraction sketch:
 
 \[
 f_{\mathrm{pad}} \approx \frac{N_{\mathrm{pad}}}{N_{\mathrm{logic}} + N_{\mathrm{pad}}}
 \]
 
-Papers quote dramatic $f_{\mathrm{pad}}$ on large designs â€” those numbers are **private/paper-specific**. Your job as a newcomer is to expect $N_{\mathrm{pad}}$ to be large enough to matter in area, bias, and latency, and to treat balancing as a first-class design loop.
+Papers quote dramatic $f_{\mathrm{pad}}$ on large designs — those numbers are **private/paper-specific**. Your job as a newcomer is to expect $N_{\mathrm{pad}}$ to be large enough to matter in area, bias, and latency, and to treat balancing as a first-class design loop.
 
-## Worked example 5 â€” Clock style does not erase pads
+## Worked example 5 — Clock style does not erase pads
 
 Chip A uses concurrent-flow clocking; chip B uses counter-flow. Both implement the same reconvergent XOR with depths 2 and 6. Both need about **4** pads on the short path. Clock style may change where hold/setup pressure sits on highways ([clocking card](concurrent-and-counter-flow-clocking.md)); it does not cancel $k = 6-2$.
 
 ## Common misconceptions
 
-- **â€œPath balancing is only an EDA paper buzzword.â€** It is enforced by pulse-window semantics.
-- **â€œClock style removes padding.â€** It relocates timing pain; reconvergence still needs matched epochs.
-- **â€œOverhead DFFs compute OR/AND.â€** They wait; Boolean function is unchanged.
-- **â€œCounting gates like CMOS depth is enough.â€** Count **clocked stages / epochs**, not only Boolean depth.
-- **â€œWave-pipelining / clockless families mean I can ignore this.â€** Learn the default tax first; alternatives are advanced leaves.
-- **â€œOne pad fixes the whole chip.â€** Every reconvergence is a site; fixes interact.
-- **â€œJTLs alone always replace DFFs for balancing.â€** Fine delay â‰  missing epochs.
-- **â€œBalancing is optional if functional sim looks OK on one vector.â€** Static epoch mismatch can hide until other patterns or corners.
+- **“Path balancing is only an EDA paper buzzword.”** It is enforced by pulse-window semantics.
+- **“Clock style removes padding.”** It relocates timing pain; reconvergence still needs matched epochs.
+- **“Overhead DFFs compute OR/AND.”** They wait; Boolean function is unchanged.
+- **“Counting gates like CMOS depth is enough.”** Count **clocked stages / epochs**, not only Boolean depth.
+- **“Wave-pipelining / clockless families mean I can ignore this.”** Learn the default tax first; alternatives are advanced leaves.
+- **“One pad fixes the whole chip.”** Every reconvergence is a site; fixes interact.
+- **“JTLs alone always replace DFFs for balancing.”** Fine delay ≠ missing epochs.
+- **“Balancing is optional if functional sim looks OK on one vector.”** Static epoch mismatch can hide until other patterns or corners.
 
 ## Bridge to SFQ circuits
 
@@ -203,7 +203,7 @@ Chip A uses concurrent-flow clocking; chip B uses counter-flow. Both implement t
 
 ## What stays private
 
-Paper â€œ% of junctions spent on balancing,â€ named balancer algorithms, and architecture tricks that reduce pads on a specific ALU â†’ private explainers.
+Paper “% of junctions spent on balancing,” named balancer algorithms, and architecture tricks that reduce pads on a specific ALU → private explainers.
 
 ## Check yourself
 
@@ -214,7 +214,7 @@ Clocked stage counts (or matched delays) on reconvergent paths so pulses share o
 </details>
 
 <details markdown="1">
-<summary markdown="span">2. What is â€œoverheadâ€ here?</summary>
+<summary markdown="span">2. What is “overhead” here?</summary>
 
 Extra DFFs/delay cells added for synchronization rather than new Boolean logic.
 </details>
@@ -234,7 +234,7 @@ About $5$ ($7-2$).
 <details markdown="1">
 <summary markdown="span">5. Does concurrent-flow clocking eliminate balancing?</summary>
 
-No â€” it changes hold/setup geography; reconvergent epoch match remains.
+No — it changes hold/setup geography; reconvergent epoch match remains.
 </details>
 
 <details markdown="1">
@@ -246,7 +246,7 @@ When you need fine delay inside/near an epoch (e.g. hold) rather than a full epo
 <details markdown="1">
 <summary markdown="span">7. Why must you recount depths after fixing the first of two series merges?</summary>
 
-Pads change the depth of the first mergeâ€™s output into the second merge â€” balancing is global/iterative.
+Pads change the depth of the first merge’s output into the second merge — balancing is global/iterative.
 </details>
 
 <details markdown="1">

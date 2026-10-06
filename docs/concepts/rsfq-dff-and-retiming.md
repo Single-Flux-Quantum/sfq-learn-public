@@ -1,8 +1,8 @@
-﻿# RSFQ DFF and Retiming
+# RSFQ DFF and Retiming
 
-**Prereqs:** [Splitter and Confluence](splitter-and-confluence.md) Â· [Pulse to Logic State](../bridge/pulse-to-logic-state.md)  
-**Next:** [Gate-Level Pipelining](../bridge/gate-level-pipelining.md) Â· [Path Balancing Overhead](path-balancing-overhead.md)  
-**Tracks:** `sfq-logic-primitives` Â· `eda-timing-verification`
+**Prereqs:** [Splitter and Confluence](splitter-and-confluence.md) · [Pulse to Logic State](../bridge/pulse-to-logic-state.md)  
+**Next:** [Gate-Level Pipelining](../bridge/gate-level-pipelining.md) · [Path Balancing Overhead](path-balancing-overhead.md)  
+**Tracks:** `sfq-logic-primitives` · `eda-timing-verification`
 
 **Learning goals.** After this page you should be able to (1) describe how an RSFQ **D flip-flop** stores one flux quantum and releases it on clock, (2) distinguish destructive readout from the idea of NDRO variants at a vocabulary level, (3) explain why DFFs are the default **retiming / path-balancing** widget, (4) connect DFF timing to [STA](sfq-static-timing-analysis.md) setup/hold intuition, and (5) choose DFF pads vs [JTL](jtl-interconnects.md) fine delay for the right job.
 
@@ -10,15 +10,15 @@
 
 If RSFQ pulses are batons, the **DFF** is a single-seat waiting room: a data pulse sits as circulating flux until a clock pulse calls it forward. Without DFFs (and cousins), you cannot build reliable pipelines, align reconvergent paths, or hold state across epochs.
 
-In area reports, SFQ chips often look â€œfull of DFFs.â€ That is not accidental â€” [gate-level pipelining](../bridge/gate-level-pipelining.md) and [path balancing](path-balancing-overhead.md) make storage cells first-class citizens, not rare register-file extras.
+In area reports, SFQ chips often look “full of DFFs.” That is not accidental — [gate-level pipelining](../bridge/gate-level-pipelining.md) and [path balancing](path-balancing-overhead.md) make storage cells first-class citizens, not rare register-file extras.
 
 Glossary: [DFF (RSFQ)](../glossary.md), [Clock window](../glossary.md), [Path balancing](../glossary.md), [$\Phi_0$](../glossary.md), [SFQ pulse](../glossary.md).
 
-## Intuition â€” capture, hold, clocked release
+## Intuition — capture, hold, clocked release
 
 An RSFQ **D flip-flop**:
 
-1. **Capture:** an input data SFQ pulse writes a flux quantum into a superconducting storage loop â†’ state â€œ1â€. If no data pulse arrived since the last clear, the loop stays empty â†’ â€œ0â€.
+1. **Capture:** an input data SFQ pulse writes a flux quantum into a superconducting storage loop → state “1”. If no data pulse arrived since the last clear, the loop stays empty → “0”.
 2. **Hold:** the circulating current persists (while superconducting and undisturbed) until readout.
 3. **Clocked release:** a clock pulse reads the loop. If full, the cell launches an **output SFQ pulse** and typically **clears** the loop (destructive readout). If empty, no data output pulse.
 
@@ -34,21 +34,21 @@ Public state cartoon:
 \end{align}
 \]
 
-While holding a â€œ1â€, the **output pin is not a CMOS-like steady high**. The â€œ1â€ lives as **loop flux**; the pin speaks when the clocked escape happens.
+While holding a “1”, the **output pin is not a CMOS-like steady high**. The “1” lives as **loop flux**; the pin speaks when the clocked escape happens.
 
-## Analogy â€” single-seat waiting room
+## Analogy — single-seat waiting room
 
 A visitor (data pulse) sits until a receptionist (clock) calls them to the exit. If nobody is waiting, the clock call produces no visitor at the door.
 
-A second picture: a one-token mailbox. Mail arrives (data). Later a courier (clock) empties the box and carries the letter onward â€” or finds the box empty.
+A second picture: a one-token mailbox. Mail arrives (data). Later a courier (clock) empties the box and carries the letter onward — or finds the box empty.
 
-Bad analogy: a CMOS latch that continuously drives a voltage high on a wire. Bad analogy #2: â€œDFF removes the need for a clock treeâ€ â€” every DFF still needs a [splitter](splitter-and-confluence.md) leaf.
+Bad analogy: a CMOS latch that continuously drives a voltage high on a wire. Bad analogy #2: “DFF removes the need for a clock tree” — every DFF still needs a [splitter](splitter-and-confluence.md) leaf.
 
 ## Picture
 
 ```text
-  DATA â”€â”€â–º [ storage loop ] â”€â”€â–º OUT
-                 â–²
+  DATA ──► [ storage loop ] ──► OUT
+                 ▲
               CLOCK
 ```
 
@@ -56,7 +56,7 @@ Bad analogy: a CMOS latch that continuously drives a voltage high on a wire. Bad
 stateDiagram-v2
   [*] --> Empty
   Empty --> Full: data pulse
-  Full --> Empty: clock â†’ emit output pulse
+  Full --> Empty: clock → emit output pulse
   Empty --> Empty: clock (no data out)
   Full --> Full: ignored / illegal extra data (library-dependent hazard)
 ```
@@ -64,10 +64,10 @@ stateDiagram-v2
 ```text
 Timing sketch (one epoch):
 
-  data:   â˜…
+  data:   ★
   store:     [==== full ====]
-  clock:              â˜…
-  out:                â˜…   (then empty)
+  clock:              ★
+  out:                ★   (then empty)
 ```
 
 ```mermaid
@@ -76,7 +76,7 @@ sequenceDiagram
   participant L as Storage loop
   participant K as Clock
   participant O as Out
-  D->>L: Î¦0 write (optional)
+  D->>L: Φ0 write (optional)
   K->>L: readout
   alt full
     L->>O: SFQ pulse
@@ -90,8 +90,8 @@ sequenceDiagram
 
 Try this in place. Prefer full-screen? Open the [lab page](../labs/rsfq-dff-and-retiming.html).
 
-1. **Inject data** â†’ loop goes FULL (circulating Î¦â‚€). Notice OUT stays quiet while holding.
-2. **Fire clock** â†’ OUT pulse + loop clears (destructive readout). Clock an empty loop â†’ no OUT.
+1. **Inject data** → loop goes FULL (circulating Φ₀). Notice OUT stays quiet while holding.
+2. **Fire clock** → OUT pulse + loop clears (destructive readout). Clock an empty loop → no OUT.
 
 <iframe
   src="../../labs/rsfq-dff-and-retiming.html"
@@ -100,16 +100,16 @@ Try this in place. Prefer full-screen? Open the [lab page](../labs/rsfq-dff-and-
   loading="lazy"
 ></iframe>
 
-## Retiming and path balancing â€” why DFFs dominate layouts
+## Retiming and path balancing — why DFFs dominate layouts
 
 Because meaning is tied to **epochs**, two inputs to a gate must present related pulses in the **same** window. If one path is shorter in clocked-stage count, insert **padding DFFs** on the short path:
 
 ```text
 Unbalanced:                         Balanced:
 
-  A --1 stage--------â”                A --1--[DFF]--[DFF]--â”
-                     +â†’ GATE                              +â†’ GATE
-  B --3 stages-------â”˜                B --3 stages---------â”˜
+  A --1 stage--------┐                A --1--[DFF]--[DFF]--┐
+                     +→ GATE                              +→ GATE
+  B --3 stages-------┘                B --3 stages---------┘
 ```
 
 Those padding DFFs may compute **no new Boolean function**. They only wait. That cost is [path-balancing overhead](path-balancing-overhead.md).
@@ -135,7 +135,7 @@ k \approx n_{\mathrm{long}} - n_{\mathrm{short}}.
 Some cells offer **non-destructive readout (NDRO)**: reading a copy without clearing, or other register semantics. Details are library-specific. For the core walk:
 
 - default mental model = **DFF with destructive clocked escape**,
-- when a paper says NDRO / shift register / TFF, map it back to â€œloop storage + pulse pins,â€ then read the private explainer for that cell.
+- when a paper says NDRO / shift register / TFF, map it back to “loop storage + pulse pins,” then read the private explainer for that cell.
 
 ## CMOS contrast
 
@@ -149,7 +149,7 @@ Some cells offer **non-destructive readout (NDRO)**: reading a copy without clea
 | Fanout of Q | Capacitive | Downstream JTLs / splitters for the **output pulse** |
 | Clock pin cost | One net per FF bank often | Each DFF is a clock-tree leaf consumer |
 
-## Worked example 1 â€” Truth table of one clocked read
+## Worked example 1 — Truth table of one clocked read
 
 | Before clock | Data arrived this epoch? | After data | Clock | Output pulse? | After clock |
 |--------------|--------------------------|------------|-------|---------------|-------------|
@@ -157,9 +157,9 @@ Some cells offer **non-destructive readout (NDRO)**: reading a copy without clea
 | empty | yes | full | yes | yes | empty |
 | full | (already full) | full | yes | yes | empty |
 
-Interpret output bits across epochs as the released stream. Illegal double-write into a full loop is a **hazard** â€” treat as forbidden unless a datasheet says otherwise.
+Interpret output bits across epochs as the released stream. Illegal double-write into a full loop is a **hazard** — treat as forbidden unless a datasheet says otherwise.
 
-## Worked example 2 â€” Balance by two DFFs
+## Worked example 2 — Balance by two DFFs
 
 Left input to a gate already has three clocked stages; right input has one. Insert **two** DFFs on the right, clocked in the same scheme, so both present data in epoch 3 (counting from a shared reference).
 
@@ -170,7 +170,7 @@ Resource sketch:
 - bias current grows,
 - latency of the short path increases by two epochs (which is the point).
 
-## Worked example 3 â€” Hold race without a DFF pad
+## Worked example 3 — Hold race without a DFF pad
 
 In concurrent-flow clocking, a combinational-looking short path might race into the next cell before that cell is ready. Fixes include:
 
@@ -178,13 +178,13 @@ In concurrent-flow clocking, a combinational-looking short path might race into 
 - an extra **DFF** stage (stronger: moves the token into the next epoch intentionally),
 - clock-tree adjustments.
 
-Public rule: **early pulse â†’ delay or retiming storage; late pulse â†’ shorten path or relax clock / reduce stages**.
+Public rule: **early pulse → delay or retiming storage; late pulse → shorten path or relax clock / reduce stages**.
 
-## Worked example 4 â€” Destructive readout in a shift register
+## Worked example 4 — Destructive readout in a shift register
 
-An $N$-bit RSFQ shift register is often a chain of DFFs: each clock advances stored fluxons one seat. After readout, the previous seat is empty unless a new data pulse wrote it. That destructive rhythm is why â€œregister file like CMOS static Qâ€ is the wrong picture for the default DFF.
+An $N$-bit RSFQ shift register is often a chain of DFFs: each clock advances stored fluxons one seat. After readout, the previous seat is empty unless a new data pulse wrote it. That destructive rhythm is why “register file like CMOS static Q” is the wrong picture for the default DFF.
 
-## Worked example 5 â€” Setup/hold language at the cell
+## Worked example 5 — Setup/hold language at the cell
 
 STA asks whether the data pulse falls in a legal window relative to the clock pulse at **this** DFF ([STA card](sfq-static-timing-analysis.md)). Same English as CMOS; different signals (pulses, not levels). Clock-flow style changes which violations dominate ([concurrent / counter-flow](concurrent-and-counter-flow-clocking.md)).
 
@@ -194,20 +194,20 @@ Public window cartoon:
 t_{\mathrm{data}} \;\text{vs}\; t_{\mathrm{clk}} \pm \text{(setup-/hold-like margins)}.
 \]
 
-## Worked example 6 â€” Cascaded overhead
+## Worked example 6 — Cascaded overhead
 
-A block needs $k=6$ padding DFFs for one merge, then those padsâ€™ clocks deepen the splitter tree, then another merge downstream needs recounting depths **including** the pads ([path balancing](path-balancing-overhead.md)). Public habit: treat DFF insertion as a **global** balancing/timing edit, not a local sticker.
+A block needs $k=6$ padding DFFs for one merge, then those pads’ clocks deepen the splitter tree, then another merge downstream needs recounting depths **including** the pads ([path balancing](path-balancing-overhead.md)). Public habit: treat DFF insertion as a **global** balancing/timing edit, not a local sticker.
 
 ## Common misconceptions
 
-- **â€œDFF output holds a CMOS-like high voltage.â€** Holding is loop flux; the pin emits a pulse at readout.
-- **â€œPadding DFFs are wasted area.â€** They are often mandatory for epoch alignment.
-- **â€œOne DFF per chip like a tiny FSM register.â€** Pipelines use DFFs everywhere.
-- **â€œClock can be omitted if data pulses are timed by hand.â€** Some research cells are asynchronous; mainstream RSFQ teaching assumes clocked storage/readout.
-- **â€œNDRO is required to understand RSFQ.â€** Useful later; DFF destructive readout is enough for the core walk.
-- **â€œJTLs replace DFFs for all balancing.â€** Fine delay â‰  missing epochs.
-- **â€œDFF removes the need for splitter clocks.â€** Every padding DFF still needs a clock leaf.
-- **â€œFunctional sim of one vector proves DFF timing.â€** Window legality is a static/STA concern too.
+- **“DFF output holds a CMOS-like high voltage.”** Holding is loop flux; the pin emits a pulse at readout.
+- **“Padding DFFs are wasted area.”** They are often mandatory for epoch alignment.
+- **“One DFF per chip like a tiny FSM register.”** Pipelines use DFFs everywhere.
+- **“Clock can be omitted if data pulses are timed by hand.”** Some research cells are asynchronous; mainstream RSFQ teaching assumes clocked storage/readout.
+- **“NDRO is required to understand RSFQ.”** Useful later; DFF destructive readout is enough for the core walk.
+- **“JTLs replace DFFs for all balancing.”** Fine delay ≠ missing epochs.
+- **“DFF removes the need for splitter clocks.”** Every padding DFF still needs a clock leaf.
+- **“Functional sim of one vector proves DFF timing.”** Window legality is a static/STA concern too.
 
 ## Bridge to SFQ circuits
 
@@ -220,7 +220,7 @@ A block needs $k=6$ padding DFFs for one merge, then those padsâ€™ clocks d
 
 ## What stays private
 
-Full SPICE schematics, measured margins vs bias, and named cell variants in a foundry kit â†’ private / project netlists â€” not this concept card.
+Full SPICE schematics, measured margins vs bias, and named cell variants in a foundry kit → private / project netlists — not this concept card.
 
 ## Check yourself
 
@@ -245,13 +245,13 @@ To retiming / path-balance pulses into the same clock epoch.
 <details markdown="1">
 <summary markdown="span">4. Path A has 1 stage, path B has 4 into one gate. How many padding DFFs on A?</summary>
 
-About $3$ (imbalance of $k$ stages â‡’ roughly $k$ pads on the short path).
+About $3$ (imbalance of $k$ stages ⇒ roughly $k$ pads on the short path).
 </details>
 
 <details markdown="1">
-<summary markdown="span">5. While a DFF holds a â€œ1â€, is the output pin necessarily a steady high voltage?</summary>
+<summary markdown="span">5. While a DFF holds a “1”, is the output pin necessarily a steady high voltage?</summary>
 
-No â€” the â€œ1â€ is internal loop flux; the output speaks as a pulse at clocked readout.
+No — the “1” is internal loop flux; the output speaks as a pulse at clocked readout.
 </details>
 
 <details markdown="1">
@@ -263,7 +263,7 @@ Same words, different signals: data SFQ pulses must fall in legal windows relati
 <details markdown="1">
 <summary markdown="span">7. Name one vocabulary cousin of the DFF you might see in papers.</summary>
 
-NDRO (non-destructive readout), TFF, or shift-register cells â€” still â€œloop storage + pulse pinsâ€ at heart.
+NDRO (non-destructive readout), TFF, or shift-register cells — still “loop storage + pulse pins” at heart.
 </details>
 
 <details markdown="1">
@@ -281,7 +281,7 @@ When you need fine delay inside/near an epoch (e.g. hold trim), not a full missi
 <details markdown="1">
 <summary markdown="span">10. Why does inserting pads force a clock-tree rethink?</summary>
 
-Each new DFF is another clock leaf â€” fanout, skew, and bias all grow with pads.
+Each new DFF is another clock leaf — fanout, skew, and bias all grow with pads.
 </details>
 
 ## Next steps

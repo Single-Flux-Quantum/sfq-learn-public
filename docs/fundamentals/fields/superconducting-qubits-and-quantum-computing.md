@@ -1,15 +1,15 @@
-﻿# Field: Superconducting Qubits & Quantum Computing
+# Field: Superconducting Qubits & Quantum Computing
 
-**Prereqs:** [Digital SFQ overview](digital-sfq-overview.md) Â· [Field map hub](README.md)  
-**Next:** [QC hardware platforms](quantum-computing-hardware-platforms.md) Â· [SQUID sensing](squid-sensing-magnetometry.md)
+**Prereqs:** [Digital SFQ overview](digital-sfq-overview.md) · [Field map hub](README.md)  
+**Next:** [QC hardware platforms](quantum-computing-hardware-platforms.md) · [SQUID sensing](squid-sensing-magnetometry.md)
 
 **Learning goals.** After this page you should be able to (1) say what a **qubit** is for at a teaching level, (2) sketch how **superposition, entanglement, and quantum interference** can enable *algorithmic* speedups for some problems, (3) place **superconducting qubits** as one hardware platform inside **quantum computing**, (4) explain why this is a **different branch** from classical SFQ digital logic (**canonical contrast**), and (5) describe how SFQ or cryo-CMOS may appear as **classical helpers** without becoming the qubit.
 
-**In one minute.** QC algorithms may gain from superposition + entanglement + interference â€” that is *not* how classical SFQ gets picosecond speed. SFQ uses Josephson devices for fast **classical** pulses; it may help control a quantum fridge, but it does not run Grover/Shor-style quantum steps. Platforms: [map](quantum-computing-hardware-platforms.md).
+**In one minute.** QC algorithms may gain from superposition + entanglement + interference — that is *not* how classical SFQ gets picosecond speed. SFQ uses Josephson devices for fast **classical** pulses; it may help control a quantum fridge, but it does not run Grover/Shor-style quantum steps. Platforms: [map](quantum-computing-hardware-platforms.md).
 
 ## Why this field exists
 
-**Quantum computing** aims to process information in ways that use quantum states â€” superposition, entanglement, and carefully engineered gate operations â€” to attack certain computational problems differently from classical bits.
+**Quantum computing** aims to process information in ways that use quantum states — superposition, entanglement, and carefully engineered gate operations — to attack certain computational problems differently from classical bits.
 
 A **qubit** is the basic quantum information unit (the quantum analogue of a bit, but with a richer state space). Many physical platforms can host qubits. **Superconducting qubits** are circuits built from Josephson junctions and superconducting resonators/wires that encode quantum information in engineered energy levels.
 
@@ -19,13 +19,13 @@ This field shares cryogenics and Josephson vocabulary with classical SFQ, which 
 |---------------|------------------------|
 | Reliable classical bits | Fragile quantum states |
 | Pulse timing / BER | Coherence / gate fidelity |
-| Often ~4â€¯K digital Nb demos | Often millikelvin device stages |
+| Often ~4 K digital Nb demos | Often millikelvin device stages |
 
 ## Analogy: a quiet music hall vs a click telegraph
 
 Classical SFQ is like a **telegraph**: loud, timed clicks that mean 0/1 if they arrive in the right window.
 
-A superconducting qubit processor is more like a **music hall**: you carefully prepare delicate tones (quantum states). Any extra noise, heat, or clumsy cable can ruin the performance. You may still station telegraph operators (classical SFQ / cryo-CMOS) in side rooms to send instructions and write down results â€” but the concert is not the telegraph.
+A superconducting qubit processor is more like a **music hall**: you carefully prepare delicate tones (quantum states). Any extra noise, heat, or clumsy cable can ruin the performance. You may still station telegraph operators (classical SFQ / cryo-CMOS) in side rooms to send instructions and write down results — but the concert is not the telegraph.
 
 ```text
   mK stage:   qubit chip (the "music")
@@ -33,13 +33,13 @@ A superconducting qubit processor is more like a **music hall**: you carefully p
   300 K:      control electronics, servers
 ```
 
-## Picture 1 â€” Quantum computing âŠƒ superconducting qubits
+## Picture 1 — Quantum computing ⊃ superconducting qubits
 
 ```mermaid
 flowchart TD
   QC[Quantum computing as a field]
   QC --> SC[Superconducting qubits]
-  QC --> Other[Other platforms: ions, photonics, atoms, dots, topologicalâ€¦]
+  QC --> Other[Other platforms: ions, photonics, atoms, dots, topological…]
   SC --> Ctrl[Classical control & readout stack]
   Ctrl --> SFQh[Possible SFQ helpers]
   Ctrl --> CMOSh[Possible cryo-CMOS helpers]
@@ -49,49 +49,49 @@ flowchart TD
 
 **Teaching sentence:** quantum computing is the discipline; superconducting qubits are one hardware choice; SFQ is usually classical electronics that might support that hardware.
 
-**Other platforms (ions, photonics, neutral atoms, quantum dots, topological):** see the comparison map â†’ [Quantum computing hardware platforms](quantum-computing-hardware-platforms.md).
+**Other platforms (ions, photonics, neutral atoms, quantum dots, topological):** see the comparison map → [Quantum computing hardware platforms](quantum-computing-hardware-platforms.md).
 
 ## How quantum mechanics can accelerate *some* computations
 
-Classical digital computers (including **classical SFQ**) evaluate one definite bit-string path at a time (or many in parallel with more hardware). **Quantum computing**, when it helps, usually does *not* mean â€œthe transistors vibrate faster.â€ It means the **information model** can use three core quantum properties so that, for **certain** problems, the number of useful steps scales better than the best known classical approach.
+Classical digital computers (including **classical SFQ**) evaluate one definite bit-string path at a time (or many in parallel with more hardware). **Quantum computing**, when it helps, usually does *not* mean “the transistors vibrate faster.” It means the **information model** can use three core quantum properties so that, for **certain** problems, the number of useful steps scales better than the best known classical approach.
 
-Teaching caution: these properties do **not** make every program faster. They enable **algorithmic** advantages on selected tasks (search, factoring, simulation, sampling, â€¦ â€” names you will meet later if you study QC algorithms). Hardware must stay coherent long enough for the algorithm to finish.
+Teaching caution: these properties do **not** make every program faster. They enable **algorithmic** advantages on selected tasks (search, factoring, simulation, sampling, … — names you will meet later if you study QC algorithms). Hardware must stay coherent long enough for the algorithm to finish.
 
 ### 1. Superposition
 
 A classical bit is 0 **or** 1. A qubit can be prepared in a **superposition**: a combination of $\lvert 0\rangle$ and $\lvert 1\rangle$ until you measure it.
 
-**Speed intuition (careful):** with $n$ qubits you can represent a state that involves $2^n$ amplitudes. Algorithms can arrange gates so many candidate answers are â€œpresentâ€ in that state at once â€” not by printing $2^n$ classical copies, but by evolving one quantum state. Measurement still yields one outcome; clever design makes the **useful** outcomes more likely.
+**Speed intuition (careful):** with $n$ qubits you can represent a state that involves $2^n$ amplitudes. Algorithms can arrange gates so many candidate answers are “present” in that state at once — not by printing $2^n$ classical copies, but by evolving one quantum state. Measurement still yields one outcome; clever design makes the **useful** outcomes more likely.
 
-**Not SFQâ€™s speed story:** an RSFQ pulse is a classical event (present/absent in a window), not a superposition bit.
+**Not SFQ’s speed story:** an RSFQ pulse is a classical event (present/absent in a window), not a superposition bit.
 
 ### 2. Entanglement
 
 Entanglement correlates qubits so the joint state is not just a product of independent single-qubit states. Operations on one subsystem can be meaningfully tied to another.
 
-**Speed intuition (careful):** many quantum algorithms need entanglement to create the structured correlations that classical bit-strings cannot cheaply mimic. It is a **resource** for multi-qubit computation, not a slogan for â€œinstant communication of usable answers.â€
+**Speed intuition (careful):** many quantum algorithms need entanglement to create the structured correlations that classical bit-strings cannot cheaply mimic. It is a **resource** for multi-qubit computation, not a slogan for “instant communication of usable answers.”
 
-**Not SFQâ€™s speed story:** classical SFQ links gates with timed pulses and shared clocks; that is classical correlation of events, not entanglement.
+**Not SFQ’s speed story:** classical SFQ links gates with timed pulses and shared clocks; that is classical correlation of events, not entanglement.
 
 ### 3. Quantum interference
 
-Amplitudes can add or cancel. Algorithms steer interference so paths leading to **wrong** answers cancel and paths leading to **right** answers reinforce â€” then measurement is more likely to report a useful result.
+Amplitudes can add or cancel. Algorithms steer interference so paths leading to **wrong** answers cancel and paths leading to **right** answers reinforce — then measurement is more likely to report a useful result.
 
-**Speed intuition (careful):** interference is how â€œtrying many possibilities in superpositionâ€ becomes a **biased** sample toward the answer, instead of a uniform random guess. Without interference engineering, superposition alone does not hand you the solution.
+**Speed intuition (careful):** interference is how “trying many possibilities in superposition” becomes a **biased** sample toward the answer, instead of a uniform random guess. Without interference engineering, superposition alone does not hand you the solution.
 
-**Not SFQâ€™s speed story:** SFQ â€œinterferenceâ€ in SQUID sensors is a different, measurement-oriented use of superconducting loops â€” not Grover-style algorithmic interference.
+**Not SFQ’s speed story:** SFQ “interference” in SQUID sensors is a different, measurement-oriented use of superconducting loops — not Grover-style algorithmic interference.
 
 ```text
   Algorithmic QC speedup (this section)
-    superposition  â†’  rich state over many basis strings
-    entanglement   â†’  non-classical multi-qubit correlations
-    interference   â†’  boost good amplitudes, cancel bad ones
-         â†“
+    superposition  →  rich state over many basis strings
+    entanglement   →  non-classical multi-qubit correlations
+    interference   →  boost good amplitudes, cancel bad ones
+         ↓
     fewer *algorithmic* steps for some problems (in theory / suitable workloads)
 
   Classical SFQ speed (this curriculum's deep path)
-    Josephson switching + Î¦0 pulses + dense pipelines
-         â†“
+    Josephson switching + Φ0 pulses + dense pipelines
+         ↓
     finer *device/timing* texture (picoseconds / high internal clock ambition)
 ```
 
@@ -100,13 +100,13 @@ Amplitudes can add or cancel. Algorithms steer interference so paths leading to 
 | Topic | Relation to the three properties |
 |-------|----------------------------------|
 | Classical SFQ digital path | **Does not use** superposition / entanglement / interference for logic speedup. Speed = fast Josephson **classical** switching + pulse pipelines ([why page](../why-superconducting-electronics.md)). |
-| Shared toolbox | Josephson junctions, cryogenics, packaging â€” same *hardware neighborhood* as many superconducting qubits. |
-| Co-location | SFQ (or cryo-CMOS) may sit in the fridge as a **classical helper** for control, readout, or serialization â€” supporting a quantum stack that *does* use the three properties. |
-| Vocabulary trap | â€œFlux quantumâ€ and â€œquantumâ€ in SFQ names refer to **device physics tokens**, not â€œwe run quantum algorithms.â€ |
+| Shared toolbox | Josephson junctions, cryogenics, packaging — same *hardware neighborhood* as many superconducting qubits. |
+| Co-location | SFQ (or cryo-CMOS) may sit in the fridge as a **classical helper** for control, readout, or serialization — supporting a quantum stack that *does* use the three properties. |
+| Vocabulary trap | “Flux quantum” and “quantum” in SFQ names refer to **device physics tokens**, not “we run quantum algorithms.” |
 
 **One sentence for lab talks:** *Our SFQ curriculum teaches classical cryogenic digital electronics that can neighbor quantum processors; algorithmic quantum speedup lives on the qubit/algorithm side, powered by superposition, entanglement, and interference.*
 
-## Picture 2 â€” What â€œgoodâ€ means here
+## Picture 2 — What “good” means here
 
 ```text
   Metric people obsess over     Rough meaning (teaching)
@@ -126,26 +126,26 @@ Many teaching superconducting qubits use Josephson junctions to create a **nonli
 
 You do **not** need Hamiltonian homework to finish orientation. You need:
 
-1. Qubit â‰  classical bit.  
-2. Superconducting qubit â‰  RSFQ gate.  
+1. Qubit ≠ classical bit.  
+2. Superconducting qubit ≠ RSFQ gate.  
 3. Same fridge can host both a quantum chip and classical helpers.
 
-## Worked example 1 â€” Title triage
+## Worked example 1 — Title triage
 
 | Title fragment | Likely emphasis |
 |----------------|-----------------|
-| â€œtransmon $T_1$ improvementâ€ | Qubit device physics |
-| â€œSFQ pulse generator for qubit controlâ€ | Classical SFQ helper for QC |
-| â€œ20â€¯GHz RSFQ microprocessorâ€ | Classical digital SFQ (often no qubits) |
-| â€œcryo-CMOS qubit controller at 4â€¯Kâ€ | Hybrid classical control for QC |
+| “transmon $T_1$ improvement” | Qubit device physics |
+| “SFQ pulse generator for qubit control” | Classical SFQ helper for QC |
+| “20 GHz RSFQ microprocessor” | Classical digital SFQ (often no qubits) |
+| “cryo-CMOS qubit controller at 4 K” | Hybrid classical control for QC |
 
-## Worked example 2 â€” â€œIs SFQ a type of quantum computer?â€
+## Worked example 2 — “Is SFQ a type of quantum computer?”
 
 **Short answer:** **No.**
 
-**Longer answer:** SFQ processors discussed in classical literature are **classical**. Some research explores quantum information ideas with Josephson circuits, but the mainstream RSFQ/ERSFQ/AQFP teaching path in this curriculum is classical digital. When SFQ appears in quantum labs, ask whether the paperâ€™s hero is the **qubit** or the **classical interface**.
+**Longer answer:** SFQ processors discussed in classical literature are **classical**. Some research explores quantum information ideas with Josephson circuits, but the mainstream RSFQ/ERSFQ/AQFP teaching path in this curriculum is classical digital. When SFQ appears in quantum labs, ask whether the paper’s hero is the **qubit** or the **classical interface**.
 
-## Comparison table â€” three layers people blur
+## Comparison table — three layers people blur
 
 | Layer | Question it answers |
 |-------|---------------------|
@@ -155,29 +155,29 @@ You do **not** need Hamiltonian homework to finish orientation. You need:
 
 ## Common misconceptions
 
-1. **â€œJosephson junction â‡’ qubit.â€**  
+1. **“Josephson junction ⇒ qubit.”**  
    Junctions also make classical SFQ gates, SQUIDs, and standards.
 
-2. **â€œSFQ is quantum because flux is quantized.â€**  
-   Flux quantization appears in classical SFQ too; â€œquantum computingâ€ means quantum *information processing* using superposition / entanglement / interference.
+2. **“SFQ is quantum because flux is quantized.”**  
+   Flux quantization appears in classical SFQ too; “quantum computing” means quantum *information processing* using superposition / entanglement / interference.
 
-3. **â€œSFQ is fast because of superposition and entanglement.â€**  
-   False for classical SFQ. Device-fast pulses â‰  algorithmic quantum speedup. See [How quantum mechanics can accelerate some computations](#how-quantum-mechanics-can-accelerate-some-computations).
+3. **“SFQ is fast because of superposition and entanglement.”**  
+   False for classical SFQ. Device-fast pulses ≠ algorithmic quantum speedup. See [How quantum mechanics can accelerate some computations](#how-quantum-mechanics-can-accelerate-some-computations).
 
-4. **â€œAll superconducting electronics is millikelvin.â€**  
-   Classical Nb SFQ often lives near ~4â€¯K; qubits often need colder stages.
+4. **“All superconducting electronics is millikelvin.”**  
+   Classical Nb SFQ often lives near ~4 K; qubits often need colder stages.
 
-5. **â€œIf I learn SFQ, I have learned quantum computing.â€**  
-   You learned a possible classical neighbor skill â€” not qubit physics or QC algorithms.
+5. **“If I learn SFQ, I have learned quantum computing.”**  
+   You learned a possible classical neighbor skill — not qubit physics or QC algorithms.
 
-6. **â€œQubit control must be SFQ.â€**  
+6. **“Qubit control must be SFQ.”**  
    Many stacks use room-temp electronics + cryo-CMOS; SFQ is one option among helpers.
 
-7. **â€œQuantum computing replaced classical SFQ historically.â€**  
+7. **“Quantum computing replaced classical SFQ historically.”**  
    Classical SFQ is older as a digital program; QC is a major new demand signal.
 
-8. **â€œSuperposition alone guarantees a faster answer.â€**  
-   Without interference (and usually entanglement in multi-qubit algorithms), you do not get a structured speedup â€” measurement can look like a random guess.
+8. **“Superposition alone guarantees a faster answer.”**  
+   Without interference (and usually entanglement in multi-qubit algorithms), you do not get a structured speedup — measurement can look like a random guess.
 
 ## CMOS contrast
 
@@ -187,7 +187,7 @@ You do **not** need Hamiltonian homework to finish orientation. You need:
 | Clock domains and setup/hold | Microwave control pulses and decoherence |
 | Bring-up on a bench | Dilution fridge schedules and wiring budgets |
 
-Classical SFQ sits between these worlds: more â€œdigitalâ€ than qubits, more â€œcryo-specializedâ€ than room-temp CMOS.
+Classical SFQ sits between these worlds: more “digital” than qubits, more “cryo-specialized” than room-temp CMOS.
 
 ## Bridge to SFQ circuits
 
@@ -198,12 +198,12 @@ This curriculum will **not** turn into a full quantum computing course. It will:
 
 **Keep the contrast handy while learning classical SFQ:**
 
-| If you are readingâ€¦ | Re-check this page whenâ€¦ |
+| If you are reading… | Re-check this page when… |
 |---------------------|--------------------------|
-| [CMOS vs SFQ](../../concepts/cmos-vs-sfq.md) Â· [lab](../../labs/cmos-vs-sfq.html) | Someone equates â€œquantumâ€ with â€œcold Josephsonâ€ |
-| [RSFQ overview](../../concepts/rsfq-logic.md) Â· [lab](../../labs/rsfq-logic.html) | A talk mixes ALU GHz with Grover/Shor vocabulary |
-| [Cryogenics](../cryogenics-for-electronics.md) | ~4â€¯K Nb demos are confused with mK qubit stages |
-| [Pulse â†’ volt I/O](../../bridge/sfq-pulse-to-volt-level.md) | Control/readout wiring is mistaken for â€œthe quantum algorithmâ€ |
+| [CMOS vs SFQ](../../concepts/cmos-vs-sfq.md) · [lab](../../labs/cmos-vs-sfq.html) | Someone equates “quantum” with “cold Josephson” |
+| [RSFQ overview](../../concepts/rsfq-logic.md) · [lab](../../labs/rsfq-logic.html) | A talk mixes ALU GHz with Grover/Shor vocabulary |
+| [Cryogenics](../cryogenics-for-electronics.md) | ~4 K Nb demos are confused with mK qubit stages |
+| [Pulse → volt I/O](../../bridge/sfq-pulse-to-volt-level.md) | Control/readout wiring is mistaken for “the quantum algorithm” |
 
 If your goal is qubit device physics, use this page as orientation, then seek a dedicated QC curriculum. If your goal is SFQ, continue the field survey and return to [logic families](../sfq-among-logic-families.md).
 
@@ -224,13 +224,13 @@ No. Qubits are quantum hardware; RSFQ is a classical pulse-logic family.
 <details markdown="1">
 <summary markdown="span">3. Why do qubit setups emphasize millikelvin stages?</summary>
 
-To reduce thermal noise and operate the quantum devices as designed â€” colder than typical ~4â€¯K Nb SFQ digital demos.
+To reduce thermal noise and operate the quantum devices as designed — colder than typical ~4 K Nb SFQ digital demos.
 </details>
 
 <details markdown="1">
 <summary markdown="span">4. How can classical SFQ still appear in a quantum lab?</summary>
 
-As a helper for control, readout, serialization, or reducing cable heat â€” optimizing classical metrics beside the qubit chip.
+As a helper for control, readout, serialization, or reducing cable heat — optimizing classical metrics beside the qubit chip.
 </details>
 
 <details markdown="1">
@@ -242,7 +242,7 @@ Superposition, entanglement, and quantum interference.
 <details markdown="1">
 <summary markdown="span">6. Does classical SFQ use those three for its GHz/picosecond story?</summary>
 
-No â€” SFQ speed is Josephson classical switching and pulse pipelines. The three properties belong to quantum *algorithms* / qubit processors.
+No — SFQ speed is Josephson classical switching and pulse pipelines. The three properties belong to quantum *algorithms* / qubit processors.
 </details>
 
 <details markdown="1">

@@ -1,9 +1,9 @@
-﻿# Field: Josephson Metrology & Voltage Standards
+# Field: Josephson Metrology & Voltage Standards
 
-**Prereqs:** [SQUID sensing](squid-sensing-magnetometry.md) Â· [Field map hub](README.md)  
+**Prereqs:** [SQUID sensing](squid-sensing-magnetometry.md) · [Field map hub](README.md)  
 **Next:** [Photon detectors](superconducting-photon-detectors.md)
 
-**In one minute.** Metrology uses Josephson physics to realize **accurate volts** (and precision waveforms). Same $\Phi_0$ as SFQ pulses â€” different product. â€œQuantum voltage standardâ€ â‰  quantum computer.
+**In one minute.** Metrology uses Josephson physics to realize **accurate volts** (and precision waveforms). Same $\Phi_0$ as SFQ pulses — different product. “Quantum voltage standard” ≠ quantum computer.
 
 ## Job
 
@@ -11,7 +11,7 @@ Josephson junctions link voltage to frequency through the flux quantum (teaching
 
 | | Metrology | Digital SFQ |
 |--|-----------|-------------|
-| $\Phi_0$ role | Voltâ€“Hz factor | Pulse/token size |
+| $\Phi_0$ role | Volt–Hz factor | Pulse/token size |
 | Hero output | Accurate V / spectra | Bits / timing |
 
 **Analogy palette:** tuning fork for volts vs telegraph clicks for bits.
@@ -31,15 +31,15 @@ Accurate, reproducible voltage (and related AC waveforms).
 <details markdown="1">
 <summary markdown="span">2. Is JAWS an SFQ CPU?</summary>
 
-No â€” precision waveform / standards tooling.
+No — precision waveform / standards tooling.
 </details>
 
 <details markdown="1">
 <summary markdown="span">3. Shared constant with RSFQ pulses?</summary>
 
-$\Phi_0$ â€” different engineered use.
+$\Phi_0$ — different engineered use.
 </details>
 
 ## Next steps
 
-[Photon detectors](superconducting-photon-detectors.md) Â· [Hub](README.md)
+[Photon detectors](superconducting-photon-detectors.md) · [Hub](README.md)
