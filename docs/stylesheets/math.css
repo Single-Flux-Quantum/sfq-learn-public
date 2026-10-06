@@ -1,4 +1,4 @@
-/* Equation readability for SFQ Learn (MathJax + arithmatex) */
+/* Equation readability for SFQ Learn (KaTeX + arithmatex) */
 
 .md-typeset .arithmatex {
   font-size: 1.05em;
@@ -17,24 +17,15 @@
   text-align: center;
 }
 
-.md-typeset div.arithmatex mjx-container {
-  margin: 0 !important;
-}
-
-/* Inline math: keep baseline readable without crowding prose */
 .md-typeset span.arithmatex {
   padding: 0 0.05em;
 }
 
-.md-typeset span.arithmatex mjx-container {
-  margin: 0 0.05em !important;
-}
-
-/* Prefer slightly larger MathJax CHTML glyphs in article body */
-.md-typeset mjx-container {
+.md-typeset .katex {
   color: var(--md-typeset-color);
+  font-size: 1.05em;
 }
 
-.md-typeset mjx-container[jax="CHTML"][display="true"] {
-  margin: 0.2em 0 !important;
+.md-typeset div.arithmatex .katex {
+  font-size: 1.12em;
 }

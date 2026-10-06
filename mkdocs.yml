@@ -27,11 +27,11 @@ markdown_extensions:
   - toc:
       permalink: true
 extra_css:
+  - stylesheets/vendor/katex/katex.min.css
   - stylesheets/math.css
 extra_javascript:
-  - javascripts/mathjax.js
-  # Self-hosted (same-origin fonts) — avoids blank equations when jsDelivr is blocked/slow
-  - javascripts/vendor/mathjax/tex-chtml.js
+  - javascripts/vendor/katex/katex.min.js
+  - javascripts/katex.js
 nav:
   - Home: index.md
   - Glossary: glossary.md
@@ -74,6 +74,7 @@ nav:
       - JTL hop: labs/jtl-interconnects.html
       - Splitter & confluence: labs/splitter-and-confluence.html
       - RSFQ DFF: labs/rsfq-dff-and-retiming.html
+      - Clock flow styles: labs/concurrent-and-counter-flow-clocking.html
   - Concepts:
       - CMOS vs SFQ: concepts/cmos-vs-sfq.md
       - RSFQ Overview: concepts/rsfq-logic.md
