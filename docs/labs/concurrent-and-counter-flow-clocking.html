@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Concurrent / Counter-Flow Clocking Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+      --data: #4051b5;
+      --clk: #7b1fa2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .seg {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      overflow: hidden;
+    }
+
+    .seg button {
+      border: none;
+      background: var(--code-bg);
+      color: var(--md-primary);
+      padding: 0.5rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .seg button.active {
+      background: #4051b51a;
+      font-weight: 700;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .field input[type="range"] {
+      width: 140px;
+      accent-color: var(--md-primary);
+    }
+
+    .field .val {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-left: 0.3rem;
+    }
+
+    button.primary {
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      background: var(--md-primary);
+      color: #fff;
+    }
+
+    button.primary:hover { background: var(--md-primary-light); }
+    button.primary:disabled { opacity: 0.55; cursor: wait; }
+
+    button.ghost {
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      background: transparent;
+      color: var(--md-primary);
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    button.ghost:hover { background: var(--code-bg); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.55rem 0.4rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .stat-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.4rem 0.7rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 220px;
+      background: #fff;
+    }
+
+    .slogan {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin: 0 0 0.65rem;
+      padding: 0.5rem 0.65rem;
+      background: var(--code-bg);
+      border-radius: 0.25rem;
+      border: 1px solid var(--border);
+    }
+
+    .slogan strong { color: var(--text); }
+
+    .hint {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Concurrent / Counter-Flow Clocking Lab</h1>
+    <p class="lede">
+      Same 3-stage pipeline — only the <strong>clock direction vs data</strong> changes.
+      Style relocates timing pain; it does <strong>not</strong> erase hold/setup physics or path-balancing pads.
+    </p>
+
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Clock style">
+        <button type="button" class="active" data-style="concurrent" id="btnConc">Concurrent-flow</button>
+        <button type="button" data-style="counter" id="btnCount">Counter-flow</button>
+      </div>
+      <div class="field">
+        <label for="dataSpeed">Data path speed</label>
+        <input type="range" id="dataSpeed" min="0" max="2" step="1" value="1">
+        <span class="val" id="speedLabel">nominal</span>
+      </div>
+      <button type="button" class="primary" id="runBtn">Launch wave</button>
+      <button type="button" class="ghost" id="resetBtn">Reset</button>
+    </div>
+
+    <p class="slogan" id="slogan">
+      <strong>Concurrent-flow:</strong> clock travels with data. Short/fast data paths often raise <em>hold</em> risk.
+    </p>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Style</div>
+        <div class="stat-value" id="statStyle">concurrent</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Hold pressure</div>
+        <div class="stat-value" id="statHold">medium</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Setup pressure</div>
+        <div class="stat-value" id="statSetup">medium</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Race flag</div>
+        <div class="stat-value" id="statRace">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Pads still needed?</div>
+        <div class="stat-value ok">YES</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">DATA → G1 → G2 → G3 · CLK arrows show flow style · dashed = local clock leaf</div>
+      <canvas id="clkCanvas" width="880" height="220"></canvas>
+    </div>
+
+    <p class="hint">
+      <strong>Try:</strong> concurrent + “too fast” data → hold race warning.
+      Switch to counter-flow: clock comes from the right; pressure moves (cartoon).
+      Reconvergent stage-count mismatch still needs DFF pads either way.
+    </p>
+  </div>
+
+  <script>
+    const STAGES = 3;
+    let style = "concurrent"; // concurrent | counter
+    let speed = 1; // 0 fast, 1 nominal, 2 slow
+    let animating = false;
+    let t = 0; // 0..1 animation
+    let race = null; // null | 'HOLD' | 'SETUP' | 'OK'
+
+    const runBtn = document.getElementById("runBtn");
+    const dataSpeed = document.getElementById("dataSpeed");
+    const speedLabel = document.getElementById("speedLabel");
+    const canvas = document.getElementById("clkCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const speedNames = ["too fast", "nominal", "too slow"];
+
+    function setStyle(s) {
+      style = s;
+      document.getElementById("btnConc").classList.toggle("active", s === "concurrent");
+      document.getElementById("btnCount").classList.toggle("active", s === "counter");
+      document.getElementById("statStyle").textContent = s;
+      document.getElementById("slogan").innerHTML =
+        s === "concurrent"
+          ? "<strong>Concurrent-flow:</strong> clock travels <em>with</em> data. Short/fast data paths often raise <em>hold</em> risk."
+          : "<strong>Counter-flow:</strong> clock travels <em>against</em> data. Timing pain moves; reconvergence pads remain.";
+      updatePressure();
+      draw(1);
+    }
+
+    function updatePressure() {
+      speed = Number(dataSpeed.value);
+      speedLabel.textContent = speedNames[speed];
+
+      let hold, setup, holdClass, setupClass;
+      if (style === "concurrent") {
+        if (speed === 0) {
+          hold = "HIGH"; holdClass = "bad";
+          setup = "low"; setupClass = "ok";
+        } else if (speed === 1) {
+          hold = "medium"; holdClass = "warn";
+          setup = "medium"; setupClass = "warn";
+        } else {
+          hold = "low"; holdClass = "ok";
+          setup = "HIGH"; setupClass = "bad";
+        }
+      } else {
+        // counter-flow: cartoon flip — fast data less hold-classic, slow data more setup-ish at early stages
+        if (speed === 0) {
+          hold = "low"; holdClass = "ok";
+          setup = "medium"; setupClass = "warn";
+        } else if (speed === 1) {
+          hold = "medium"; holdClass = "warn";
+          setup = "medium"; setupClass = "warn";
+        } else {
+          hold = "medium"; holdClass = "warn";
+          setup = "HIGH"; setupClass = "bad";
+        }
+      }
+
+      const hEl = document.getElementById("statHold");
+      const sEl = document.getElementById("statSetup");
+      hEl.textContent = hold;
+      hEl.className = "stat-value " + holdClass;
+      sEl.textContent = setup;
+      sEl.className = "stat-value " + setupClass;
+
+      if (race == null) {
+        document.getElementById("statRace").textContent = "—";
+        document.getElementById("statRace").className = "stat-value";
+      }
+    }
+
+    function evaluateRace() {
+      if (style === "concurrent" && speed === 0) return "HOLD";
+      if (style === "concurrent" && speed === 2) return "SETUP";
+      if (style === "counter" && speed === 2) return "SETUP";
+      if (style === "counter" && speed === 0) return "OK";
+      return "OK";
+    }
+
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    async function launch() {
+      if (animating) return;
+      animating = true;
+      runBtn.disabled = true;
+      race = null;
+      updatePressure();
+      document.getElementById("statRace").textContent = "…";
+      document.getElementById("statRace").className = "stat-value";
+
+      const frames = 48;
+      for (let i = 0; i <= frames; i++) {
+        t = i / frames;
+        draw(t);
+        await sleep(28);
+      }
+
+      race = evaluateRace();
+      const el = document.getElementById("statRace");
+      el.textContent = race;
+      el.className = "stat-value " + (race === "OK" ? "ok" : "bad");
+
+      animating = false;
+      runBtn.disabled = false;
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = 220;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function draw(progress) {
+      const { w, h } = resize();
+      const p = progress == null ? 1 : progress;
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const padL = 70;
+      const padR = 70;
+      const usable = w - padL - padR;
+      const yData = h * 0.38;
+      const yClk = h * 0.72;
+      const xs = [];
+      for (let i = 0; i < STAGES; i++) {
+        xs.push(padL + ((i + 0.5) / STAGES) * usable);
+      }
+      const xIn = padL - 10;
+      const xOut = w - padR + 10;
+
+      // data rail
+      ctx.strokeStyle = "rgba(64,81,181,0.35)";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(xIn, yData);
+      ctx.lineTo(xOut, yData);
+      ctx.stroke();
+
+      // clock rail
+      ctx.strokeStyle = "rgba(123,31,162,0.35)";
+      ctx.beginPath();
+      ctx.moveTo(xIn, yClk);
+      ctx.lineTo(xOut, yClk);
+      ctx.stroke();
+
+      // gates + clock leaves
+      for (let i = 0; i < STAGES; i++) {
+        const x = xs[i];
+        box(x - 28, yData - 22, 56, 44, "G" + (i + 1), "#4051b5");
+        // dashed leaf
+        ctx.setLineDash([4, 4]);
+        ctx.strokeStyle = "rgba(123,31,162,0.55)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x, yClk);
+        ctx.lineTo(x, yData + 22);
+        ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.beginPath();
+        ctx.fillStyle = "#fff";
+        ctx.strokeStyle = "#7b1fa2";
+        ctx.lineWidth = 2;
+        ctx.arc(x, yClk, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+
+      // direction arrows on clock rail
+      ctx.fillStyle = "#7b1fa2";
+      ctx.font = "700 14px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      if (style === "concurrent") {
+        ctx.fillText("CLK →  →  →", (xIn + xOut) / 2, yClk + 28);
+      } else {
+        ctx.fillText("←  ←  ← CLK", (xIn + xOut) / 2, yClk + 28);
+      }
+      ctx.fillStyle = "#4051b5";
+      ctx.fillText("DATA →", xIn + 30, yData - 32);
+
+      // labels
+      ctx.fillStyle = "rgba(0,0,0,0.45)";
+      ctx.font = "11px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("IN", xIn - 8, yData + 4);
+      ctx.textAlign = "right";
+      ctx.fillText("OUT", xOut + 8, yData + 4);
+
+      // animate pulses
+      if (p > 0 && p < 1.001) {
+        // data position: modulated by speed
+        const dataRate = speed === 0 ? 1.35 : speed === 2 ? 0.7 : 1.0;
+        const dPos = Math.min(1, p * dataRate);
+        const dataX = xIn + (xOut - xIn) * dPos;
+        pulse(dataX, yData, "#4051b5");
+
+        // clock wave
+        let cPos;
+        if (style === "concurrent") {
+          cPos = p;
+          pulse(xIn + (xOut - xIn) * cPos, yClk, "#7b1fa2");
+        } else {
+          cPos = p;
+          pulse(xOut - (xOut - xIn) * cPos, yClk, "#7b1fa2");
+        }
+
+        // hold race visual: data ahead of clock leaf at mid stage in concurrent+fast
+        if (style === "concurrent" && speed === 0 && dPos > 0.35 && dPos < 0.85) {
+          const mid = xs[1];
+          if (dataX > mid + 10) {
+            ctx.fillStyle = "rgba(198,40,40,0.12)";
+            ctx.fillRect(mid - 40, yData - 50, 80, 100);
+            ctx.fillStyle = "#c62828";
+            ctx.font = "700 11px Roboto, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("hold race?", mid, yData - 38);
+          }
+        }
+      }
+
+      // race banner after run
+      if (race && p >= 1) {
+        ctx.font = "700 13px Roboto, sans-serif";
+        ctx.textAlign = "left";
+        if (race === "HOLD") {
+          ctx.fillStyle = "#c62828";
+          ctx.fillText("Result: HOLD-like race (data too early vs local clock)", 12, 20);
+        } else if (race === "SETUP") {
+          ctx.fillStyle = "#c62828";
+          ctx.fillText("Result: SETUP-like pressure (data too late for window)", 12, 20);
+        } else {
+          ctx.fillStyle = "#2e7d32";
+          ctx.fillText("Result: OK (cartoon margins) — pads still needed at reconvergence", 12, 20);
+        }
+      }
+    }
+
+    function box(x, y, w, h, label, color) {
+      ctx.fillStyle = color + "14";
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.75;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(x, y, w, h, 5);
+      else {
+        ctx.rect(x, y, w, h);
+      }
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = color;
+      ctx.font = "700 12px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(label, x + w / 2, y + h / 2 + 4);
+    }
+
+    function pulse(x, y, color) {
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.arc(x, y, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x, y - 15);
+      ctx.lineTo(x, y + 4);
+      ctx.stroke();
+    }
+
+    document.getElementById("btnConc").addEventListener("click", () => setStyle("concurrent"));
+    document.getElementById("btnCount").addEventListener("click", () => setStyle("counter"));
+    dataSpeed.addEventListener("input", () => {
+      race = null;
+      updatePressure();
+      draw(1);
+    });
+    runBtn.addEventListener("click", launch);
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      race = null;
+      t = 0;
+      dataSpeed.value = "1";
+      setStyle(style);
+      updatePressure();
+      document.getElementById("statRace").textContent = "—";
+      document.getElementById("statRace").className = "stat-value";
+      draw(1);
+    });
+    window.addEventListener("resize", () => draw(animating ? t : 1));
+
+    updatePressure();
+    draw(1);
+  </script>
+</body>
+</html>

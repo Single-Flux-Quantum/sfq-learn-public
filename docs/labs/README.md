@@ -1,7 +1,7 @@
 # Interactive labs
 
 **Prereqs:** none (index for demos)  
-**Next:** [Phase to pulse lab](phase-to-pulse.html) · [Pulse to logic state lab](pulse-to-logic-state.html) · [Gate-level pipelining lab](gate-level-pipelining.html) · [JTL hop lab](jtl-interconnects.html) · [Splitter & confluence lab](splitter-and-confluence.html) · [DFF lab](rsfq-dff-and-retiming.html) · [Bridge hub](../bridge/README.md)
+**Next:** [Phase to pulse lab](phase-to-pulse.html) · [Pulse to logic state lab](pulse-to-logic-state.html) · [Gate-level pipelining lab](gate-level-pipelining.html) · [JTL hop lab](jtl-interconnects.html) · [Splitter & confluence lab](splitter-and-confluence.html) · [DFF lab](rsfq-dff-and-retiming.html) · [Clock-flow lab](concurrent-and-counter-flow-clocking.html) · [Bridge hub](../bridge/README.md)
 
 Self-contained HTML labs that let newcomers **click, watch events, and read stats** — the same teaching pattern as a small in-browser simulator, not SPICE or netlists.
 
@@ -51,6 +51,7 @@ Use height ≥ 700px so controls, stats, and the table fit without clipping.
 | [jtl-interconnects.html](jtl-interconnects.html) | [JTL interconnects](../concepts/jtl-interconnects.md) | Stage-by-stage Φ₀ regeneration vs passive-wire myth |
 | [splitter-and-confluence.html](splitter-and-confluence.html) | [Splitter and confluence](../concepts/splitter-and-confluence.md) | Fanout-2 copy + skew; confluence stagger vs hazard |
 | [rsfq-dff-and-retiming.html](rsfq-dff-and-retiming.html) | [RSFQ DFF and retiming](../concepts/rsfq-dff-and-retiming.md) | Capture → hold (loop Φ₀) → clocked destructive readout |
+| [concurrent-and-counter-flow-clocking.html](concurrent-and-counter-flow-clocking.html) | [Concurrent / counter-flow clocking](../concepts/concurrent-and-counter-flow-clocking.md) | Clock vs data direction; hold/setup pressure cartoon |
 
 ## Adding a lab
 

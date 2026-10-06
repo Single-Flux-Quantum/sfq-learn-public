@@ -92,6 +92,20 @@ flowchart TD
   L3 -.-> S3
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/concurrent-and-counter-flow-clocking.html).
+
+1. **Concurrent-flow** + data path **too fast** → launch wave → hold-race warning.
+2. Switch to **Counter-flow** and compare where pressure moves. Note: **pads still needed** at reconvergence either way.
+
+<iframe
+  src="../../labs/concurrent-and-counter-flow-clocking.html"
+  title="Concurrent and counter-flow clocking lab"
+  style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Timing pressure — qualitative comparison
 
 | Concern | Concurrent-flow tendency (cartoon) | Counter-flow tendency (cartoon) |

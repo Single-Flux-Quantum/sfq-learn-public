@@ -85,7 +85,7 @@ SFQ vocabulary cards. Best after the matching bridge pages.
 
 **Clocking, bias, timing, routing**
 
-- [Concurrent / counter-flow clocking](concepts/concurrent-and-counter-flow-clocking.md)  
+- [Concurrent / counter-flow clocking](concepts/concurrent-and-counter-flow-clocking.md) · [lab](labs/concurrent-and-counter-flow-clocking.html)  
 - [Path balancing overhead](concepts/path-balancing-overhead.md)  
 - [SFQ static timing analysis](concepts/sfq-static-timing-analysis.md)  
 - [Hybrid JTL–PTL routing](concepts/hybrid-jtl-ptl-routing.md)  
