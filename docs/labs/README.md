@@ -1,7 +1,7 @@
 # Interactive labs
 
 **Prereqs:** none (index for demos)  
-**Next:** [Phase to pulse lab](phase-to-pulse.html) · [Pulse to logic state lab](pulse-to-logic-state.html) · [Gate-level pipelining lab](gate-level-pipelining.html) · [JTL hop lab](jtl-interconnects.html) · [Splitter & confluence lab](splitter-and-confluence.html) · [DFF lab](rsfq-dff-and-retiming.html) · [Clock-flow lab](concurrent-and-counter-flow-clocking.html) · [Path-balancing lab](path-balancing-overhead.html) · [Bias → ERSFQ lab](resistive-bias-to-ersfq.html) · [Pulse → volt lab](sfq-pulse-to-volt-level.html) · [AQFP lab](aqfp-logic.html) · [RCSJ washboard lab](josephson-junction-rcsj.html) · [Bridge hub](../bridge/README.md)
+**Next:** [Phase to pulse lab](phase-to-pulse.html) · [Pulse to logic state lab](pulse-to-logic-state.html) · [Gate-level pipelining lab](gate-level-pipelining.html) · [JTL hop lab](jtl-interconnects.html) · [Splitter & confluence lab](splitter-and-confluence.html) · [DFF lab](rsfq-dff-and-retiming.html) · [Clock-flow lab](concurrent-and-counter-flow-clocking.html) · [Path-balancing lab](path-balancing-overhead.html) · [Bias → ERSFQ lab](resistive-bias-to-ersfq.html) · [Pulse → volt lab](sfq-pulse-to-volt-level.html) · [AQFP lab](aqfp-logic.html) · [RCSJ washboard lab](josephson-junction-rcsj.html) · [DC bias delivery lab](dc-bias-current-delivery.html) · [Serial biasing lab](serial-biasing-current-recycling.html) · [SFQ STA lab](sfq-static-timing-analysis.html) · [I/O megaphone lab](squid-stack-and-four-jl-driver.html) · [Flux / SQUID loop lab](flux-quantization-squid-loop.html) · [Bridge hub](../bridge/README.md)
 
 Self-contained HTML labs that let newcomers **click, watch events, and read stats** — the same teaching pattern as a small in-browser simulator, not SPICE or netlists.
 
@@ -57,6 +57,11 @@ Use height ≥ 700px so controls, stats, and the table fit without clipping.
 | [sfq-pulse-to-volt-level.html](sfq-pulse-to-volt-level.html) | [SFQ pulse to volt-level](../bridge/sfq-pulse-to-volt-level.md) | Height/time gaps; stretch fails; amp+latch leaves Φ₀ class |
 | [aqfp-logic.html](aqfp-logic.html) | [AQFP logic](../concepts/aqfp-logic.md) | Multiphase AC settle; majority; phase buffers ≠ RSFQ |
 | [josephson-junction-rcsj.html](josephson-junction-rcsj.html) | [Josephson junction (RCSJ)](../fundamentals/josephson-junction-rcsj.md) | Washboard particle; overdamped pulse vs underdamped latch |
+| [dc-bias-current-delivery.html](dc-bias-current-delivery.html) | [DC bias current delivery](../bridge/dc-bias-current-delivery.md) | \(I\sim N I_b\) parallel crisis; serial recycle + islands preview |
+| [serial-biasing-current-recycling.html](serial-biasing-current-recycling.html) | [Serial biasing / current recycling](../concepts/serial-biasing-current-recycling.md) | \(I_{\mathrm{serial}}\sim\max I_i\) vs \(\sum\); islands + isolation crossings |
+| [sfq-static-timing-analysis.html](sfq-static-timing-analysis.html) | [SFQ static timing analysis](../concepts/sfq-static-timing-analysis.md) | Setup/hold slack vs clock; pads; epoch mismatch vs window blame |
+| [squid-stack-and-four-jl-driver.html](squid-stack-and-four-jl-driver.html) | [SQUID stack](../concepts/squid-stack-driver.md) · [4JL latching](../concepts/four-jl-latching-driver.md) | Series \(N\cdot V\) vs latch+hold+reset megaphones |
+| [flux-quantization-squid-loop.html](flux-quantization-squid-loop.html) | [Flux quantization](../fundamentals/flux-quantization.md) · [Loop / SQUID](../fundamentals/superconducting-loop-squid.md) | \(n\Phi_0\) only; \(2\pi\) write/read; \(I_{\mathrm{circ}}\approx\Phi_0/L\) |
 
 ## Adding a lab
 

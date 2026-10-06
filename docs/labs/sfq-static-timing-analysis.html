@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SFQ Static Timing Analysis Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+      --data: #4051b5;
+      --clk: #7b1fa2;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .field input[type="range"] {
+      width: 130px;
+      accent-color: var(--md-primary);
+    }
+
+    .field .val {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-left: 0.3rem;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding-bottom: 0.3rem;
+      user-select: none;
+    }
+
+    .toggle input { accent-color: var(--md-primary); }
+
+    button.primary, button.ghost {
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border: none;
+      background: var(--md-primary);
+      color: #fff;
+    }
+
+    button.primary:hover { background: var(--md-primary-light); }
+
+    button.ghost {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--md-primary);
+    }
+
+    button.ghost:hover { background: var(--code-bg); }
+
+    .formula {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.82rem;
+      padding: 0.5rem 0.7rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+      line-height: 1.55;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.5rem 0.35rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.65rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 220px;
+      background: #fff;
+    }
+
+    .hint {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>SFQ Static Timing Analysis Lab</h1>
+    <p class="lede">
+      Abstract delays only — <strong>not SPICE</strong>.
+      Move data arrival vs the capturing clock pulse; watch
+      <strong>setup-like</strong> and <strong>hold-like</strong> slack.
+      Numbers are illustrative teaching cartoons.
+    </p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="tData">t_data (ps)</label>
+        <input type="range" id="tData" min="2" max="40" step="1" value="20">
+        <span class="val" id="tDataLabel">20</span>
+      </div>
+      <div class="field">
+        <label for="tSkew">Clock skew (ps)</label>
+        <input type="range" id="tSkew" min="-10" max="15" step="1" value="5">
+        <span class="val" id="tSkewLabel">+5</span>
+      </div>
+      <div class="field">
+        <label for="tSetup">Setup req (ps)</label>
+        <input type="range" id="tSetup" min="4" max="16" step="1" value="8">
+        <span class="val" id="tSetupLabel">8</span>
+      </div>
+      <div class="field">
+        <label for="tHold">Hold req (ps)</label>
+        <input type="range" id="tHold" min="0" max="10" step="1" value="3">
+        <span class="val" id="tHoldLabel">3</span>
+      </div>
+      <div class="field">
+        <label for="pads">JTL pads (+ps)</label>
+        <input type="range" id="pads" min="0" max="20" step="1" value="0">
+        <span class="val" id="padsLabel">0</span>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="epochBad">
+        <span>Epoch mismatch (balance fail)</span>
+      </label>
+      <button type="button" class="primary" id="presetSetup">Preset: setup fail</button>
+      <button type="button" class="ghost" id="presetHold">Preset: hold fail</button>
+      <button type="button" class="ghost" id="presetOk">Preset: OK</button>
+    </div>
+
+    <div class="formula" id="formula">…</div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">t_data′</div>
+        <div class="stat-value" id="statData">20 ps</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">t_clk (rel)</div>
+        <div class="stat-value" id="statClk">5 ps</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Setup slack</div>
+        <div class="stat-value" id="statSetup">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Hold slack</div>
+        <div class="stat-value" id="statHold">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Verdict</div>
+        <div class="stat-value" id="statVerdict">—</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">Capturing cell timeline · ★ = clock · blue = data · shaded = legal window cartoon</div>
+      <canvas id="staCanvas" width="880" height="220"></canvas>
+    </div>
+
+    <p class="hint">
+      Setup-like: data must arrive <strong>early enough before</strong> the clock window closes.
+      Hold-like: data must not be <strong>so early</strong> it races the previous capture.
+      Fix short paths with pads / DFF epochs — same menu as the chapter.
+    </p>
+  </div>
+
+  <script>
+    const tData = document.getElementById("tData");
+    const tSkew = document.getElementById("tSkew");
+    const tSetup = document.getElementById("tSetup");
+    const tHold = document.getElementById("tHold");
+    const pads = document.getElementById("pads");
+    const epochBad = document.getElementById("epochBad");
+    const canvas = document.getElementById("staCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function cfg() {
+      return {
+        data: Number(tData.value),
+        skew: Number(tSkew.value),
+        setup: Number(tSetup.value),
+        hold: Number(tHold.value),
+        pad: Number(pads.value),
+        epoch: epochBad.checked,
+      };
+    }
+
+    function analyze() {
+      const c = cfg();
+      // Relative timeline: place capturing clock at origin 0 after skew accounting.
+      // t_clk_rel = skew (how late clock is vs a reference launching edge).
+      // Data arrival relative to capturing clock: t_arr = data + pad - skew
+      // (if skew > 0, clock is late → data looks earlier relative to clock → helps setup, hurts hold)
+      const tArr = c.data + c.pad - c.skew;
+      // Setup: need tArr <= -setup  (arrive at least setup before clock at 0)
+      // i.e. slack_setup = -setup - tArr  (positive = OK)
+      // Wait - if clock at 0, data should arrive at t <= -setup for setup.
+      // tArr is arrival time of data relative to clock. Negative = before clock.
+      // setup slack = (-setup) - tArr ? No:
+      //   required: tArr <= -setupReq
+      //   slack = (-setupReq) - tArr  ... if tArr = -20 and setup=8, slack = -8 - (-20) = 12 OK
+      //   if tArr = -2 and setup=8, slack = -8 - (-2) = -6 FAIL
+      const setupSlack = -c.setup - tArr;
+      // Hold: need tArr >= holdReq (not too early before clock)
+      //   slack_hold = tArr - holdReq
+      const holdSlack = tArr - c.hold;
+
+      let verdict = "PASS";
+      let reason = "windows OK";
+      if (c.epoch) {
+        verdict = "FAIL";
+        reason = "epoch mismatch (balance)";
+      } else if (setupSlack < 0 && holdSlack < 0) {
+        verdict = "FAIL";
+        reason = "setup + hold";
+      } else if (setupSlack < 0) {
+        verdict = "FAIL";
+        reason = "setup-like";
+      } else if (holdSlack < 0) {
+        verdict = "FAIL";
+        reason = "hold-like";
+      }
+
+      return { c, tArr, setupSlack, holdSlack, verdict, reason };
+    }
+
+    function refresh() {
+      const a = analyze();
+      const { c, tArr, setupSlack, holdSlack, verdict, reason } = a;
+
+      document.getElementById("tDataLabel").textContent = String(c.data);
+      document.getElementById("tSkewLabel").textContent =
+        (c.skew >= 0 ? "+" : "") + c.skew;
+      document.getElementById("tSetupLabel").textContent = String(c.setup);
+      document.getElementById("tHoldLabel").textContent = String(c.hold);
+      document.getElementById("padsLabel").textContent = String(c.pad);
+
+      document.getElementById("formula").innerHTML =
+        "t_arr = t_data + pads − skew = " +
+        c.data +
+        " + " +
+        c.pad +
+        " − (" +
+        c.skew +
+        ") = <strong>" +
+        tArr.toFixed(0) +
+        " ps</strong> vs clock@0 · setup slack = (−req − t_arr) · hold slack = (t_arr − req)";
+
+      document.getElementById("statData").textContent =
+        c.data + c.pad + " ps";
+      document.getElementById("statClk").textContent =
+        (c.skew >= 0 ? "+" : "") + c.skew + " ps";
+
+      const sEl = document.getElementById("statSetup");
+      sEl.textContent = (setupSlack >= 0 ? "+" : "") + setupSlack.toFixed(0) + " ps";
+      sEl.className = "stat-value " + (c.epoch ? "warn" : setupSlack >= 0 ? "ok" : "bad");
+
+      const hEl = document.getElementById("statHold");
+      hEl.textContent = (holdSlack >= 0 ? "+" : "") + holdSlack.toFixed(0) + " ps";
+      hEl.className = "stat-value " + (c.epoch ? "warn" : holdSlack >= 0 ? "ok" : "bad");
+
+      const vEl = document.getElementById("statVerdict");
+      vEl.textContent = verdict === "PASS" ? "PASS" : reason;
+      vEl.className = "stat-value " + (verdict === "PASS" ? "ok" : "bad");
+
+      draw(a);
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = 220;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function draw(a) {
+      const { w, h } = resize();
+      const { c, tArr, setupSlack, holdSlack, verdict } = a;
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const padL = 48;
+      const padR = 24;
+      const usable = w - padL - padR;
+      // Map time [-45, +25] ps onto x
+      const tMin = -45;
+      const tMax = 25;
+      const xOf = (t) => padL + ((t - tMin) / (tMax - tMin)) * usable;
+      const yMid = h * 0.55;
+
+      // axis
+      ctx.strokeStyle = "rgba(0,0,0,0.2)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(padL, yMid);
+      ctx.lineTo(w - padR, yMid);
+      ctx.stroke();
+
+      // ticks
+      ctx.fillStyle = "rgba(0,0,0,0.4)";
+      ctx.font = "10px Roboto Mono, monospace";
+      ctx.textAlign = "center";
+      for (let t = -40; t <= 20; t += 10) {
+        const x = xOf(t);
+        ctx.beginPath();
+        ctx.moveTo(x, yMid - 4);
+        ctx.lineTo(x, yMid + 4);
+        ctx.stroke();
+        ctx.fillText(t + "ps", x, yMid + 18);
+      }
+
+      // legal window: from -setup ... something? Cartoon: shaded band from holdReq to -setupReq
+      // Legal: holdReq <= tArr <= -setupReq
+      const winL = xOf(c.hold);
+      const winR = xOf(-c.setup);
+      if (winR > winL) {
+        ctx.fillStyle = "#4051b51a";
+        ctx.fillRect(winL, yMid - 48, winR - winL, 40);
+        ctx.strokeStyle = "#4051b566";
+        ctx.strokeRect(winL, yMid - 48, winR - winL, 40);
+        ctx.fillStyle = "#4051b5";
+        ctx.font = "700 10px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("legal window", (winL + winR) / 2, yMid - 55);
+      } else {
+        // contradictory constraints
+        ctx.fillStyle = "#c62828";
+        ctx.font = "700 11px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("constraints overlap (impossible window)", w / 2, 28);
+      }
+
+      // clock at 0
+      const xClk = xOf(0);
+      ctx.strokeStyle = "#7b1fa2";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(xClk, yMid - 70);
+      ctx.lineTo(xClk, yMid + 8);
+      ctx.stroke();
+      ctx.fillStyle = "#7b1fa2";
+      ctx.font = "700 16px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("★", xClk, yMid - 74);
+      ctx.font = "10px Roboto, sans-serif";
+      ctx.fillText("clk", xClk, yMid + 32);
+
+      // data pulse
+      const xData = xOf(tArr);
+      ctx.beginPath();
+      ctx.fillStyle = verdict === "PASS" && !c.epoch ? "#4051b5" : "#c62828";
+      ctx.arc(xData, yMid - 28, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = ctx.fillStyle;
+      ctx.font = "10px Roboto, sans-serif";
+      ctx.fillText("data", xData, yMid - 42);
+
+      // epoch banner
+      if (c.epoch) {
+        ctx.fillStyle = "rgba(198,40,40,0.12)";
+        ctx.fillRect(0, 0, w, h);
+        ctx.fillStyle = "#c62828";
+        ctx.font = "700 13px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Epoch mismatch — STA flags balance before blaming setup/hold numbers", w / 2, 22);
+      } else if (setupSlack < 0) {
+        ctx.fillStyle = "#c62828";
+        ctx.font = "700 12px Roboto, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("Too late → setup-like violation", padL, 22);
+      } else if (holdSlack < 0) {
+        ctx.fillStyle = "#c62828";
+        ctx.font = "700 12px Roboto, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("Too early → hold-like violation", padL, 22);
+      } else {
+        ctx.fillStyle = "#2e7d32";
+        ctx.font = "700 12px Roboto, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("Both slacks ≥ 0 — abstract window OK", padL, 22);
+      }
+
+      // legend
+      ctx.fillStyle = "rgba(0,0,0,0.45)";
+      ctx.font = "10px Roboto, sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText("Illustrative ps only · not a real library", w - padR, h - 10);
+    }
+
+    function setPreset(kind) {
+      epochBad.checked = false;
+      if (kind === "setup") {
+        tData.value = 30;
+        tSkew.value = 0;
+        tSetup.value = 8;
+        tHold.value = 3;
+        pads.value = 0;
+      } else if (kind === "hold") {
+        tData.value = 4;
+        tSkew.value = 10;
+        tSetup.value = 8;
+        tHold.value = 3;
+        pads.value = 0;
+      } else {
+        tData.value = 18;
+        tSkew.value = 5;
+        tSetup.value = 8;
+        tHold.value = 3;
+        pads.value = 0;
+      }
+      refresh();
+    }
+
+    [
+      tData,
+      tSkew,
+      tSetup,
+      tHold,
+      pads,
+      epochBad,
+    ].forEach((el) => el.addEventListener("input", refresh));
+    epochBad.addEventListener("change", refresh);
+    document.getElementById("presetSetup").addEventListener("click", () => setPreset("setup"));
+    document.getElementById("presetHold").addEventListener("click", () => setPreset("hold"));
+    document.getElementById("presetOk").addEventListener("click", () => setPreset("ok"));
+    window.addEventListener("resize", refresh);
+
+    refresh();
+  </script>
+</body>
+</html>

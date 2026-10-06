@@ -18,6 +18,7 @@ More pages and more wording are **intentional**. Prefer clarity over compression
 | Coming from CMOS | Express lane + preview [CMOS vs SFQ](concepts/cmos-vs-sfq.md) |
 | Only need symbols | [Symbol card](fundamentals/sfq-symbol-card.md) or [Notation](fundamentals/reading-sfq-notation.md) |
 | Finished fundamentals; cells feel sudden | [Bridge](#2-bridge-close-the-gap) |
+| Want click-and-watch demos | [Interactive labs](labs/README.md) |
 | Ready for a guided path | [Tracks](#4-tracks) |
 
 ## Express lane vs full orientation
@@ -51,9 +52,9 @@ Then jump to [Symbol card](fundamentals/sfq-symbol-card.md) → [Notation](funda
 1. [Symbol card](fundamentals/sfq-symbol-card.md) — five-symbol cheatsheet  
 2. [How to read SFQ notation](fundamentals/reading-sfq-notation.md)  
 3. [Superconductivity intuition](fundamentals/superconductivity-intuition.md)  
-4. [Josephson junction (RCSJ)](fundamentals/josephson-junction-rcsj.md)  
-5. [Flux quantization](fundamentals/flux-quantization.md)  
-6. [Superconducting loop / SQUID](fundamentals/superconducting-loop-squid.md)  
+4. [Josephson junction (RCSJ)](fundamentals/josephson-junction-rcsj.md) · [lab](labs/josephson-junction-rcsj.html)  
+5. [Flux quantization](fundamentals/flux-quantization.md) · [lab](labs/flux-quantization-squid-loop.html)  
+6. [Superconducting loop / SQUID](fundamentals/superconducting-loop-squid.md) · [lab](labs/flux-quantization-squid-loop.html)  
 7. [Overdamped vs underdamped JJ](fundamentals/overdamped-vs-underdamped-jj.md)  
 
 ## 2. Bridge (close the gap)
@@ -66,7 +67,7 @@ Start here: [bridge/README.md](bridge/README.md)
 2. [Pulse to logic state](bridge/pulse-to-logic-state.md) · [lab](labs/pulse-to-logic-state.html)  
 3. [Gate-level pipelining](bridge/gate-level-pipelining.md) · [lab](labs/gate-level-pipelining.html)  
 4. [Resistive bias to ERSFQ](bridge/resistive-bias-to-ersfq.md) · [lab](labs/resistive-bias-to-ersfq.html)  
-5. [DC bias current delivery](bridge/dc-bias-current-delivery.md)  
+5. [DC bias current delivery](bridge/dc-bias-current-delivery.md) · [lab](labs/dc-bias-current-delivery.html)  
 6. [SFQ pulse to voltage levels](bridge/sfq-pulse-to-volt-level.md) · [lab](labs/sfq-pulse-to-volt-level.html)  
 
 ## 3. Concepts
@@ -87,14 +88,14 @@ SFQ vocabulary cards. Best after the matching bridge pages.
 
 - [Concurrent / counter-flow clocking](concepts/concurrent-and-counter-flow-clocking.md) · [lab](labs/concurrent-and-counter-flow-clocking.html)  
 - [Path balancing overhead](concepts/path-balancing-overhead.md) · [lab](labs/path-balancing-overhead.html)  
-- [SFQ static timing analysis](concepts/sfq-static-timing-analysis.md)  
+- [SFQ static timing analysis](concepts/sfq-static-timing-analysis.md) · [lab](labs/sfq-static-timing-analysis.html)  
 - [Hybrid JTL–PTL routing](concepts/hybrid-jtl-ptl-routing.md)  
-- [Serial biasing / current recycling](concepts/serial-biasing-current-recycling.md)  
+- [Serial biasing / current recycling](concepts/serial-biasing-current-recycling.md) · [lab](labs/serial-biasing-current-recycling.html)  
 
 **I/O & memory**
 
-- [SQUID stack driver](concepts/squid-stack-driver.md)  
-- [Four-JL latching driver](concepts/four-jl-latching-driver.md)  
+- [SQUID stack driver](concepts/squid-stack-driver.md) · [lab](labs/squid-stack-and-four-jl-driver.html)  
+- [Four-JL latching driver](concepts/four-jl-latching-driver.md) · [lab](labs/squid-stack-and-four-jl-driver.html)  
 - [Vortex transitional RAM](concepts/vortex-transitional-ram.md)  
 - [Josephson–CMOS hybrid memory](concepts/josephson-cmos-hybrid-memory.md)  
 
@@ -107,5 +108,9 @@ SFQ vocabulary cards. Best after the matching bridge pages.
 - [Cryogenic memory](tracks/cryogenic-memory/ROADMAP.md)  
 - [Compute & neuromorphic](tracks/compute-neuromorphic/ROADMAP.md) *(public cards TBD)*  
 - [Quantum & detector interfaces](tracks/quantum-detector-interfaces/ROADMAP.md) *(public cards TBD)*  
+
+## Interactive labs
+
+In-browser click-and-watch demos (not SPICE). Full list: **[Labs hub](labs/README.md)**. Each lab also embeds on its matching chapter.
 
 Maintained by skill: `research-sfq-learn`.

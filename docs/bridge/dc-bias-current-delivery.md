@@ -72,6 +72,20 @@ Before scaling arithmetic, name the **path**. “The chip needs bias” is incom
   Parallel taps: I_total ≈ sum of branch bias currents
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/dc-bias-current-delivery.html).
+
+1. **Parallel feed:** raise $N$ and $I_b$ — watch $I_{\mathrm{supply}} \sim N\times I_b$ hit amperes; toggle **+20% pads** to see timing tax become ampere tax.
+2. **Serial recycle (preview):** same $N$, supply current collapses toward $\sim I_b$ — but **ground islands** appear. ERSFQ still does **not** clear amperes by itself.
+
+<iframe
+  src="../../labs/dc-bias-current-delivery.html"
+  title="DC bias current delivery lab"
+  style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ```mermaid
 flowchart TD
   Supply[DC bias supply at room temp] --> Cable[Cryocable / filters / feedthroughs]

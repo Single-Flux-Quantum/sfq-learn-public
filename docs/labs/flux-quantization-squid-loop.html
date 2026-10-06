@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flux Quantization / SQUID Loop Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .field input[type="range"] {
+      width: 130px;
+      accent-color: var(--md-primary);
+    }
+
+    .field .val {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-left: 0.3rem;
+    }
+
+    button.primary, button.ghost, button.danger {
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border: none;
+      background: var(--md-primary);
+      color: #fff;
+    }
+
+    button.primary:hover { background: var(--md-primary-light); }
+    button.primary:disabled { opacity: 0.55; cursor: wait; }
+
+    button.ghost {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--md-primary);
+    }
+
+    button.ghost:hover { background: var(--code-bg); }
+    button.ghost:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    button.danger {
+      border: 1px dashed var(--bad);
+      background: transparent;
+      color: var(--bad);
+    }
+
+    button.danger:hover { background: #c6282812; }
+
+    .formula {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.82rem;
+      padding: 0.5rem 0.7rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+      line-height: 1.55;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.5rem 0.35rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 0.92rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.65rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 230px;
+      background: #fff;
+    }
+
+    .hint {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Flux Quantization / SQUID Loop Lab</h1>
+    <p class="lede">
+      Closed loops hold <strong>integer</strong> multiples of Φ₀ — no stable half-quantum.
+      One <strong>2π</strong> slip writes/erases one packet. Area of V(t) stays Φ₀;
+      circulating current ≈ Φ₀/L.
+    </p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="Lval">Loop L (pH)</label>
+        <input type="range" id="Lval" min="2" max="20" step="1" value="8">
+        <span class="val" id="LLabel">8</span>
+      </div>
+      <button type="button" class="primary" id="writeBtn">Write Φ₀ (2π slip)</button>
+      <button type="button" class="ghost" id="readBtn" disabled>Clocked readout</button>
+      <button type="button" class="danger" id="halfBtn">Try half-Φ₀</button>
+    </div>
+
+    <div class="formula" id="formula">Φ₀ ≈ 2.07 mV·ps ···</div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">n (fluxoid)</div>
+        <div class="stat-value" id="statN">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">I_circ ≈ Φ₀/L</div>
+        <div class="stat-value" id="statI">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">∫V dt</div>
+        <div class="stat-value" id="statArea">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Bit picture</div>
+        <div class="stat-value" id="statBit">empty</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Half quantum?</div>
+        <div class="stat-value ok" id="statHalf">FORBIDDEN</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">Left: storage loop / DC SQUID motif · Right: last V(t) slip (area = Φ₀)</div>
+      <canvas id="fluxCanvas" width="880" height="230"></canvas>
+    </div>
+
+    <p class="hint">
+      Φ₀ ≈ <strong>2.07 mV·ps</strong>. Shape of the spike can change; the
+      <strong>area</strong> is the token. CMOS stores continuous voltage — SFQ stores discrete flux packets.
+    </p>
+  </div>
+
+  <script>
+    const PHI0_MVP = 2.07; // mV·ps
+    let n = 0;
+    let animating = false;
+    let pulseWave = null; // {samples, label}
+    let banner = null;
+    let bannerT = 0;
+
+    const Lval = document.getElementById("Lval");
+    const writeBtn = document.getElementById("writeBtn");
+    const readBtn = document.getElementById("readBtn");
+    const halfBtn = document.getElementById("halfBtn");
+    const canvas = document.getElementById("fluxCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function L() {
+      return Number(Lval.value);
+    }
+
+    function iCirc() {
+      // Φ0/L with Φ0≈2.07 mV·ps, L in pH → I in mA? 
+      // Φ0 = 2.07e-15 Wb, L in pH = L*1e-12 H
+      // I = Φ0/L = 2.07e-15 / (L e-12) = 2.07/L * 1e-3 A = 2.07/L mA
+      // Actually: 2.07e-15 / 1e-12 = 2.07e-3 A = 2.07 mA for 1 pH
+      // So I(uA) = 2070 / L_pH
+      return 2070 / L();
+    }
+
+    function refresh() {
+      document.getElementById("LLabel").textContent = String(L());
+      const ic = iCirc();
+      document.getElementById("formula").innerHTML =
+        "Φ₀ ≈ 2.07 mV·ps · I_circ ≈ Φ₀/L = <strong>" +
+        ic.toFixed(0) +
+        " µA</strong> at L=" +
+        L() +
+        " pH · stable states n ∈ ℤ only";
+
+      document.getElementById("statN").textContent = String(n);
+      document.getElementById("statN").className =
+        "stat-value " + (n === 0 ? "" : "ok");
+      document.getElementById("statI").textContent =
+        n === 0 ? "0 µA" : Math.round(ic) + " µA";
+      document.getElementById("statBit").textContent =
+        n === 0 ? "empty (0)" : "|n|≈1 → “1”";
+      document.getElementById("statBit").className =
+        "stat-value " + (n === 0 ? "" : "ok");
+
+      readBtn.disabled = animating || n === 0;
+      writeBtn.disabled = animating || Math.abs(n) >= 1;
+      // allow write only when empty for simple bit picture; or allow n±1
+      writeBtn.disabled = animating || n !== 0;
+
+      draw();
+    }
+
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = 230;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function draw() {
+      const { w, h } = resize();
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const mid = w * 0.42;
+      const cx = mid / 2;
+      const cy = h * 0.52;
+      const R = Math.min(70, mid * 0.32);
+
+      // loop
+      ctx.strokeStyle = "#4051b5";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(cx, cy, R, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // two JJ marks (SQUID) at left/right
+      for (const ang of [Math.PI * 0.85, Math.PI * 0.15]) {
+        const x = cx + Math.cos(ang) * R;
+        const y = cy + Math.sin(ang) * R;
+        ctx.fillStyle = "#fff";
+        ctx.strokeStyle = "#ef6c00";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(x, y, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#ef6c00";
+        ctx.font = "700 10px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("X", x, y + 3);
+      }
+
+      // circulating arrow if n≠0
+      if (n !== 0) {
+        ctx.strokeStyle = "#2e7d32";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(cx, cy, R - 18, -0.8, Math.PI * 1.2);
+        ctx.stroke();
+        // arrow head
+        const ax = cx + Math.cos(Math.PI * 1.2) * (R - 18);
+        const ay = cy + Math.sin(Math.PI * 1.2) * (R - 18);
+        ctx.beginPath();
+        ctx.fillStyle = "#2e7d32";
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(ax - 8, ay - 6);
+        ctx.lineTo(ax - 2, ay + 8);
+        ctx.fill();
+        ctx.font = "700 11px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("I_circ", cx, cy + 4);
+      } else {
+        ctx.fillStyle = "rgba(0,0,0,0.4)";
+        ctx.font = "11px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("n = 0", cx, cy + 4);
+      }
+
+      ctx.fillStyle = "rgba(0,0,0,0.5)";
+      ctx.font = "10px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("DC SQUID / storage loop", cx, 18);
+      ctx.fillText("L = " + L() + " pH", cx, h - 12);
+
+      // discrete ladder
+      const lx = mid - 30;
+      ctx.fillStyle = "rgba(0,0,0,0.45)";
+      ctx.font = "9px Roboto Mono, monospace";
+      ctx.textAlign = "left";
+      for (let k = -1; k <= 2; k++) {
+        const y = cy - k * 22;
+        ctx.strokeStyle = k === n ? "#4051b5" : "rgba(0,0,0,0.2)";
+        ctx.lineWidth = k === n ? 2.5 : 1;
+        ctx.beginPath();
+        ctx.moveTo(lx, y);
+        ctx.lineTo(lx + 36, y);
+        ctx.stroke();
+        ctx.fillStyle = k === n ? "#4051b5" : "rgba(0,0,0,0.35)";
+        ctx.fillText("n=" + k, lx + 40, y + 3);
+      }
+      ctx.fillStyle = "#c62828";
+      ctx.font = "9px Roboto, sans-serif";
+      ctx.fillText("½ ✗", lx + 8, cy - 11);
+
+      // right: pulse
+      const wx0 = mid + 20;
+      const wx1 = w - 16;
+      const wy0 = 28;
+      const wy1 = h - 24;
+      ctx.strokeStyle = "rgba(0,0,0,0.2)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(wx0, wy1);
+      ctx.lineTo(wx1, wy1);
+      ctx.moveTo(wx0, wy0);
+      ctx.lineTo(wx0, wy1);
+      ctx.stroke();
+
+      if (pulseWave && pulseWave.samples) {
+        const samples = pulseWave.samples;
+        const vMax = Math.max(...samples, 0.5) * 1.15;
+        ctx.strokeStyle = "#4051b5";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let i = 0; i < samples.length; i++) {
+          const x = wx0 + (i / (samples.length - 1)) * (wx1 - wx0);
+          const y = wy1 - (samples[i] / vMax) * (wy1 - wy0);
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+        // shade area
+        ctx.fillStyle = "#4051b528";
+        ctx.beginPath();
+        ctx.moveTo(wx0, wy1);
+        for (let i = 0; i < samples.length; i++) {
+          const x = wx0 + (i / (samples.length - 1)) * (wx1 - wx0);
+          const y = wy1 - (samples[i] / vMax) * (wy1 - wy0);
+          ctx.lineTo(x, y);
+        }
+        ctx.lineTo(wx1, wy1);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = "#4051b5";
+        ctx.font = "700 11px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(pulseWave.label || "∫V dt = Φ₀", (wx0 + wx1) / 2, wy0 + 4);
+      } else {
+        ctx.fillStyle = "rgba(0,0,0,0.35)";
+        ctx.font = "12px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Fire a 2π slip to see V(t)", (wx0 + wx1) / 2, (wy0 + wy1) / 2);
+      }
+
+      if (banner) {
+        ctx.fillStyle = banner.ok ? "#2e7d32" : "#c62828";
+        ctx.font = "700 12px Roboto, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText(banner.text, mid + 20, 18);
+      }
+    }
+
+    function makePulse(tall) {
+      // tall=true → higher peak, shorter width; area conserved ≈ PHI0 in mV·ps
+      // Use discrete sum: sum(V_i)*dt = PHI0
+      const nS = 80;
+      const width = tall ? 12 : 28; // samples of pulse
+      const samples = new Array(nS).fill(0);
+      const start = 20;
+      // triangle/sine pulse
+      let raw = 0;
+      for (let i = 0; i < width; i++) {
+        const u = i / (width - 1);
+        const v = Math.sin(Math.PI * u);
+        samples[start + i] = v;
+        raw += v;
+      }
+      // Scale so sum * dt = PHI0. Treat total time window as 40 ps → dt = 40/nS
+      const T = 40; // ps
+      const dt = T / nS;
+      const scale = PHI0_MVP / (raw * dt); // mV
+      return samples.map((v) => v * scale);
+    }
+
+    function areaOf(samples) {
+      const T = 40;
+      const dt = T / samples.length;
+      return samples.reduce((a, b) => a + b, 0) * dt;
+    }
+
+    async function doWrite() {
+      if (animating || n !== 0) return;
+      animating = true;
+      writeBtn.disabled = true;
+      banner = null;
+      const tall = Math.random() > 0.5;
+      const samples = makePulse(tall);
+      pulseWave = {
+        samples: samples.map(() => 0),
+        label: "∫V dt → Φ₀",
+      };
+      for (let f = 0; f <= 30; f++) {
+        const p = f / 30;
+        pulseWave.samples = samples.map((v) => v * p);
+        draw();
+        await sleep(20);
+      }
+      pulseWave.samples = samples;
+      pulseWave.label =
+        "∫V dt = " + areaOf(samples).toFixed(2) + " mV·ps ≈ Φ₀";
+      document.getElementById("statArea").textContent =
+        areaOf(samples).toFixed(2) + " mV·ps";
+      document.getElementById("statArea").className = "stat-value ok";
+      n = 1;
+      banner = { ok: true, text: "2π slip wrote one Φ₀ into the loop" };
+      animating = false;
+      refresh();
+    }
+
+    async function doRead() {
+      if (animating || n === 0) return;
+      animating = true;
+      readBtn.disabled = true;
+      const samples = makePulse(false);
+      pulseWave = { samples: samples.map(() => 0), label: "readout slip" };
+      for (let f = 0; f <= 30; f++) {
+        const p = f / 30;
+        pulseWave.samples = samples.map((v) => v * p);
+        draw();
+        await sleep(20);
+      }
+      pulseWave.samples = samples;
+      pulseWave.label =
+        "∫V dt = " + areaOf(samples).toFixed(2) + " mV·ps ≈ Φ₀ (escape)";
+      document.getElementById("statArea").textContent =
+        areaOf(samples).toFixed(2) + " mV·ps";
+      n = 0;
+      banner = { ok: true, text: "Clocked readout: circulating Φ₀ escapes" };
+      animating = false;
+      refresh();
+    }
+
+    async function tryHalf() {
+      if (animating) return;
+      animating = true;
+      banner = { ok: false, text: "Rejected — no stable half-Φ₀ in a closed loop" };
+      document.getElementById("statHalf").textContent = "REJECTED";
+      document.getElementById("statHalf").className = "stat-value bad";
+      // flash half on ladder
+      for (let i = 0; i < 6; i++) {
+        draw();
+        // overlay flash
+        const { w, h } = resize();
+        const mid = w * 0.42;
+        const cy = h * 0.52;
+        ctx.fillStyle = i % 2 === 0 ? "#c6282888" : "#c6282800";
+        ctx.fillRect(mid - 30, cy - 20, 70, 16);
+        await sleep(90);
+      }
+      document.getElementById("statHalf").textContent = "FORBIDDEN";
+      document.getElementById("statHalf").className = "stat-value ok";
+      setTimeout(() => {
+        banner = null;
+        draw();
+      }, 1200);
+      animating = false;
+      refresh();
+    }
+
+    Lval.addEventListener("input", refresh);
+    writeBtn.addEventListener("click", doWrite);
+    readBtn.addEventListener("click", doRead);
+    halfBtn.addEventListener("click", tryHalf);
+    window.addEventListener("resize", draw);
+
+    refresh();
+  </script>
+</body>
+</html>

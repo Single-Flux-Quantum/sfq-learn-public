@@ -17,7 +17,7 @@ More wording is intentional so newcomers can follow with patience (same pedagogy
 2. [Pulse to logic state](pulse-to-logic-state.md) — windows, storage loops, clocked readout ([interactive lab](../labs/pulse-to-logic-state.html))  
 3. [Gate-level pipelining](gate-level-pipelining.md) — every gate is also a timing stage ([interactive lab](../labs/gate-level-pipelining.html))  
 4. [Resistive bias to ERSFQ](resistive-bias-to-ersfq.md) — static power in bias resistors ([interactive lab](../labs/resistive-bias-to-ersfq.html))  
-5. [DC bias current delivery](dc-bias-current-delivery.md) — why chips need amperes  
+5. [DC bias current delivery](dc-bias-current-delivery.md) — why chips need amperes ([interactive lab](../labs/dc-bias-current-delivery.html))  
 6. [SFQ pulse to voltage levels](sfq-pulse-to-volt-level.md) — why I/O amplifiers exist ([interactive lab](../labs/sfq-pulse-to-volt-level.html))  
 
 ## After bridges

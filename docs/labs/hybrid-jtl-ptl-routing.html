@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hybrid JTL–PTL Routing Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5; --md-primary-light: #5d6cc0;
+      --bg: #fff; --border: #0000001f; --text: #000000de; --muted: #00000099;
+      --code-bg: #f5f5f5; --ok: #2e7d32; --bad: #c62828; --warn: #ef6c00;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 12px 4px 4px; font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 0.95rem; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 920px; margin: 0 auto; border: 1px solid var(--border); border-radius: 0.35rem; padding: 1rem 1.15rem 1.25rem; }
+    h1 { margin: 0 0 0.35rem; font-size: 1.2rem; font-weight: 700; color: var(--md-primary); }
+    .lede { margin: 0 0 0.85rem; color: var(--muted); font-size: 0.92rem; }
+    .lede strong { color: var(--text); }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: flex-end; margin-bottom: 0.75rem; }
+    .seg { display: flex; border: 1px solid var(--border); border-radius: 0.25rem; overflow: hidden; }
+    .seg button { border: none; background: var(--code-bg); color: var(--md-primary); padding: 0.45rem 0.7rem; font-size: 0.8rem; font-weight: 500; font-family: inherit; cursor: pointer; }
+    .seg button.active { background: #4051b51a; font-weight: 700; }
+    .field label { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 0.2rem; }
+    .field input[type="range"] { width: 130px; accent-color: var(--md-primary); }
+    .field .val { font-family: "Roboto Mono", ui-monospace, Consolas, monospace; font-size: 0.8rem; font-weight: 600; margin-left: 0.3rem; }
+    button.primary { border: none; border-radius: 0.25rem; padding: 0.5rem 0.85rem; font-size: 0.85rem; font-weight: 500; font-family: inherit; cursor: pointer; background: var(--md-primary); color: #fff; }
+    button.primary:hover { background: var(--md-primary-light); }
+    button.primary:disabled { opacity: 0.55; cursor: wait; }
+    .formula { font-family: "Roboto Mono", ui-monospace, Consolas, monospace; font-size: 0.82rem; padding: 0.5rem 0.7rem; background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.25rem; margin-bottom: 0.75rem; line-height: 1.5; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
+    .stat { background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.35rem; padding: 0.5rem 0.35rem; text-align: center; }
+    .stat-label { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .stat-value { font-size: 0.92rem; font-weight: 700; font-family: "Roboto Mono", ui-monospace, Consolas, monospace; }
+    .ok { color: var(--ok); } .warn { color: var(--warn); } .bad { color: var(--bad); }
+    .canvas-wrap { border: 1px solid var(--border); border-radius: 0.35rem; overflow: hidden; margin-bottom: 0.65rem; background: var(--code-bg); }
+    .canvas-label { padding: 0.35rem 0.65rem; font-size: 0.76rem; color: var(--muted); background: #fff; border-bottom: 1px solid var(--border); }
+    canvas { display: block; width: 100%; height: 220px; background: #fff; }
+    .hint { margin: 0; font-size: 0.8rem; color: var(--muted); }
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Hybrid JTL–PTL Routing Lab</h1>
+    <p class="lede"><strong>JTL</strong> regenerates locally (pay per stage). <strong>PTL</strong> flies farther (driver + flight + rx). Hybrid = walk, throw, walk. Cartoon delays only.</p>
+    <div class="controls">
+      <div class="seg">
+        <button type="button" class="active" id="btnAll">All-JTL</button>
+        <button type="button" id="btnHyb">Hybrid</button>
+      </div>
+      <div class="field"><label for="dist">Span (mm cartoon)</label><input type="range" id="dist" min="0.2" max="4" step="0.2" value="1.6"><span class="val" id="distLabel">1.6</span></div>
+      <div class="field"><label for="tau">τ_JTL (ps)</label><input type="range" id="tau" min="4" max="12" step="1" value="6"><span class="val" id="tauLabel">6</span></div>
+      <button type="button" class="primary" id="runBtn">Send pulse</button>
+    </div>
+    <div class="formula" id="formula">…</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">t_net</div><div class="stat-value" id="statT">—</div></div>
+      <div class="stat"><div class="stat-label">Active JJ stages</div><div class="stat-value" id="statJJ">—</div></div>
+      <div class="stat"><div class="stat-label">Bias feel</div><div class="stat-value" id="statBias">—</div></div>
+      <div class="stat"><div class="stat-label">Winner?</div><div class="stat-value" id="statWin">—</div></div>
+    </div>
+    <div class="canvas-wrap">
+      <div class="canvas-label">Path cartoon · pulse travels left → right</div>
+      <canvas id="c" width="880" height="220"></canvas>
+    </div>
+    <p class="hint">Raise span: all-JTL stage count explodes; hybrid keeps stages local and pays <strong>flight(ℓ)</strong>. Fine delay pads stay on JTL.</p>
+  </div>
+  <script>
+    let mode = "all", animating = false, pulseP = 0;
+    const dist = document.getElementById("dist"), tau = document.getElementById("tau");
+    const canvas = document.getElementById("c"), ctx = canvas.getContext("2d");
+    // cartoons: JTL pitch 0.05 mm/stage, PTL flight 8 ps/mm, drv+rx = 18 ps, local stubs 2 stages each
+    function analyze() {
+      const ell = Number(dist.value), tj = Number(tau.value);
+      const stagesAll = Math.max(1, Math.round(ell / 0.05));
+      const tAll = stagesAll * tj;
+      const tHyb = 2 * tj + 18 + ell * 8 + 2 * tj; // local + drv + flight + rx + far
+      const jjHyb = 4 + 2; // stubs + drv/rx cartoon
+      return { ell, tj, stagesAll, tAll, tHyb, jjHyb, win: tHyb < tAll ? "hybrid" : "all-JTL" };
+    }
+    function refresh() {
+      const a = analyze();
+      document.getElementById("distLabel").textContent = a.ell.toFixed(1);
+      document.getElementById("tauLabel").textContent = String(a.tj);
+      if (mode === "all") {
+        document.getElementById("formula").innerHTML =
+          "All-JTL: t ≈ n·τ = " + a.stagesAll + " × " + a.tj + " = <strong>" + a.tAll + " ps</strong>";
+        document.getElementById("statT").textContent = a.tAll + " ps";
+        document.getElementById("statJJ").textContent = String(a.stagesAll);
+        document.getElementById("statBias").textContent = a.stagesAll > 20 ? "heavy" : "ok";
+        document.getElementById("statBias").className = "stat-value " + (a.stagesAll > 20 ? "bad" : "ok");
+      } else {
+        document.getElementById("formula").innerHTML =
+          "Hybrid: t ≈ t_JTL + t_drv + t_flight(" + a.ell.toFixed(1) + ") + t_rx ≈ <strong>" + a.tHyb.toFixed(0) + " ps</strong>";
+        document.getElementById("statT").textContent = a.tHyb.toFixed(0) + " ps";
+        document.getElementById("statJJ").textContent = "~" + a.jjHyb;
+        document.getElementById("statBias").textContent = "ends only";
+        document.getElementById("statBias").className = "stat-value ok";
+      }
+      document.getElementById("statWin").textContent = a.win === mode || (mode === "all" && a.win === "all-JTL") || (mode === "hyb" && a.win === "hybrid") ? a.win + " (for span)" : a.win + " better";
+      document.getElementById("statWin").className = "stat-value " + ((mode === "hyb" && a.win === "hybrid") || (mode === "all" && a.win === "all-JTL") ? "ok" : "warn");
+      draw();
+    }
+    function setMode(m) {
+      mode = m;
+      document.getElementById("btnAll").classList.toggle("active", m === "all");
+      document.getElementById("btnHyb").classList.toggle("active", m === "hyb");
+      pulseP = 0; refresh();
+    }
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+    function resize() {
+      const dpr = window.devicePixelRatio || 1, w = canvas.clientWidth || 880, h = 220;
+      canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); return { w, h };
+    }
+    function draw() {
+      const { w, h } = resize(); const a = analyze();
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+      const y = h * 0.45, x0 = 50, x1 = w - 50;
+      // endpoints
+      ctx.fillStyle = "#4051b5"; ctx.font = "700 11px Roboto, sans-serif"; ctx.textAlign = "center";
+      ctx.fillText("SRC", x0, y - 36); ctx.fillText("SNK", x1, y - 36);
+      ctx.beginPath(); ctx.arc(x0, y, 14, 0, Math.PI * 2); ctx.strokeStyle = "#4051b5"; ctx.lineWidth = 2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(x1, y, 14, 0, Math.PI * 2); ctx.stroke();
+
+      if (mode === "all") {
+        const n = Math.min(40, a.stagesAll);
+        for (let i = 0; i < n; i++) {
+          const x = x0 + 30 + ((i + 0.5) / n) * (x1 - x0 - 60);
+          ctx.fillStyle = "#4051b5"; ctx.fillRect(x - 4, y - 8, 8, 16);
+        }
+        ctx.strokeStyle = "rgba(64,81,181,0.4)"; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.moveTo(x0 + 14, y); ctx.lineTo(x1 - 14, y); ctx.stroke();
+        ctx.fillStyle = "rgba(0,0,0,0.45)"; ctx.font = "11px Roboto, sans-serif";
+        ctx.fillText(a.stagesAll + " JTL stages (bucket brigade)", (x0 + x1) / 2, h - 16);
+      } else {
+        const xa = x0 + (x1 - x0) * 0.18, xb = x0 + (x1 - x0) * 0.82;
+        // local JTL
+        for (let i = 0; i < 2; i++) {
+          const x = x0 + 28 + i * 18; ctx.fillStyle = "#4051b5"; ctx.fillRect(x, y - 8, 8, 16);
+          const x2 = xb + 20 + i * 18; ctx.fillRect(x2, y - 8, 8, 16);
+        }
+        // driver / rx boxes
+        ctx.fillStyle = "#ef6c0014"; ctx.strokeStyle = "#ef6c00"; ctx.lineWidth = 1.5;
+        ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(xa - 28, y - 22, 56, 44, 4); else ctx.rect(xa - 28, y - 22, 56, 44);
+        ctx.fill(); ctx.stroke();
+        ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(xb - 28, y - 22, 56, 44, 4); else ctx.rect(xb - 28, y - 22, 56, 44);
+        ctx.fill(); ctx.stroke();
+        ctx.fillStyle = "#ef6c00"; ctx.font = "700 10px Roboto, sans-serif";
+        ctx.fillText("DRV", xa, y + 4); ctx.fillText("RX", xb, y + 4);
+        // PTL double line
+        ctx.strokeStyle = "#ef6c00"; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.moveTo(xa + 28, y - 4); ctx.lineTo(xb - 28, y - 4); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(xa + 28, y + 4); ctx.lineTo(xb - 28, y + 4); ctx.stroke();
+        ctx.fillStyle = "rgba(0,0,0,0.45)"; ctx.font = "11px Roboto, sans-serif";
+        ctx.fillText("PTL flight ~ " + (a.ell * 8).toFixed(0) + " ps", (xa + xb) / 2, h - 16);
+      }
+
+      if (pulseP > 0) {
+        const x = x0 + pulseP * (x1 - x0);
+        ctx.beginPath(); ctx.fillStyle = "#4051b5"; ctx.arc(x, y - 28, 7, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    async function run() {
+      if (animating) return; animating = true; document.getElementById("runBtn").disabled = true;
+      for (let i = 0; i <= 40; i++) { pulseP = i / 40; draw(); await sleep(28); }
+      animating = false; document.getElementById("runBtn").disabled = false;
+    }
+    document.getElementById("btnAll").addEventListener("click", () => setMode("all"));
+    document.getElementById("btnHyb").addEventListener("click", () => setMode("hyb"));
+    dist.addEventListener("input", refresh); tau.addEventListener("input", refresh);
+    document.getElementById("runBtn").addEventListener("click", run);
+    window.addEventListener("resize", draw);
+    refresh();
+  </script>
+</body>
+</html>

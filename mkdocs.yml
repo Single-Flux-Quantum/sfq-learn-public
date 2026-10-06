@@ -80,6 +80,11 @@ nav:
       - Pulse → volt-level: labs/sfq-pulse-to-volt-level.html
       - AQFP logic: labs/aqfp-logic.html
       - RCSJ washboard: labs/josephson-junction-rcsj.html
+      - DC bias delivery: labs/dc-bias-current-delivery.html
+      - Serial biasing / recycling: labs/serial-biasing-current-recycling.html
+      - SFQ STA windows: labs/sfq-static-timing-analysis.html
+      - I/O megaphone (SQUID / 4JL): labs/squid-stack-and-four-jl-driver.html
+      - Flux / SQUID loop: labs/flux-quantization-squid-loop.html
   - Concepts:
       - CMOS vs SFQ: concepts/cmos-vs-sfq.md
       - RSFQ Overview: concepts/rsfq-logic.md

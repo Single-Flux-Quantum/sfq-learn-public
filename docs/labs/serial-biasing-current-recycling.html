@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serial Biasing / Current Recycling Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+      --isl: #ef6c00;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .seg {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      overflow: hidden;
+    }
+
+    .seg button {
+      border: none;
+      background: var(--code-bg);
+      color: var(--md-primary);
+      padding: 0.45rem 0.7rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .seg button.active {
+      background: #4051b51a;
+      font-weight: 700;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .field input[type="range"] {
+      width: 130px;
+      accent-color: var(--md-primary);
+    }
+
+    .field .val {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-left: 0.3rem;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding-bottom: 0.3rem;
+      user-select: none;
+    }
+
+    .toggle input { accent-color: var(--md-primary); }
+
+    button.primary {
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      background: var(--md-primary);
+      color: #fff;
+    }
+
+    button.primary:hover { background: var(--md-primary-light); }
+    button.primary:disabled { opacity: 0.55; cursor: wait; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.5rem 0.35rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+
+    .formula {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.85rem;
+      padding: 0.5rem 0.7rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.65rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 230px;
+      background: #fff;
+    }
+
+    .hint {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Serial Biasing / Current Recycling Lab</h1>
+    <p class="lede">
+      Same ampere threads stacked <strong>ground islands</strong>.
+      Gain: cryocable current. Pay: isolation when SFQ crosses islands, taller voltage stack.
+      Not ERSFQ (heat) and not AQFP (AC family).
+    </p>
+
+    <div class="controls">
+      <div class="seg">
+        <button type="button" class="active" data-mode="parallel" id="btnPar">Parallel</button>
+        <button type="button" data-mode="serial" id="btnSer">Serial recycle</button>
+      </div>
+      <div class="field">
+        <label for="nIsl">Islands M</label>
+        <input type="range" id="nIsl" min="2" max="6" step="1" value="3">
+        <span class="val" id="nIslLabel">3</span>
+      </div>
+      <div class="field">
+        <label for="iPer">I per island (A)</label>
+        <input type="range" id="iPer" min="1" max="10" step="1" value="5">
+        <span class="val" id="iPerLabel">0.5</span>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="crossToggle">
+        <span>Send pulse across islands</span>
+      </label>
+      <button type="button" class="primary" id="pulseBtn">Launch pulse</button>
+    </div>
+
+    <div class="formula" id="formula">I_parallel ≈ Σ I_i ···</div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">I_supply</div>
+        <div class="stat-value" id="statI">1.5 A</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">V stack cartoon</div>
+        <div class="stat-value" id="statV">1×</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Isolation sites</div>
+        <div class="stat-value" id="statIso">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Cross result</div>
+        <div class="stat-value" id="statCross">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">≠ ERSFQ?</div>
+        <div class="stat-value ok">YES</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">Islands + bias current · dashed = isolation / transformer when crossing</div>
+      <canvas id="serCanvas" width="880" height="230"></canvas>
+    </div>
+
+    <p class="hint">
+      Ideal cartoon: <strong>I_serial ∼ max I_i</strong> vs <strong>I_parallel ∼ Σ I_i</strong>.
+      Intra-island timing (path balance / STA) still applies. Every necessary crossing is an isolation site.
+    </p>
+  </div>
+
+  <script>
+    let mode = "parallel";
+    let animating = false;
+    let pulseT = 0;
+    let crossOk = null;
+
+    const nIsl = document.getElementById("nIsl");
+    const iPer = document.getElementById("iPer");
+    const crossToggle = document.getElementById("crossToggle");
+    const pulseBtn = document.getElementById("pulseBtn");
+    const canvas = document.getElementById("serCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function cfg() {
+      const M = Number(nIsl.value);
+      const Ii = Number(iPer.value) / 10; // 0.1 .. 1.0 A
+      return { M, Ii };
+    }
+
+    function refresh() {
+      const { M, Ii } = cfg();
+      document.getElementById("nIslLabel").textContent = String(M);
+      document.getElementById("iPerLabel").textContent = Ii.toFixed(1);
+
+      let iSup, vStack, formula;
+      if (mode === "parallel") {
+        iSup = M * Ii;
+        vStack = "1×";
+        formula =
+          "I_parallel ≈ Σ I_i = " +
+          M +
+          " × " +
+          Ii.toFixed(1) +
+          " A = <strong>" +
+          iSup.toFixed(1) +
+          " A</strong>";
+      } else {
+        iSup = Ii;
+        vStack = M + "×";
+        formula =
+          "I_serial ≈ max I_i = <strong>" +
+          iSup.toFixed(1) +
+          " A</strong> (ideal) · voltage stack ~ " +
+          M +
+          "× taller";
+      }
+
+      document.getElementById("formula").innerHTML = formula;
+      const iEl = document.getElementById("statI");
+      iEl.textContent = iSup.toFixed(1) + " A";
+      iEl.className = "stat-value " + (iSup >= 1.5 ? "bad" : iSup >= 0.8 ? "warn" : "ok");
+      document.getElementById("statV").textContent = vStack;
+      document.getElementById("statV").className =
+        "stat-value " + (mode === "serial" ? "warn" : "");
+
+      const crossings = mode === "serial" ? M - 1 : 0;
+      document.getElementById("statIso").textContent = String(
+        crossToggle.checked ? Math.max(1, crossings) : crossings
+      );
+
+      if (crossOk == null) {
+        document.getElementById("statCross").textContent = "—";
+        document.getElementById("statCross").className = "stat-value";
+      }
+
+      draw(0);
+    }
+
+    function setMode(m) {
+      mode = m;
+      document.getElementById("btnPar").classList.toggle("active", m === "parallel");
+      document.getElementById("btnSer").classList.toggle("active", m === "serial");
+      crossOk = null;
+      refresh();
+    }
+
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = 230;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function draw(p) {
+      const { w, h } = resize();
+      const { M, Ii } = cfg();
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const padL = 70;
+      const padR = 50;
+      const usable = w - padL - padR;
+      const y0 = h * 0.42;
+
+      // supply
+      ctx.fillStyle = "#4051b5";
+      ctx.font = "700 11px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("SUPPLY", 36, y0 - 40);
+      ctx.beginPath();
+      ctx.strokeStyle = "#4051b5";
+      ctx.lineWidth = 2;
+      ctx.arc(36, y0, 18, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.font = "10px Roboto Mono, monospace";
+      ctx.fillText(
+        mode === "parallel" ? (M * Ii).toFixed(1) + "A" : Ii.toFixed(1) + "A",
+        36,
+        y0 + 4
+      );
+
+      const xs = [];
+      for (let i = 0; i < M; i++) {
+        xs.push(padL + ((i + 0.5) / M) * usable);
+      }
+
+      if (mode === "parallel") {
+        // fan out from supply
+        for (let i = 0; i < M; i++) {
+          ctx.strokeStyle = "rgba(64,81,181,0.45)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(54, y0);
+          ctx.lineTo(xs[i], y0);
+          ctx.stroke();
+          drawIsland(xs[i], y0, i, false);
+        }
+        ctx.fillStyle = "rgba(0,0,0,0.45)";
+        ctx.font = "11px Roboto, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("Each island draws its own I_i — currents add at the cable", 12, h - 14);
+      } else {
+        // series string
+        ctx.strokeStyle = "#4051b5";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(54, y0);
+        ctx.lineTo(xs[0] - 55, y0);
+        ctx.stroke();
+
+        for (let i = 0; i < M; i++) {
+          drawIsland(xs[i], y0, i, true);
+          if (i < M - 1) {
+            ctx.strokeStyle = "#4051b5";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(xs[i] + 55, y0);
+            ctx.lineTo(xs[i + 1] - 55, y0);
+            ctx.stroke();
+            // isolation marker
+            const mx = (xs[i] + xs[i + 1]) / 2;
+            ctx.fillStyle = "#fff";
+            ctx.strokeStyle = "#ef6c00";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.arc(mx, y0 - 36, 14, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+            ctx.fillStyle = "#ef6c00";
+            ctx.font = "700 9px Roboto, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("ISO", mx, y0 - 33);
+
+            // potential step
+            ctx.fillStyle = "rgba(0,0,0,0.4)";
+            ctx.font = "9px Roboto, sans-serif";
+            ctx.fillText("ΔV", mx, y0 + 50);
+          }
+        }
+
+        // return
+        ctx.strokeStyle = "#4051b5";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(xs[M - 1] + 55, y0);
+        ctx.lineTo(w - 30, y0);
+        ctx.lineTo(w - 30, h - 30);
+        ctx.lineTo(36, h - 30);
+        ctx.lineTo(36, y0 + 18);
+        ctx.stroke();
+        ctx.fillStyle = "rgba(0,0,0,0.45)";
+        ctx.font = "11px Roboto, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("Same I_series threads all islands · local GNDs step", 12, h - 14);
+      }
+
+      // animated pulse
+      if (p > 0 && crossToggle.checked) {
+        if (mode === "serial") {
+          // travel from island 0 to last via ISO
+          const xStart = xs[0];
+          const xEnd = xs[M - 1];
+          const x = xStart + (xEnd - xStart) * p;
+          ctx.beginPath();
+          ctx.fillStyle = "#4051b5";
+          ctx.arc(x, y0 - 18, 6, 0, Math.PI * 2);
+          ctx.fill();
+          // check if near an ISO without... always OK if we have ISO boxes
+          if (p > 0.95 && crossOk !== true) {
+            /* set after animation */
+          }
+        } else {
+          // parallel: casual cross looks "fine" electrically in cartoon (shared GND)
+          const x = xs[0] + (xs[M - 1] - xs[0]) * p;
+          ctx.beginPath();
+          ctx.fillStyle = "#2e7d32";
+          ctx.arc(x, y0 - 18, 6, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      if (crossOk === false) {
+        ctx.fillStyle = "#c62828";
+        ctx.font = "700 12px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Blocked: need isolation to cross islands", w / 2, 22);
+      } else if (crossOk === true) {
+        ctx.fillStyle = mode === "serial" ? "#2e7d32" : "#2e7d32";
+        ctx.font = "700 12px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(
+          mode === "serial"
+            ? "OK via isolation / transformer sites"
+            : "Shared GND — no island barrier (but I_supply is large)",
+          w / 2,
+          22
+        );
+      }
+    }
+
+    function drawIsland(x, y, idx, serial) {
+      ctx.fillStyle = serial ? "#ef6c0014" : "#4051b514";
+      ctx.strokeStyle = serial ? "#ef6c00" : "#4051b5";
+      ctx.lineWidth = 1.75;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(x - 50, y - 28, 100, 56, 6);
+      else ctx.rect(x - 50, y - 28, 100, 56);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = serial ? "#ef6c00" : "#4051b5";
+      ctx.font = "700 12px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("island " + (idx + 1), x, y - 4);
+      ctx.font = "10px Roboto, sans-serif";
+      ctx.fillStyle = "rgba(0,0,0,0.55)";
+      ctx.fillText("local GND", x, y + 14);
+    }
+
+    async function launchPulse() {
+      if (animating) return;
+      if (!crossToggle.checked) {
+        crossOk = null;
+        document.getElementById("statCross").textContent = "enable cross";
+        document.getElementById("statCross").className = "stat-value muted";
+        return;
+      }
+      animating = true;
+      pulseBtn.disabled = true;
+      crossOk = null;
+      document.getElementById("statCross").textContent = "…";
+
+      // If serial and somehow no ISO — we always draw ISO between islands
+      // Parallel: OK. Serial: OK with ISO.
+      // Demonstrate "naive short" by briefly showing fail if user... always OK with ISO on serial.
+      // Better demo: when serial, pulse succeeds WITH iso; show message.
+      // Optional fail mode: hold Alt? Keep simple — serial always needs ISO and we have them → OK.
+
+      const frames = 36;
+      for (let i = 0; i <= frames; i++) {
+        pulseT = i / frames;
+        draw(pulseT);
+        await sleep(28);
+      }
+
+      crossOk = true;
+      const el = document.getElementById("statCross");
+      el.textContent = mode === "serial" ? "OK + ISO" : "OK (shared GND)";
+      el.className = "stat-value ok";
+      draw(1);
+
+      animating = false;
+      pulseBtn.disabled = false;
+    }
+
+    document.getElementById("btnPar").addEventListener("click", () => setMode("parallel"));
+    document.getElementById("btnSer").addEventListener("click", () => setMode("serial"));
+    nIsl.addEventListener("input", () => {
+      crossOk = null;
+      refresh();
+    });
+    iPer.addEventListener("input", () => {
+      crossOk = null;
+      refresh();
+    });
+    crossToggle.addEventListener("change", () => {
+      crossOk = null;
+      refresh();
+    });
+    pulseBtn.addEventListener("click", launchPulse);
+    window.addEventListener("resize", () => draw(pulseT));
+
+    refresh();
+  </script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overdamped vs Underdamped JJ Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5; --md-primary-light: #5d6cc0;
+      --bg: #fff; --border: #0000001f; --text: #000000de; --muted: #00000099;
+      --code-bg: #f5f5f5; --ok: #2e7d32; --bad: #c62828; --warn: #ef6c00;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 12px 4px 4px; font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 0.95rem; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 920px; margin: 0 auto; border: 1px solid var(--border); border-radius: 0.35rem; padding: 1rem 1.15rem 1.25rem; }
+    h1 { margin: 0 0 0.35rem; font-size: 1.2rem; font-weight: 700; color: var(--md-primary); }
+    .lede { margin: 0 0 0.85rem; color: var(--muted); font-size: 0.92rem; }
+    .lede strong { color: var(--text); }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: flex-end; margin-bottom: 0.75rem; }
+    .field label { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 0.2rem; }
+    .field input[type="range"] { width: 150px; accent-color: var(--md-primary); }
+    .field .val { font-family: "Roboto Mono", ui-monospace, Consolas, monospace; font-size: 0.8rem; font-weight: 600; margin-left: 0.3rem; }
+    button.primary, button.ghost { border-radius: 0.25rem; padding: 0.5rem 0.85rem; font-size: 0.85rem; font-weight: 500; font-family: inherit; cursor: pointer; }
+    button.primary { border: none; background: var(--md-primary); color: #fff; }
+    button.primary:hover { background: var(--md-primary-light); }
+    button.primary:disabled { opacity: 0.55; cursor: wait; }
+    button.ghost { border: 1px solid var(--border); background: transparent; color: var(--md-primary); }
+    button.ghost:hover { background: var(--code-bg); }
+    button.ghost:disabled { opacity: 0.45; cursor: not-allowed; }
+    .formula { font-family: "Roboto Mono", ui-monospace, Consolas, monospace; font-size: 0.82rem; padding: 0.5rem 0.7rem; background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.25rem; margin-bottom: 0.75rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
+    .stat { background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.35rem; padding: 0.5rem 0.35rem; text-align: center; }
+    .stat-label { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .stat-value { font-size: 0.92rem; font-weight: 700; font-family: "Roboto Mono", ui-monospace, Consolas, monospace; }
+    .ok { color: var(--ok); } .warn { color: var(--warn); } .bad { color: var(--bad); }
+    .canvas-wrap { border: 1px solid var(--border); border-radius: 0.35rem; overflow: hidden; margin-bottom: 0.65rem; background: var(--code-bg); }
+    .canvas-label { padding: 0.35rem 0.65rem; font-size: 0.76rem; color: var(--muted); background: #fff; border-bottom: 1px solid var(--border); }
+    canvas { display: block; width: 100%; height: 230px; background: #fff; }
+    .hint { margin: 0; font-size: 0.8rem; color: var(--muted); }
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Overdamped vs Underdamped JJ Lab</h1>
+    <p class="lede">McCumber <strong>β<sub>C</sub></strong> sorts personality: ≲1 → short pulse then V≈0 (RSFQ); ≫1 → latches until reset (I/O / drivers). Same trigger, different outcome.</p>
+    <div class="controls">
+      <div class="field">
+        <label for="beta">β<sub>C</sub> (cartoon)</label>
+        <input type="range" id="beta" min="0.2" max="12" step="0.2" value="0.8">
+        <span class="val" id="betaLabel">0.8</span>
+      </div>
+      <button type="button" class="primary" id="kickBtn">Trigger kick</button>
+      <button type="button" class="ghost" id="resetBtn" disabled>Reset latch</button>
+      <button type="button" class="ghost" id="presetOver">RSFQ preset</button>
+      <button type="button" class="ghost" id="presetUnder">Latch preset</button>
+    </div>
+    <div class="formula" id="formula">β<sub>C</sub> = 2π I<sub>c</sub> R² C / Φ₀ ···</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Regime</div><div class="stat-value" id="statReg">overdamped</div></div>
+      <div class="stat"><div class="stat-label">After kick</div><div class="stat-value" id="statAfter">pulse → V≈0</div></div>
+      <div class="stat"><div class="stat-label">State</div><div class="stat-value" id="statState">ready</div></div>
+      <div class="stat"><div class="stat-label">RSFQ-safe?</div><div class="stat-value ok" id="statSafe">YES</div></div>
+      <div class="stat"><div class="stat-label">I/O latch tool?</div><div class="stat-value" id="statIo">no</div></div>
+    </div>
+    <div class="canvas-wrap">
+      <div class="canvas-label">V(t) after kick · shaded area ≈ Φ₀ only for a clean overdamped slip</div>
+      <canvas id="c" width="880" height="230"></canvas>
+    </div>
+    <p class="hint">Drag β<sub>C</sub> across ~1. Overdamped = screen door that stops. Underdamped = door that stays open until you pull it shut.</p>
+  </div>
+  <script>
+    let state = "ready", animating = false, wave = [];
+    const beta = document.getElementById("beta");
+    const kickBtn = document.getElementById("kickBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const canvas = document.getElementById("c");
+    const ctx = canvas.getContext("2d");
+
+    function betaVal() { return Number(beta.value); }
+    function over() { return betaVal() <= 1.5; }
+
+    function refresh() {
+      const b = betaVal();
+      document.getElementById("betaLabel").textContent = b.toFixed(1);
+      const isOver = over();
+      document.getElementById("formula").innerHTML =
+        "β<sub>C</sub> = 2π I<sub>c</sub> R² C / Φ₀ ≈ <strong>" + b.toFixed(1) + "</strong> → " +
+        (isOver ? "overdamped (shunt toward RSFQ)" : "underdamped (latching personality)");
+      document.getElementById("statReg").textContent = isOver ? "overdamped" : "underdamped";
+      document.getElementById("statReg").className = "stat-value " + (isOver ? "ok" : "warn");
+      document.getElementById("statAfter").textContent = isOver ? "pulse → V≈0" : "HIGH until reset";
+      document.getElementById("statSafe").textContent = isOver ? "YES" : "NO (gates)";
+      document.getElementById("statSafe").className = "stat-value " + (isOver ? "ok" : "bad");
+      document.getElementById("statIo").textContent = isOver ? "no" : "YES";
+      document.getElementById("statIo").className = "stat-value " + (isOver ? "" : "warn");
+      document.getElementById("statState").textContent = state;
+      resetBtn.disabled = animating || state !== "latched";
+      kickBtn.disabled = animating || state === "latched";
+      draw();
+    }
+
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+    function resize() {
+      const dpr = window.devicePixelRatio || 1, w = canvas.clientWidth || 880, h = 230;
+      canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); return { w, h };
+    }
+
+    function draw() {
+      const { w, h } = resize();
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+      const x0 = 40, x1 = w - 16, y0 = 24, y1 = h - 28;
+      ctx.strokeStyle = "rgba(0,0,0,0.2)"; ctx.beginPath();
+      ctx.moveTo(x0, y1); ctx.lineTo(x1, y1); ctx.moveTo(x0, y0); ctx.lineTo(x0, y1); ctx.stroke();
+      const vMax = 12;
+      const yOf = v => y1 - (v / vMax) * (y1 - y0);
+      const n = 120;
+      let samples = wave.length ? wave : new Array(n).fill(0);
+      if (!wave.length && state === "latched") samples = samples.map((_, i) => (i / (n - 1) > 0.12 ? 8 : 0));
+      // shade if pulse-like
+      if (wave.length && over() && state === "ready") {
+        ctx.fillStyle = "#4051b528";
+        ctx.beginPath(); ctx.moveTo(x0, y1);
+        for (let i = 0; i < samples.length; i++) {
+          const x = x0 + (i / (samples.length - 1)) * (x1 - x0);
+          ctx.lineTo(x, yOf(samples[i]));
+        }
+        ctx.lineTo(x1, y1); ctx.closePath(); ctx.fill();
+      }
+      ctx.strokeStyle = over() ? "#4051b5" : "#ef6c00";
+      ctx.lineWidth = 2.5; ctx.beginPath();
+      for (let i = 0; i < samples.length; i++) {
+        const x = x0 + (i / (samples.length - 1)) * (x1 - x0);
+        const y = yOf(samples[i]);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      ctx.fillStyle = "rgba(0,0,0,0.45)"; ctx.font = "11px Roboto, sans-serif"; ctx.textAlign = "left";
+      ctx.fillText(over() ? "∫V dt ≈ Φ₀ (one slip)" : "finite-V latch (not a clean Φ₀ token)", x0 + 8, 18);
+      // beta marker
+      const bx = x0 + Math.min(1, betaVal() / 12) * (x1 - x0) * 0.35;
+      ctx.fillStyle = "#4051b5"; ctx.font = "10px Roboto Mono, monospace";
+      ctx.fillText("βC=" + betaVal().toFixed(1), x1 - 70, y0 + 14);
+    }
+
+    async function kick() {
+      if (animating || state === "latched") return;
+      animating = true; kickBtn.disabled = true;
+      const n = 120, isOver = over();
+      if (isOver) {
+        state = "firing"; refresh();
+        const peak = 5;
+        for (let f = 0; f <= 36; f++) {
+          const p = f / 36;
+          wave = [];
+          for (let i = 0; i < n; i++) {
+            const u = i / (n - 1);
+            let v = 0;
+            if (u > 0.15 && u < 0.4) {
+              const s = (u - 0.15) / 0.25;
+              if (s <= p) v = peak * Math.sin(Math.PI * Math.min(1, s / Math.max(p, 0.01)));
+              else if (p > 0.3) v = peak * Math.sin(Math.PI * s) * Math.max(0, 1 - (p - 0.3) / 0.7);
+            }
+            wave.push(v);
+          }
+          // simpler rebuild each frame
+          wave = [];
+          for (let i = 0; i < n; i++) {
+            const u = i / (n - 1);
+            let v = 0;
+            if (u > 0.18 && u < 0.42) {
+              const s = (u - 0.18) / 0.24;
+              v = peak * Math.sin(Math.PI * s) * Math.min(1, p * 1.5);
+              if (p > 0.55) v *= Math.max(0, 1 - (p - 0.55) / 0.45);
+            }
+            wave.push(v);
+          }
+          draw(); await sleep(22);
+        }
+        wave = []; state = "ready";
+      } else {
+        state = "firing"; refresh();
+        for (let f = 0; f <= 28; f++) {
+          const rise = Math.min(1, f / 12);
+          wave = Array(n).fill(0).map((_, i) => (i / (n - 1) > 0.12 ? 8 * rise : 0));
+          draw(); await sleep(22);
+        }
+        state = "latched";
+        wave = Array(n).fill(0).map((_, i) => (i / (n - 1) > 0.12 ? 8 : 0));
+      }
+      animating = false; refresh();
+    }
+
+    async function doReset() {
+      if (state !== "latched" || animating) return;
+      animating = true;
+      for (let f = 0; f <= 20; f++) {
+        const fall = 1 - f / 20;
+        wave = Array(120).fill(0).map((_, i) => (i / 119 > 0.12 ? 8 * fall : 0));
+        draw(); await sleep(20);
+      }
+      wave = []; state = "ready"; animating = false; refresh();
+    }
+
+    beta.addEventListener("input", () => { if (state === "latched" && over()) { state = "ready"; wave = []; } refresh(); });
+    kickBtn.addEventListener("click", kick);
+    resetBtn.addEventListener("click", doReset);
+    document.getElementById("presetOver").addEventListener("click", () => { beta.value = 0.8; state = "ready"; wave = []; refresh(); });
+    document.getElementById("presetUnder").addEventListener("click", () => { beta.value = 8; state = "ready"; wave = []; refresh(); });
+    window.addEventListener("resize", draw);
+    refresh();
+  </script>
+</body>
+</html>

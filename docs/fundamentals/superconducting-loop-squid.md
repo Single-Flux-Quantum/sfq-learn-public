@@ -71,6 +71,20 @@ flowchart TD
   Sense --> Dig[Digital cells and drivers reuse the motif]
 ```
 
+## Interactive lab
+
+Same lab as [Flux Quantization](flux-quantization.md) — loop storage + Φ₀ packet. Prefer full-screen? Open the [lab page](../labs/flux-quantization-squid-loop.html).
+
+1. Set **L**, **Write Φ₀**, watch $I_{\mathrm{circ}}$ and the circulating-current arrow.
+2. **Clocked readout** empties the loop; **Try half-Φ₀** shows why flux is discrete.
+
+<iframe
+  src="../../labs/flux-quantization-squid-loop.html"
+  title="Flux quantization / SQUID loop lab"
+  style="width:100%;height:740px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Persistent current and inductance
 
 For a first estimate, ignore junction phase drops and write the inductive flux as

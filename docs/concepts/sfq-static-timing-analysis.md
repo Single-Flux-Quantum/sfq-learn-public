@@ -86,6 +86,20 @@ sequenceDiagram
   Rep->>Net: fix pads / tree / routes
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/sfq-static-timing-analysis.html).
+
+1. Click **Preset: setup fail** — data arrives too late vs the clock; setup slack goes negative. Raise **JTL pads** until setup clears (watch hold).
+2. Click **Preset: hold fail** — data is too early; add pads or reduce skew. Toggle **Epoch mismatch** to see balance flagged *before* blaming window numbers.
+
+<iframe
+  src="../../labs/sfq-static-timing-analysis.html"
+  title="SFQ static timing analysis lab"
+  style="width:100%;height:760px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## What SFQ STA cares about (public list)
 
 | Check | Plain meaning |

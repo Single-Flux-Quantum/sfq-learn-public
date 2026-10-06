@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I/O Megaphone Lab — SQUID Stack vs 4JL Latching</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+      --rsfq: #90a4ae;
+      --squid: #4051b5;
+      --latch: #ef6c00;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .seg {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      overflow: hidden;
+    }
+
+    .seg button {
+      border: none;
+      background: var(--code-bg);
+      color: var(--md-primary);
+      padding: 0.45rem 0.7rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .seg button.active {
+      background: #4051b51a;
+      font-weight: 700;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .field input[type="range"] {
+      width: 120px;
+      accent-color: var(--md-primary);
+    }
+
+    .field .val {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-left: 0.3rem;
+    }
+
+    button.primary, button.ghost {
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border: none;
+      background: var(--md-primary);
+      color: #fff;
+    }
+
+    button.primary:hover { background: var(--md-primary-light); }
+    button.primary:disabled { opacity: 0.55; cursor: wait; }
+
+    button.ghost {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--md-primary);
+    }
+
+    button.ghost:hover { background: var(--code-bg); }
+    button.ghost:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .formula {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.82rem;
+      padding: 0.5rem 0.7rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.5rem 0.35rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 0.92rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.65rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 240px;
+      background: #fff;
+    }
+
+    .hint {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>I/O Megaphone Lab — SQUID Stack vs 4JL / Suzuki</h1>
+    <p class="lede">
+      SFQ pulses are millivolt-class whispers. Two public megaphones:
+      <strong>SQUID stack</strong> (series stages → taller short swing) vs
+      <strong>latching 4JL / Suzuki</strong> (underdamped hold until reset).
+      Cartoon numbers only — not a datasheet.
+    </p>
+
+    <div class="controls">
+      <div class="seg">
+        <button type="button" class="active" data-fam="squid" id="btnSquid">SQUID stack</button>
+        <button type="button" data-fam="latch" id="btnLatch">4JL / Suzuki latch</button>
+      </div>
+      <div class="field">
+        <label for="nStack">Stack height N</label>
+        <input type="range" id="nStack" min="1" max="8" step="1" value="4">
+        <span class="val" id="nStackLabel">4</span>
+      </div>
+      <div class="field">
+        <label for="vOne">V_one (mV cartoon)</label>
+        <input type="range" id="vOne" min="1" max="8" step="1" value="3">
+        <span class="val" id="vOneLabel">3</span>
+      </div>
+      <button type="button" class="primary" id="trigBtn">SFQ trigger ★</button>
+      <button type="button" class="ghost" id="resetBtn" disabled>Reset</button>
+    </div>
+
+    <div class="formula" id="formula">…</div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Family</div>
+        <div class="stat-value" id="statFam">SQUID</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">V_out peak</div>
+        <div class="stat-value" id="statV">12 mV</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Duration</div>
+        <div class="stat-value" id="statDur">short</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">State</div>
+        <div class="stat-value" id="statState">ready</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">CMOS hear?</div>
+        <div class="stat-value" id="statCmos">maybe</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">Left: stack cartoon · Right: V(t) vs bare RSFQ pulse (gray)</div>
+      <canvas id="ioCanvas" width="880" height="240"></canvas>
+    </div>
+
+    <p class="hint">
+      SQUID: <strong>V ∼ N · V_stage</strong>, still brief. Latching: same height idea, but
+      <strong>trigger → HIGH → reset</strong> — wider for slow samplers. Neither invents a new bit encoding.
+    </p>
+  </div>
+
+  <script>
+    let family = "squid";
+    let state = "ready"; // ready | firing | latched
+    let animT = 0;
+    let animating = false;
+    let wave = []; // sampled V(t) history for display
+
+    const nStack = document.getElementById("nStack");
+    const vOne = document.getElementById("vOne");
+    const trigBtn = document.getElementById("trigBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const canvas = document.getElementById("ioCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function cfg() {
+      return { N: Number(nStack.value), V1: Number(vOne.value) };
+    }
+
+    function vPeak() {
+      const { N, V1 } = cfg();
+      return N * V1;
+    }
+
+    function refreshLabels() {
+      const { N, V1 } = cfg();
+      document.getElementById("nStackLabel").textContent = String(N);
+      document.getElementById("vOneLabel").textContent = String(V1);
+      const Vp = vPeak();
+
+      if (family === "squid") {
+        document.getElementById("formula").innerHTML =
+          "SQUID stack: V_out ∼ N · V_stage = " +
+          N +
+          " × " +
+          V1 +
+          " mV = <strong>" +
+          Vp +
+          " mV</strong> (short Josephson swing; overdamped-ish stages)";
+        document.getElementById("statFam").textContent = "SQUID";
+        document.getElementById("statDur").textContent = "short pulse";
+        document.getElementById("statDur").className = "stat-value";
+      } else {
+        document.getElementById("formula").innerHTML =
+          "4JL / Suzuki latch: V_latched ∼ N · V_one = " +
+          N +
+          " × " +
+          V1 +
+          " mV = <strong>" +
+          Vp +
+          " mV</strong> until reset (underdamped hold)";
+        document.getElementById("statFam").textContent = "4JL/Suzuki";
+        document.getElementById("statDur").textContent =
+          state === "latched" ? "HELD wide" : "until reset";
+        document.getElementById("statDur").className =
+          "stat-value " + (state === "latched" ? "warn" : "");
+      }
+
+      document.getElementById("statV").textContent = Vp + " mV";
+      document.getElementById("statState").textContent = state;
+      document.getElementById("statState").className =
+        "stat-value " +
+        (state === "latched" ? "warn" : state === "ready" ? "ok" : "");
+
+      const hear = Vp >= 12 ? "likely" : Vp >= 6 ? "borderline" : "too quiet";
+      const cEl = document.getElementById("statCmos");
+      cEl.textContent = hear;
+      cEl.className =
+        "stat-value " +
+        (hear === "likely" ? "ok" : hear === "borderline" ? "warn" : "bad");
+
+      resetBtn.disabled = family !== "latch" || state !== "latched" || animating;
+      trigBtn.disabled = animating || (family === "latch" && state === "latched");
+
+      draw();
+    }
+
+    function setFamily(f) {
+      family = f;
+      state = "ready";
+      wave = [];
+      document.getElementById("btnSquid").classList.toggle("active", f === "squid");
+      document.getElementById("btnLatch").classList.toggle("active", f === "latch");
+      refreshLabels();
+    }
+
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = 240;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function draw() {
+      const { w, h } = resize();
+      const { N, V1 } = cfg();
+      const Vp = vPeak();
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const mid = w * 0.38;
+      // --- left: stack ---
+      const boxH = Math.min(28, (h - 50) / Math.max(N, 1) - 4);
+      const startY = 36;
+      for (let i = 0; i < N; i++) {
+        const y = startY + i * (boxH + 6);
+        ctx.fillStyle = family === "squid" ? "#4051b514" : "#ef6c0014";
+        ctx.strokeStyle = family === "squid" ? "#4051b5" : "#ef6c00";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(24, y, mid - 60, boxH, 4);
+        else ctx.rect(24, y, mid - 60, boxH);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = family === "squid" ? "#4051b5" : "#ef6c00";
+        ctx.font = "11px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(
+          family === "squid" ? "SQUID " + (i + 1) : "JJ " + (i + 1),
+          24 + (mid - 60) / 2,
+          y + boxH / 2 + 4
+        );
+        if (i < N - 1) {
+          ctx.strokeStyle = "rgba(0,0,0,0.35)";
+          ctx.beginPath();
+          ctx.moveTo(24 + (mid - 60) / 2, y + boxH);
+          ctx.lineTo(24 + (mid - 60) / 2, y + boxH + 6);
+          ctx.stroke();
+        }
+      }
+      ctx.fillStyle = "rgba(0,0,0,0.5)";
+      ctx.font = "10px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("★ SFQ in", 24, 22);
+      ctx.fillText("V_out → load", 24, h - 12);
+
+      // highlight latched
+      if (family === "latch" && state === "latched") {
+        ctx.strokeStyle = "#ef6c00";
+        ctx.lineWidth = 2.5;
+        ctx.strokeRect(20, startY - 4, mid - 52, N * (boxH + 6) + 4);
+        ctx.fillStyle = "#ef6c00";
+        ctx.font = "700 11px Roboto, sans-serif";
+        ctx.fillText("LATCHED", mid - 90, 22);
+      }
+
+      // --- right: waveform ---
+      const wx0 = mid + 10;
+      const wx1 = w - 16;
+      const wy0 = 30;
+      const wy1 = h - 28;
+      ctx.strokeStyle = "rgba(0,0,0,0.2)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(wx0, wy1);
+      ctx.lineTo(wx1, wy1);
+      ctx.moveTo(wx0, wy0);
+      ctx.lineTo(wx0, wy1);
+      ctx.stroke();
+
+      const vMax = Math.max(30, Vp * 1.3);
+      const yOf = (v) => wy1 - (v / vMax) * (wy1 - wy0);
+      const samples = 120;
+
+      // bare RSFQ reference
+      ctx.strokeStyle = "#90a4ae";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      for (let i = 0; i <= samples; i++) {
+        const t = i / samples;
+        let v = 0;
+        if (t > 0.15 && t < 0.28) {
+          const u = (t - 0.15) / 0.13;
+          v = 2.5 * Math.sin(Math.PI * u);
+        }
+        const x = wx0 + t * (wx1 - wx0);
+        if (i === 0) ctx.moveTo(x, yOf(v));
+        else ctx.lineTo(x, yOf(v));
+      }
+      ctx.stroke();
+      ctx.fillStyle = "#90a4ae";
+      ctx.font = "10px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("bare RSFQ", wx0 + 6, wy0 + 12);
+
+      // output wave from animation or static preview
+      ctx.strokeStyle = family === "squid" ? "#4051b5" : "#ef6c00";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      let started = false;
+      for (let i = 0; i <= samples; i++) {
+        const t = i / samples;
+        let v = 0;
+        if (family === "squid") {
+          if (wave.length) {
+            const idx = Math.min(wave.length - 1, Math.floor(t * (wave.length - 1)));
+            v = wave[idx];
+          } else if (state === "ready") {
+            // idle preview ghost
+            if (t > 0.15 && t < 0.45) {
+              const u = (t - 0.15) / 0.3;
+              v = Vp * Math.sin(Math.PI * u) * 0.15;
+            }
+          }
+        } else {
+          // latch
+          if (state === "latched" || (wave.length && !animating && state === "ready" && wave[wave.length - 1] < 0.1)) {
+            // show last wave or held
+          }
+          if (wave.length) {
+            const idx = Math.min(wave.length - 1, Math.floor(t * (wave.length - 1)));
+            v = wave[idx];
+          } else if (state === "latched") {
+            if (t > 0.15) v = Vp;
+          } else if (state === "ready") {
+            if (t > 0.15 && t < 0.35) {
+              const u = (t - 0.15) / 0.2;
+              v = Vp * Math.sin(Math.PI * u) * 0.12;
+            }
+          }
+        }
+        const x = wx0 + t * (wx1 - wx0);
+        if (!started) {
+          ctx.moveTo(x, yOf(v));
+          started = true;
+        } else ctx.lineTo(x, yOf(v));
+      }
+      ctx.stroke();
+
+      ctx.fillStyle = family === "squid" ? "#4051b5" : "#ef6c00";
+      ctx.font = "10px Roboto, sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText("V_out (cartoon)", wx1, wy0 + 12);
+      ctx.fillStyle = "rgba(0,0,0,0.4)";
+      ctx.fillText(Vp + " mV scale", wx1, wy1 + 16);
+    }
+
+    async function trigger() {
+      if (animating) return;
+      if (family === "latch" && state === "latched") return;
+      animating = true;
+      trigBtn.disabled = true;
+      const Vp = vPeak();
+      wave = [];
+      const frames = family === "squid" ? 40 : 36;
+
+      if (family === "squid") {
+        state = "firing";
+        refreshLabels();
+        for (let i = 0; i <= frames; i++) {
+          const t = i / frames;
+          // pulse shape across full buffer
+          const arr = [];
+          for (let j = 0; j < 120; j++) {
+            const u = j / 119;
+            let v = 0;
+            if (u > 0.15 && u < 0.15 + 0.28 * Math.min(1, t * 1.4)) {
+              const p = (u - 0.15) / 0.28;
+              if (p <= 1) v = Vp * Math.sin(Math.PI * Math.min(1, p));
+            }
+            arr.push(v);
+          }
+          wave = arr;
+          draw();
+          await sleep(22);
+        }
+        // decay to zero
+        for (let k = 0; k < 15; k++) {
+          wave = wave.map((v) => v * 0.75);
+          draw();
+          await sleep(20);
+        }
+        wave = [];
+        state = "ready";
+      } else {
+        state = "firing";
+        refreshLabels();
+        for (let i = 0; i <= frames; i++) {
+          const rise = Math.min(1, i / (frames * 0.4));
+          const arr = [];
+          for (let j = 0; j < 120; j++) {
+            const u = j / 119;
+            let v = 0;
+            if (u > 0.15) v = Vp * rise;
+            arr.push(v);
+          }
+          wave = arr;
+          draw();
+          await sleep(22);
+        }
+        state = "latched";
+        // hold flat
+        wave = Array(120)
+          .fill(0)
+          .map((_, j) => (j / 119 > 0.15 ? Vp : 0));
+      }
+
+      animating = false;
+      refreshLabels();
+    }
+
+    async function doReset() {
+      if (family !== "latch" || state !== "latched" || animating) return;
+      animating = true;
+      resetBtn.disabled = true;
+      const Vp = vPeak();
+      for (let i = 0; i <= 24; i++) {
+        const fall = 1 - i / 24;
+        wave = Array(120)
+          .fill(0)
+          .map((_, j) => (j / 119 > 0.15 ? Vp * fall : 0));
+        draw();
+        await sleep(22);
+      }
+      wave = [];
+      state = "ready";
+      animating = false;
+      refreshLabels();
+    }
+
+    document.getElementById("btnSquid").addEventListener("click", () => setFamily("squid"));
+    document.getElementById("btnLatch").addEventListener("click", () => setFamily("latch"));
+    nStack.addEventListener("input", refreshLabels);
+    vOne.addEventListener("input", refreshLabels);
+    trigBtn.addEventListener("click", trigger);
+    resetBtn.addEventListener("click", doReset);
+    window.addEventListener("resize", draw);
+
+    refreshLabels();
+  </script>
+</body>
+</html>

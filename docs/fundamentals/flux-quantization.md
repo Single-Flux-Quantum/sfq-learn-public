@@ -107,6 +107,20 @@ flowchart LR
   Area --> Loop["Loop flux changes by one quantum"]
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/flux-quantization-squid-loop.html).
+
+1. **Write Φ₀** — a $2\pi$ slip; shaded $\int V\,dt$ stays $\approx 2.07\,\text{mV}\cdot\text{ps}$ even when the spike shape changes. Loop goes $n=0\to 1$.
+2. Click **Try half-Φ₀** (rejected), then **Clocked readout** to escape the quantum. Change **L** and watch $I_{\mathrm{circ}}\approx\Phi_0/L$.
+
+<iframe
+  src="../../labs/flux-quantization-squid-loop.html"
+  title="Flux quantization / SQUID loop lab"
+  style="width:100%;height:740px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Engineering form: why mV·ps is useful
 
 Writing $\Phi_0 \approx 2.07\times 10^{-15}\,\text{Wb}$ is correct but hard to visualize on a picosecond scope. Because $1\,\text{Wb} = 1\,\text{V}\cdot\text{s}$,

@@ -96,6 +96,20 @@ Compare RSFQ gate pulse: tiny spike, area ~ Φ0, then V≈0
 Compare latching driver: often taller AND wider until reset
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/squid-stack-and-four-jl-driver.html).
+
+1. Stay on **SQUID stack**, raise **N**, fire **SFQ trigger** — peak grows ∼ \(N\cdot V_{\mathrm{stage}}\), still a short swing vs gray bare RSFQ.
+2. Switch to **4JL / Suzuki latch**, fire again — voltage **holds** until you **Reset**. Same height knob, different duration story.
+
+<iframe
+  src="../../labs/squid-stack-and-four-jl-driver.html"
+  title="SQUID stack vs 4JL latching driver lab"
+  style="width:100%;height:760px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## What each stage is doing (field-fundamental)
 
 You do not need a full SQUID magnetometer course. For digital I/O, keep four sentences:

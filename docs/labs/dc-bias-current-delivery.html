@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DC Bias Current Delivery Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .seg {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      overflow: hidden;
+    }
+
+    .seg button {
+      border: none;
+      background: var(--code-bg);
+      color: var(--md-primary);
+      padding: 0.45rem 0.7rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .seg button.active {
+      background: #4051b51a;
+      font-weight: 700;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .field input[type="range"] {
+      width: 140px;
+      accent-color: var(--md-primary);
+    }
+
+    .field .val {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-left: 0.3rem;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      padding-bottom: 0.3rem;
+      user-select: none;
+    }
+
+    .toggle input { accent-color: var(--md-primary); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.55rem 0.4rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+
+    .formula {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.88rem;
+      padding: 0.5rem 0.7rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.65rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 220px;
+      background: #fff;
+    }
+
+    .hint {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>DC Bias Current Delivery Lab</h1>
+    <p class="lede">
+      ERSFQ can kill <strong>static resistor heat</strong> — it does <strong>not</strong> erase
+      <strong>I<sub>total</sub> ∼ N · I<sub>b</sub></strong> under parallel feed. Amperes are a cryocable / delivery problem.
+    </p>
+
+    <div class="controls">
+      <div class="seg">
+        <button type="button" class="active" data-topo="parallel" id="btnPar">Parallel feed</button>
+        <button type="button" data-topo="serial" id="btnSer">Serial recycle (preview)</button>
+      </div>
+      <div class="field">
+        <label for="nSlider">Logic taps N</label>
+        <input type="range" id="nSlider" min="100" max="50000" step="100" value="10000">
+        <span class="val" id="nLabel">10k</span>
+      </div>
+      <div class="field">
+        <label for="ibSlider">I<sub>b</sub> per tap (mA)</label>
+        <input type="range" id="ibSlider" min="5" max="50" step="1" value="10">
+        <span class="val" id="ibLabel">0.10</span>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="padToggle">
+        <span>+20% path-balance pads</span>
+      </label>
+    </div>
+
+    <div class="formula" id="formula">I_supply ≈ N × I_b = …</div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Effective N</div>
+        <div class="stat-value" id="statN">10000</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">I_supply</div>
+        <div class="stat-value" id="statI">1.00 A</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Cable stress</div>
+        <div class="stat-value" id="statCable">HIGH</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Islands?</div>
+        <div class="stat-value" id="statIsl">no</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">ERSFQ clears amps?</div>
+        <div class="stat-value bad" id="statErsfq">NO</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">Room-temp supply → cryocable → on-chip taps → return</div>
+      <canvas id="delCanvas" width="880" height="220"></canvas>
+    </div>
+
+    <p class="hint">
+      Illustrative I<sub>b</sub> only (not a PDK). Serial recycle cartoon:
+      I<sub>supply</sub> ∼ I<sub>b</sub> with stacked <strong>ground islands</strong> — next concept card.
+      Pads for timing still grow N in the parallel sum.
+    </p>
+  </div>
+
+  <script>
+    let topo = "parallel";
+    const nSlider = document.getElementById("nSlider");
+    const ibSlider = document.getElementById("ibSlider");
+    const padToggle = document.getElementById("padToggle");
+    const canvas = document.getElementById("delCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function fmtN(n) {
+      if (n >= 1000) return (n / 1000).toFixed(n % 1000 === 0 ? 0 : 1) + "k";
+      return String(n);
+    }
+
+    function fmtI(amps) {
+      if (amps < 0.001) return (amps * 1e6).toFixed(0) + " µA";
+      if (amps < 1) return (amps * 1e3).toFixed(1) + " mA";
+      return amps.toFixed(2) + " A";
+    }
+
+    function refresh() {
+      const nLogic = Number(nSlider.value);
+      const ibMA = Number(ibSlider.value) / 100; // slider 5..50 → 0.05..0.50 mA
+      const ib = ibMA * 1e-3; // amps
+      const nEff = padToggle.checked ? Math.round(nLogic * 1.2) : nLogic;
+
+      document.getElementById("nLabel").textContent = fmtN(nLogic);
+      document.getElementById("ibLabel").textContent = ibMA.toFixed(2);
+
+      let iSupply, formula;
+      if (topo === "parallel") {
+        iSupply = nEff * ib;
+        formula =
+          "I_supply ≈ N_eff × I_b = " +
+          fmtN(nEff) +
+          " × " +
+          ibMA.toFixed(2) +
+          " mA = <strong>" +
+          fmtI(iSupply) +
+          "</strong>";
+      } else {
+        iSupply = ib; // ideal recycle cartoon
+        formula =
+          "I_supply ≈ I_b (ideal serial recycle) = <strong>" +
+          fmtI(iSupply) +
+          "</strong> through stacked islands — not N×I_b";
+      }
+
+      document.getElementById("formula").innerHTML = formula;
+      document.getElementById("statN").textContent = fmtN(nEff);
+      const iEl = document.getElementById("statI");
+      iEl.textContent = fmtI(iSupply);
+      iEl.className = "stat-value " + (iSupply >= 1 ? "bad" : iSupply >= 0.2 ? "warn" : "ok");
+
+      const cable = document.getElementById("statCable");
+      if (topo === "serial") {
+        cable.textContent = "LOW";
+        cable.className = "stat-value ok";
+      } else if (iSupply >= 1) {
+        cable.textContent = "HIGH";
+        cable.className = "stat-value bad";
+      } else if (iSupply >= 0.2) {
+        cable.textContent = "medium";
+        cable.className = "stat-value warn";
+      } else {
+        cable.textContent = "OK";
+        cable.className = "stat-value ok";
+      }
+
+      document.getElementById("statIsl").textContent = topo === "serial" ? "YES" : "no";
+      document.getElementById("statIsl").className =
+        "stat-value " + (topo === "serial" ? "warn" : "");
+
+      draw(nEff, ibMA, iSupply);
+    }
+
+    function setTopo(t) {
+      topo = t;
+      document.getElementById("btnPar").classList.toggle("active", t === "parallel");
+      document.getElementById("btnSer").classList.toggle("active", t === "serial");
+      refresh();
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = 220;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function draw(nEff, ibMA, iSupply) {
+      const { w, h } = resize();
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      // stages along path
+      const y = h * 0.35;
+      const boxes = [
+        { x: 70, label: "RT supply", sub: fmtI(iSupply) },
+        { x: 220, label: "cryocable", sub: topo === "parallel" && iSupply >= 0.5 ? "heat leak!" : "filters" },
+        { x: 400, label: "on-chip net", sub: "distribution" },
+        { x: 600, label: "cell taps", sub: fmtN(nEff) + " × " + ibMA.toFixed(2) + "mA" },
+        { x: 780, label: "return", sub: topo === "serial" ? "islands" : "GND" }
+      ];
+
+      ctx.strokeStyle = iSupply >= 1 && topo === "parallel" ? "#c62828" : "#4051b5";
+      ctx.lineWidth = Math.min(8, 2 + iSupply * 2);
+      ctx.beginPath();
+      ctx.moveTo(boxes[0].x, y);
+      ctx.lineTo(boxes[boxes.length - 1].x, y);
+      ctx.stroke();
+
+      boxes.forEach((b, i) => {
+        ctx.fillStyle = "#fff";
+        ctx.strokeStyle = "#4051b5";
+        ctx.lineWidth = 1.75;
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(b.x - 48, y - 28, 96, 56, 6);
+        else ctx.rect(b.x - 48, y - 28, 96, 56);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#4051b5";
+        ctx.font = "700 11px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(b.label, b.x, y - 2);
+        ctx.font = "10px Roboto, sans-serif";
+        ctx.fillStyle = "rgba(0,0,0,0.55)";
+        ctx.fillText(b.sub, b.x, y + 14);
+        if (i < boxes.length - 1) {
+          ctx.fillStyle = "#4051b5";
+          ctx.font = "16px sans-serif";
+          ctx.fillText("→", (b.x + boxes[i + 1].x) / 2, y - 36);
+        }
+      });
+
+      // chip detail
+      const chipY = h * 0.72;
+      if (topo === "parallel") {
+        const show = 8;
+        const x0 = 320;
+        const gap = 50;
+        ctx.fillStyle = "rgba(0,0,0,0.45)";
+        ctx.font = "11px Roboto, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("Parallel taps (currents add):", 40, chipY - 20);
+        for (let i = 0; i < show; i++) {
+          const x = x0 + i * gap;
+          ctx.strokeStyle = "#4051b5";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(x, chipY - 30);
+          ctx.lineTo(x, chipY);
+          ctx.stroke();
+          ctx.fillStyle = "#4051b514";
+          ctx.strokeStyle = "#4051b5";
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(x - 14, chipY, 28, 22, 3);
+          else ctx.rect(x - 14, chipY, 28, 22);
+          ctx.fill();
+          ctx.stroke();
+        }
+        ctx.fillStyle = "rgba(0,0,0,0.5)";
+        ctx.font = "11px Roboto, sans-serif";
+        ctx.fillText("… × " + fmtN(nEff), x0 + show * gap + 8, chipY + 16);
+      } else {
+        ctx.fillStyle = "rgba(0,0,0,0.45)";
+        ctx.font = "11px Roboto, sans-serif";
+        ctx.textAlign = "left";
+        ctx.fillText("Serial recycle: one I_b through stacked ground islands", 40, chipY - 24);
+        const islands = 3;
+        for (let i = 0; i < islands; i++) {
+          const x = 280 + i * 160;
+          ctx.fillStyle = "#ef6c0014";
+          ctx.strokeStyle = "#ef6c00";
+          ctx.lineWidth = 1.75;
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(x - 50, chipY - 10, 100, 40, 5);
+          else ctx.rect(x - 50, chipY - 10, 100, 40);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = "#ef6c00";
+          ctx.font = "700 11px Roboto, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("island " + (i + 1), x, chipY + 14);
+          if (i < islands - 1) {
+            ctx.fillStyle = "#4051b5";
+            ctx.font = "14px sans-serif";
+            ctx.fillText("⇢ I_b", x + 80, chipY + 14);
+          }
+        }
+      }
+    }
+
+    document.getElementById("btnPar").addEventListener("click", () => setTopo("parallel"));
+    document.getElementById("btnSer").addEventListener("click", () => setTopo("serial"));
+    nSlider.addEventListener("input", refresh);
+    ibSlider.addEventListener("input", refresh);
+    padToggle.addEventListener("change", refresh);
+    window.addEventListener("resize", refresh);
+
+    refresh();
+  </script>
+</body>
+</html>

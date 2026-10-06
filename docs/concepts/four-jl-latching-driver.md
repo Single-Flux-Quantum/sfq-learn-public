@@ -114,6 +114,20 @@ Compare RSFQ pulse: narrow spike, area ~ Φ0, then V≈0
 Compare SQUID stack: taller peak from series stages; hold time depends on design
 ```
 
+## Interactive lab
+
+Try this in place (same lab as the [SQUID stack](squid-stack-driver.md) page — two megaphone families). Prefer full-screen? Open the [lab page](../labs/squid-stack-and-four-jl-driver.html).
+
+1. Select **4JL / Suzuki latch**, set stack height **N**, fire **SFQ trigger** — output climbs and **holds**.
+2. Click **Reset** to return to ready. Flip to **SQUID stack** and fire again: taller peak, but it dies without a latch/reset machine.
+
+<iframe
+  src="../../labs/squid-stack-and-four-jl-driver.html"
+  title="SQUID stack vs 4JL latching driver lab"
+  style="width:100%;height:760px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Underdamping as a deliberate I/O tool
 
 In pulse logic, underdamping is often a **bug**: unwanted latching wrecks timing and margins. In I/O drivers, underdamping is often a **feature**: you *want* a finite-voltage state that lasts long enough for a slow neighbor to sample.

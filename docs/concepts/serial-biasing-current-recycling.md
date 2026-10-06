@@ -94,6 +94,20 @@ sequenceDiagram
   Note over I1,I3: Local grounds differ; pulse crossing needs isolation
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/serial-biasing-current-recycling.html).
+
+1. **Parallel:** raise islands $M$ and $I$ per island — $I_{\mathrm{supply}}$ is the sum; shared GND, no isolation sites.
+2. **Serial recycle:** same $M$ — $I_{\mathrm{supply}}$ collapses toward one island’s $I$; voltage stack grows; **ISO** marks appear between islands. Toggle **Send pulse across islands** and launch.
+
+<iframe
+  src="../../labs/serial-biasing-current-recycling.html"
+  title="Serial biasing / current recycling lab"
+  style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## What a ground island is (public definition)
 
 A **ground island** is a circuit region whose local return / ground reference is intentionally **not** tied to every other region’s ground as one shared equipotential. In serial biasing, islands appear because the series bias string forces potential steps.
