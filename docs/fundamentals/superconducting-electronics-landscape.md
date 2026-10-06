@@ -29,7 +29,7 @@ Passengers (applications) fly to different destinations. Confusing terminals was
 | Scoreboard | Timing, BER, energy, libraries | Coherence, gate/readout fidelity |
 | Role of SFQ in a quantum fridge | Optional **classical helper** | Not the qubit itself |
 
-**Quantum computing** is the broader field. **Superconducting qubits** are one hardware platform inside it. Detailed guide: [Superconducting qubits & quantum computing](fields/superconducting-qubits-and-quantum-computing.md).
+**Quantum computing** is the broader field with **several hardware platforms** (ions, superconducting, photonics, neutral atoms, quantum dots, topological, …). **Superconducting qubits** are the platform that shares the most toolbox with classical SFQ. Guides: [qubits & QC](fields/superconducting-qubits-and-quantum-computing.md) · [QC hardware platforms](fields/quantum-computing-hardware-platforms.md).
 
 ```text
                     Superconducting electronics
@@ -97,7 +97,7 @@ flowchart TD
 
 **Critical distinction:** the qubit chip is quantum information hardware; an SFQ serializer beside it is still classical digital SFQ.
 
-**Deeper orientation:** [Superconducting qubits & quantum computing](fields/superconducting-qubits-and-quantum-computing.md)
+**Deeper orientation:** [Superconducting qubits & quantum computing](fields/superconducting-qubits-and-quantum-computing.md) · [QC hardware platforms](fields/quantum-computing-hardware-platforms.md) (ions, photonics, atoms, dots, topological — relevance ranking)
 
 ### Branch F — Cryo-CMOS and hybrid systems
 
@@ -158,7 +158,7 @@ flowchart TD
 | SQUID sensing | [fields/squid-sensing…](fields/squid-sensing-magnetometry.md) | Loop/SQUID fundamentals only (not MEG course) |
 | Metrology | [fields/josephson-metrology…](fields/josephson-metrology-voltage-standards.md) | $\Phi_0$ reuse in fundamentals |
 | Detectors | [fields/…photon-detectors](fields/superconducting-photon-detectors.md) | I/O / detector track pointers later |
-| Qubits / QC interfaces | [fields/…qubits…](fields/superconducting-qubits-and-quantum-computing.md) | Cryo I/O concepts + track |
+| Qubits / QC interfaces | [qubits](fields/superconducting-qubits-and-quantum-computing.md) · [platforms](fields/quantum-computing-hardware-platforms.md) | Cryo I/O concepts + track |
 | Cryo-CMOS hybrids | [fields/cryo-cmos…](fields/cryo-cmos-and-hybrids.md) | Memory/I/O concepts; CMOS contrast |
 | EDA | Landscape Branch G | STA, routing, path balancing concepts |
 

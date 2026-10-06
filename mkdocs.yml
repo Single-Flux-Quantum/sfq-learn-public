@@ -40,6 +40,7 @@ nav:
           - Hub: fundamentals/fields/README.md
           - Digital SFQ overview: fundamentals/fields/digital-sfq-overview.md
           - Qubits & quantum computing: fundamentals/fields/superconducting-qubits-and-quantum-computing.md
+          - QC hardware platforms: fundamentals/fields/quantum-computing-hardware-platforms.md
           - SQUID sensing: fundamentals/fields/squid-sensing-magnetometry.md
           - Josephson metrology: fundamentals/fields/josephson-metrology-voltage-standards.md
           - Photon detectors: fundamentals/fields/superconducting-photon-detectors.md

@@ -16,7 +16,7 @@ More pages and more wording are **intentional**. Prefer clarity over compression
 | You are… | Start at |
 |----------|----------|
 | Brand new — want motivation before math | [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md) then orientation + [field guides](fundamentals/fields/README.md) |
-| Confused about qubits vs SFQ | [Qubits & quantum computing](fundamentals/fields/superconducting-qubits-and-quantum-computing.md) then back to [landscape](fundamentals/superconducting-electronics-landscape.md) |
+| Confused about qubits vs SFQ | [Qubits & quantum computing](fundamentals/fields/superconducting-qubits-and-quantum-computing.md) then [QC platforms](fundamentals/fields/quantum-computing-hardware-platforms.md) |
 | Coming from CMOS digital design | [Why…](fundamentals/why-superconducting-electronics.md) + preview [CMOS vs SFQ](concepts/cmos-vs-sfq.md), then orientation → notation |
 | Ready for symbols / device physics | [Reading SFQ notation](fundamentals/reading-sfq-notation.md) |
 | Finished fundamentals but cells feel sudden | [Bridge](#2-bridge-close-the-gap) |
@@ -32,7 +32,7 @@ Build context first, then device intuition. **No rush.**
 1. [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md) — motivation, costs, niches  
 2. [History of superconducting electronics](fundamentals/history-of-superconducting-electronics.md) — latching → RSFQ → efficiency / systems  
 3. [Superconducting electronics landscape](fundamentals/superconducting-electronics-landscape.md) — airport map of branches  
-4. [Field guides](fundamentals/fields/README.md) — deeper orientation per branch (**qubits ≠ SFQ**, sensing, metrology, detectors, cryo-CMOS, digital SFQ)  
+4. [Field guides](fundamentals/fields/README.md) — deeper orientation per branch (**qubits ≠ SFQ**, [QC platforms](fundamentals/fields/quantum-computing-hardware-platforms.md), sensing, metrology, detectors, cryo-CMOS)  
 5. [Where SFQ sits among logic families](fundamentals/sfq-among-logic-families.md) — RSFQ / ERSFQ / AQFP / latching  
 6. [Cryogenics for electronics](fundamentals/cryogenics-for-electronics.md) — ~4 K vs mK, system taxes  
 

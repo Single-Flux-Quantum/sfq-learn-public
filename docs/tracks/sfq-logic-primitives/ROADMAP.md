@@ -38,7 +38,7 @@ graph TD
 1. [Why superconducting electronics?](../../fundamentals/why-superconducting-electronics.md)
 2. [History of superconducting electronics](../../fundamentals/history-of-superconducting-electronics.md)
 3. [Superconducting electronics landscape](../../fundamentals/superconducting-electronics-landscape.md)
-4. [Field guides hub](../../fundamentals/fields/README.md) (survey branches; especially [qubits](../../fundamentals/fields/superconducting-qubits-and-quantum-computing.md))
+4. [Field guides hub](../../fundamentals/fields/README.md) (survey branches; [qubits](../../fundamentals/fields/superconducting-qubits-and-quantum-computing.md) · [QC platforms](../../fundamentals/fields/quantum-computing-hardware-platforms.md))
 5. [Where SFQ sits among logic families](../../fundamentals/sfq-among-logic-families.md)
 6. [Cryogenics for electronics](../../fundamentals/cryogenics-for-electronics.md)
 

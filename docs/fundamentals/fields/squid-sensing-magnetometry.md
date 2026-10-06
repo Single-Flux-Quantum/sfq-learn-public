@@ -1,6 +1,6 @@
 # Field: SQUID Sensing & Magnetometry
 
-**Prereqs:** [Qubits & quantum computing](superconducting-qubits-and-quantum-computing.md) · [Field map hub](README.md)  
+**Prereqs:** [QC hardware platforms](quantum-computing-hardware-platforms.md) · [Field map hub](README.md)  
 **Next:** [Josephson metrology & voltage standards](josephson-metrology-voltage-standards.md)
 
 **Learning goals.** After this page you should be able to (1) state what SQUID sensing is *for*, (2) explain why a SQUID loop is a natural magnetometer building block, (3) contrast sensing success metrics with digital SFQ metrics, and (4) avoid assuming every SQUID schematic is an SFQ microprocessor cell.

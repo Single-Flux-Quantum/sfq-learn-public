@@ -1,7 +1,7 @@
 # Field: Superconducting Qubits & Quantum Computing
 
 **Prereqs:** [Digital SFQ overview](digital-sfq-overview.md) · [Field map hub](README.md)  
-**Next:** [SQUID sensing & magnetometry](squid-sensing-magnetometry.md) · [Cryogenics](../cryogenics-for-electronics.md)
+**Next:** [QC hardware platforms](quantum-computing-hardware-platforms.md) · [SQUID sensing](squid-sensing-magnetometry.md)
 
 **Learning goals.** After this page you should be able to (1) say what a **qubit** is for at a teaching level, (2) place **superconducting qubits** as one hardware platform inside **quantum computing**, (3) explain why this is a **different branch** from classical SFQ digital logic, and (4) describe how SFQ or cryo-CMOS may appear as **classical helpers** in the same cryostat without becoming the qubit.
 
@@ -37,15 +37,17 @@ A superconducting qubit processor is more like a **music hall**: you carefully p
 flowchart TD
   QC[Quantum computing as a field]
   QC --> SC[Superconducting qubits]
-  QC --> Ion[Trapped ions]
-  QC --> Phot[Photonic / other platforms]
+  QC --> Other[Other platforms: ions, photonics, atoms, dots, topological…]
   SC --> Ctrl[Classical control & readout stack]
   Ctrl --> SFQh[Possible SFQ helpers]
   Ctrl --> CMOSh[Possible cryo-CMOS helpers]
   Ctrl --> RT[Room-temperature electronics]
+  Other --> Map[See QC hardware platforms map]
 ```
 
 **Teaching sentence:** quantum computing is the discipline; superconducting qubits are one hardware choice; SFQ is usually classical electronics that might support that hardware.
+
+**Other platforms (ions, photonics, neutral atoms, quantum dots, topological):** see the comparison map → [Quantum computing hardware platforms](quantum-computing-hardware-platforms.md).
 
 ## Picture 2 — What “good” means here
 
@@ -162,20 +164,21 @@ As a helper for control, readout, serialization, or reducing cable heat — opti
 <details>
 <summary>5. Name two non-superconducting qubit platforms (awareness only).</summary>
 
-Examples: trapped ions, photonic qubits (and others). Superconducting is one hardware family among several.
+Examples: trapped ions, photonic qubits, neutral atoms, quantum dots. Full map: [QC hardware platforms](quantum-computing-hardware-platforms.md).
 </details>
 
 <details>
 <summary>6. What is next in the fields survey?</summary>
 
-[SQUID sensing & magnetometry](squid-sensing-magnetometry.md), or jump to other field pages from the [hub](README.md).
+[QC hardware platforms](quantum-computing-hardware-platforms.md), then [SQUID sensing](squid-sensing-magnetometry.md).
 </details>
 
 ## Glossary spot-links
 
-Glossary: qubit (add), quantum computing (concept), Josephson junction, cryogenic, SFQ, cryo-CMOS.
+Glossary: qubit, quantum computing, Josephson junction, cryogenic, SFQ, cryo-CMOS.
 
 ## Next steps
 
-- Continue survey: [SQUID sensing](squid-sensing-magnetometry.md).  
+- Map other QC hardwares: [Quantum computing hardware platforms](quantum-computing-hardware-platforms.md).  
+- Then continue survey: [SQUID sensing](squid-sensing-magnetometry.md).  
 - Thermal map reminder: [Cryogenics for electronics](../cryogenics-for-electronics.md).

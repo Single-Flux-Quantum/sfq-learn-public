@@ -13,6 +13,7 @@ The [landscape](../superconducting-electronics-landscape.md) page is the **airpo
 |------------|--------------|
 | [Digital SFQ overview](digital-sfq-overview.md) | Classical Josephson digital logic (this curriculum’s deep path) |
 | [Superconducting qubits & quantum computing](superconducting-qubits-and-quantum-computing.md) | Quantum information hardware + nearby classical helpers |
+| [QC hardware platforms](quantum-computing-hardware-platforms.md) | Ions, superconducting, photonics, atoms, dots, topological — relevance to us |
 | [SQUID sensing & magnetometry](squid-sensing-magnetometry.md) | Measure tiny magnetic signals |
 | [Josephson metrology & voltage standards](josephson-metrology-voltage-standards.md) | Accurate voltage from Josephson physics |
 | [Superconducting photon detectors](superconducting-photon-detectors.md) | Detect single photons (SNSPD/SSPD) |
@@ -35,8 +36,9 @@ Shared toolbox (junctions, cryogenics, packaging) ≠ same research goal.
 
 1. [Digital SFQ overview](digital-sfq-overview.md) — know “home base”  
 2. [Qubits & quantum computing](superconducting-qubits-and-quantum-computing.md) — clearest sibling confusion  
-3. Sensing → metrology → detectors → cryo-CMOS (any order)  
-4. Return: [SFQ among logic families](../sfq-among-logic-families.md) → [cryogenics](../cryogenics-for-electronics.md) → [notation](../reading-sfq-notation.md)
+3. [QC hardware platforms](quantum-computing-hardware-platforms.md) — ions / photonics / atoms / dots / topological vs us  
+4. Sensing → metrology → detectors → cryo-CMOS (any order)  
+5. Return: [SFQ among logic families](../sfq-among-logic-families.md) → [cryogenics](../cryogenics-for-electronics.md) → [notation](../reading-sfq-notation.md)
 
 ## Next steps
 

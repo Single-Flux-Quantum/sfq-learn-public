@@ -36,6 +36,9 @@ Jump here whenever a word feels fuzzy. Definitions stay public and field-fundame
 | **PTL** | Passive Transmission Line — long superconducting interconnect needing driver/receiver. |
 | **Qubit** | Quantum bit — physical system storing quantum information; superconducting qubits are one QC hardware platform (not classical SFQ). |
 | **Quantum computing** | Field of information processing with quantum states; may use superconducting qubits and classical cryo helpers (SFQ/cryo-CMOS). |
+| **Quantum dot (qubit)** | Semiconductor nanostructure qubit platform; closer to cryo-CMOS/semi story than to RSFQ. |
+| **Neutral-atom qubit** | Qubit platform using arrays of neutral atoms (e.g. optical tweezers); weak overlap with SFQ gates. |
+| **Photonic qubit** | Qubit platform encoding information in light; often needs detectors (e.g. SNSPD) — medium overlap via readout. |
 | **RCSJ** | Resistively and Capacitively Shunted Junction model (JJ + $R$ + $C$). |
 | **RSFQ** | Rapid Single Flux Quantum — pulse-based superconducting digital logic family. |
 | **Serial biasing / current recycling** | Reusing one bias current through series-stacked ground islands. |
@@ -44,6 +47,8 @@ Jump here whenever a word feels fuzzy. Definitions stay public and field-fundame
 | **Splitter** | Cell that copies one SFQ pulse onto two outputs (fanout). |
 | **SQUID** | Superconducting Quantum Interference Device — loop with junctions; flux sensor / building block. |
 | **SQUID stack** | Series SQUID stages that add voltage for interface drive. |
+| **Topological qubit** | Research platform aiming at topologically protected qubits; awareness-only for this SFQ curriculum. |
+| **Trapped-ion qubit** | Qubit platform using ions in electromagnetic traps with laser control; QC sibling, weak SFQ overlap. |
 | **STA** | Static timing analysis — check setup/hold-like windows without full pattern simulation. |
 | **Supercurrent** | Current through a superconductor with essentially zero DC resistance. |
 | **Underdamped** | Junction can latch at large voltage; used in some drivers, not typical RSFQ gates. |
