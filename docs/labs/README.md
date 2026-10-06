@@ -1,7 +1,7 @@
 # Interactive labs
 
 **Prereqs:** none (index for demos)  
-**Next:** [Pulse to logic state lab](pulse-to-logic-state.html) · [Bridge hub](../bridge/README.md)
+**Next:** [Phase to pulse lab](phase-to-pulse.html) · [Pulse to logic state lab](pulse-to-logic-state.html) · [Bridge hub](../bridge/README.md)
 
 Self-contained HTML labs that let newcomers **click, watch events, and read stats** — the same teaching pattern as a small in-browser simulator, not SPICE or netlists.
 
@@ -45,6 +45,7 @@ Use height ≥ 700px so controls, stats, and the table fit without clipping.
 
 | Lab | Pairs with | Idea |
 |-----|------------|------|
+| [phase-to-pulse.html](phase-to-pulse.html) | [Phase to pulse](../bridge/phase-to-pulse.md) | \(2\pi\) slip → \(V(t)\); area \(\Phi_0\) fixed while \(\Delta t\) changes height |
 | [pulse-to-logic-state.html](pulse-to-logic-state.html) | [Pulse to logic state](../bridge/pulse-to-logic-state.md) | Presence/absence in a clock window; timing skew → errors |
 
 ## Adding a lab

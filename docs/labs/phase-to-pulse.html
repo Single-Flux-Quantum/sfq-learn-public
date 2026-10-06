@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phase → SFQ Pulse Lab</title>
+  <style>
+    /* Match MkDocs Material default (light + indigo) used by sfq-learn-public */
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --md-accent: #526cfe;
+      --bg: #ffffff;
+      --panel: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --phi: #4051b5;
+      --volt: #c62828;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 1rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: center;
+      margin-bottom: 0.85rem;
+    }
+
+    button {
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 0.15s, box-shadow 0.15s;
+    }
+
+    #fireBtn {
+      background: var(--md-primary);
+      color: #fff;
+      box-shadow: 0 1px 2px #00000024;
+    }
+
+    #fireBtn:hover { background: var(--md-primary-light); }
+    #fireBtn:disabled { opacity: 0.55; cursor: wait; }
+
+    #clearBtn {
+      background: transparent;
+      color: var(--md-primary);
+      border: 1px solid var(--border);
+    }
+
+    #clearBtn:hover { background: var(--code-bg); }
+
+    .slider-block {
+      flex: 1 1 220px;
+      min-width: 200px;
+    }
+
+    .slider-block label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--md-primary);
+    }
+
+    .slider-val {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.82rem;
+      font-weight: 600;
+      min-width: 4.5rem;
+      color: var(--text);
+    }
+
+    .presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .presets button {
+      background: var(--code-bg);
+      color: var(--md-primary);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.65rem;
+      font-size: 0.78rem;
+    }
+
+    .presets button:hover { background: #ebebeb; }
+    .presets button.active {
+      background: #4051b51a;
+      border-color: var(--md-primary);
+      font-weight: 600;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.65rem 0.5rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .stat-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .plots {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .plots { grid-template-columns: 1fr; }
+    }
+
+    .plot-card {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      background: var(--code-bg);
+    }
+
+    .plot-label {
+      padding: 0.45rem 0.7rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 160px;
+      background: #fff;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      background: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    th {
+      padding: 0.55rem 0.45rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--code-bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.55rem 0.45rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .muted { color: var(--muted); }
+    .ok { color: var(--ok); font-weight: 700; }
+
+    .hint {
+      margin-top: 0.85rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Phase → SFQ Pulse Lab</h1>
+    <p class="lede">
+      One intentional <strong>2π</strong> phase slip → one voltage pulse whose
+      <strong>area</strong> is always <strong>Φ₀ ≈ 2.07 mV·ps</strong>.
+      Change the slip duration: peak height changes; the area does not.
+    </p>
+
+    <div class="controls">
+      <button type="button" id="fireBtn">Fire 2π slip</button>
+      <button type="button" id="clearBtn">Reset</button>
+      <div class="slider-block">
+        <label for="dtSlider">Slip duration Δt (sets average height ≈ Φ₀ / Δt)</label>
+        <div class="slider-row">
+          <input type="range" id="dtSlider" min="2" max="200" step="1" value="4">
+          <span class="slider-val" id="dtLabel">4 ps</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="presets">
+      <button type="button" data-dt="4" class="active">Fast RSFQ (~4 ps)</button>
+      <button type="button" data-dt="20">Slower (~20 ps)</button>
+      <button type="button" data-dt="200">Very slow (~200 ps)</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Slips fired</div>
+        <div class="stat-value" id="statSlips">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Total area</div>
+        <div class="stat-value" id="statArea">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Last Δt</div>
+        <div class="stat-value" id="statDt">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Last V<sub>avg</sub></div>
+        <div class="stat-value" id="statVavg">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Area check</div>
+        <div class="stat-value ok" id="statCheck">Φ₀ fixed</div>
+      </div>
+    </div>
+
+    <div class="plots">
+      <div class="plot-card">
+        <div class="plot-label">Phase φ(t) — one turn = +2π</div>
+        <canvas id="phiCanvas" width="440" height="160" aria-label="Phase vs time"></canvas>
+      </div>
+      <div class="plot-card">
+        <div class="plot-label">Voltage V(t) — shaded area = Φ₀</div>
+        <canvas id="vCanvas" width="440" height="160" aria-label="Voltage vs time"></canvas>
+      </div>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Slip #</th>
+            <th>Δt (ps)</th>
+            <th>V<sub>avg</sub> (mV)</th>
+            <th>Area (mV·ps)</th>
+            <th>Token</th>
+          </tr>
+        </thead>
+        <tbody id="resultsTable">
+          <tr>
+            <td colspan="5" class="muted" style="padding: 20px;">
+              Pick a duration, then click “Fire 2π slip”. Try fast vs very slow and watch V<sub>avg</sub> change while area stays Φ₀.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="hint">
+      <strong>Invariant:</strong> ∫V dt = Φ₀ for each ideal single slip.
+      <strong>Not the bit:</strong> peak / average height — those only set how “tall” the scope sketch looks.
+      A ~200&nbsp;ps slip still has area Φ₀, but V<sub>avg</sub> is tiny (~10&nbsp;µV scale here as Φ₀/Δt) — not a useful RSFQ gate token.
+    </p>
+  </div>
+
+  <script>
+    const PHI0 = 2.07; // mV·ps
+    const MAX_ROWS = 12;
+
+    let slipCount = 0;
+    let totalArea = 0;
+    let animating = false;
+    /** @type {{ id: number, dt: number, vAvg: number, area: number }[]} */
+    let history = [];
+    let displayDt = 4;
+    let animProgress = 1; // 0..1 for draw
+
+    const fireBtn = document.getElementById("fireBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const dtSlider = document.getElementById("dtSlider");
+    const dtLabel = document.getElementById("dtLabel");
+    const resultsTable = document.getElementById("resultsTable");
+    const phiCanvas = document.getElementById("phiCanvas");
+    const vCanvas = document.getElementById("vCanvas");
+    const phiCtx = phiCanvas.getContext("2d");
+    const vCtx = vCanvas.getContext("2d");
+
+    const presetBtns = document.querySelectorAll(".presets button");
+
+    function formatVavg(dt) {
+      const v = PHI0 / dt;
+      if (v >= 0.1) return v.toFixed(2) + " mV";
+      if (v >= 0.001) return (v * 1000).toFixed(1) + " µV";
+      return (v * 1e6).toFixed(1) + " nV";
+    }
+
+    function syncSliderUI() {
+      const dt = Number(dtSlider.value);
+      dtLabel.textContent = dt + " ps";
+      presetBtns.forEach((b) => {
+        b.classList.toggle("active", Number(b.dataset.dt) === dt);
+      });
+    }
+
+    function updateStats(last) {
+      document.getElementById("statSlips").textContent = String(slipCount);
+      document.getElementById("statArea").textContent =
+        slipCount === 0 ? "0" : (totalArea.toFixed(2) + " (= " + slipCount + " Φ₀)");
+      if (!last) {
+        document.getElementById("statDt").textContent = "—";
+        document.getElementById("statVavg").textContent = "—";
+        return;
+      }
+      document.getElementById("statDt").textContent = last.dt + " ps";
+      document.getElementById("statVavg").textContent = formatVavg(last.dt);
+    }
+
+    function renderTable() {
+      if (history.length === 0) {
+        resultsTable.innerHTML =
+          '<tr><td colspan="5" class="muted" style="padding: 20px;">Pick a duration, then click “Fire 2π slip”.</td></tr>';
+        return;
+      }
+      resultsTable.innerHTML = "";
+      const rows = history.slice().reverse();
+      for (const row of rows) {
+        const tr = document.createElement("tr");
+        tr.innerHTML =
+          "<td>" + row.id + "</td>" +
+          "<td>" + row.dt + "</td>" +
+          "<td>" + (PHI0 / row.dt).toFixed(3) + "</td>" +
+          "<td class=\"ok\">" + row.area.toFixed(2) + "</td>" +
+          "<td class=\"ok\">1 × Φ₀</td>";
+        resultsTable.appendChild(tr);
+      }
+    }
+
+    function resizeCanvas(canvas, ctx) {
+      const dpr = window.devicePixelRatio || 1;
+      const cssW = canvas.clientWidth || 440;
+      const cssH = 160;
+      canvas.width = Math.floor(cssW * dpr);
+      canvas.height = Math.floor(cssH * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w: cssW, h: cssH };
+    }
+
+    /** Raised-cosine-like pulse shape for pedagogy (area normalized later). */
+    function pulseShape(u) {
+      // u in [0,1]; smooth bump
+      if (u <= 0 || u >= 1) return 0;
+      return Math.sin(Math.PI * u);
+    }
+
+    function shapeIntegral() {
+      // ∫_0^1 sin(πu) du = 2/π
+      return 2 / Math.PI;
+    }
+
+    function drawAxes(ctx, w, h, yLabel) {
+      const padL = 36;
+      const padR = 12;
+      const padT = 14;
+      const padB = 28;
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = "rgba(0,0,0,0.12)";
+      ctx.beginPath();
+      ctx.moveTo(padL, padT);
+      ctx.lineTo(padL, h - padB);
+      ctx.lineTo(w - padR, h - padB);
+      ctx.stroke();
+      ctx.fillStyle = "rgba(0,0,0,0.54)";
+      ctx.font = "11px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("time", (padL + w - padR) / 2, h - 8);
+      ctx.save();
+      ctx.translate(12, (padT + h - padB) / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText(yLabel, 0, 0);
+      ctx.restore();
+      return { padL, padR, padT, padB };
+    }
+
+    function drawPlots(dt, progress) {
+      const phi = resizeCanvas(phiCanvas, phiCtx);
+      const vv = resizeCanvas(vCanvas, vCtx);
+      const p = Math.max(0, Math.min(1, progress));
+
+      // --- Phase plot: step up by 2π during the slip window ---
+      {
+        const { w, h } = phi;
+        const pads = drawAxes(phiCtx, w, h, "φ");
+        const x0 = pads.padL;
+        const x1 = w - pads.padR;
+        const y0 = h - pads.padB;
+        const y1 = pads.padT;
+        const midY = (y0 + y1) / 2;
+
+        // idle before / after
+        const slipStart = 0.25;
+        const slipEnd = 0.75;
+        const n = 80;
+        phiCtx.strokeStyle = "#4051b5";
+        phiCtx.lineWidth = 2.5;
+        phiCtx.beginPath();
+        for (let i = 0; i <= n; i++) {
+          const t = i / n;
+          if (t > p) break;
+          let phiVal;
+          if (t < slipStart) phiVal = 0;
+          else if (t > slipEnd) phiVal = 1;
+          else phiVal = (t - slipStart) / (slipEnd - slipStart);
+          // smoothstep the rise for nicer look
+          if (t >= slipStart && t <= slipEnd) {
+            const u = (t - slipStart) / (slipEnd - slipStart);
+            phiVal = u * u * (3 - 2 * u);
+          }
+          const x = x0 + t * (x1 - x0);
+          const y = midY + 28 - phiVal * 56;
+          if (i === 0) phiCtx.moveTo(x, y);
+          else phiCtx.lineTo(x, y);
+        }
+        phiCtx.stroke();
+
+        phiCtx.fillStyle = "rgba(0,0,0,0.45)";
+        phiCtx.font = "11px Roboto, sans-serif";
+        phiCtx.textAlign = "left";
+        if (p >= slipEnd) {
+          phiCtx.fillText("+2π", x0 + 8, midY - 36);
+        } else if (p > slipStart) {
+          phiCtx.fillText("slipping…", x0 + 8, midY - 36);
+        } else {
+          phiCtx.fillText("idle (V≈0)", x0 + 8, midY - 36);
+        }
+      }
+
+      // --- Voltage plot: pulse with fixed area Φ0 ---
+      {
+        const { w, h } = vv;
+        const pads = drawAxes(vCtx, w, h, "V");
+        const x0 = pads.padL;
+        const x1 = w - pads.padR;
+        const y0 = h - pads.padB;
+        const yTop = pads.padT + 8;
+
+        const slipStart = 0.25;
+        const slipEnd = 0.75;
+        const amp = (PHI0 / dt) / shapeIntegral(); // peak of sin shape so area = Φ0
+        // Scale plot to a reference fast pulse so slow pulses look short
+        const refPeak = (PHI0 / 4) / shapeIntegral();
+        const yScale = (y0 - yTop) / (refPeak * 1.15);
+
+        // Shade area under pulse (up to progress)
+        vCtx.beginPath();
+        let started = false;
+        const n = 100;
+        for (let i = 0; i <= n; i++) {
+          const t = i / n;
+          if (t > p) break;
+          let v = 0;
+          if (t >= slipStart && t <= slipEnd) {
+            const u = (t - slipStart) / (slipEnd - slipStart);
+            v = amp * pulseShape(u);
+          }
+          const x = x0 + t * (x1 - x0);
+          const y = y0 - v * yScale;
+          if (!started) {
+            vCtx.moveTo(x, y0);
+            vCtx.lineTo(x, y);
+            started = true;
+          } else {
+            vCtx.lineTo(x, y);
+          }
+        }
+        if (started) {
+          const tEnd = Math.min(p, 1);
+          const xEnd = x0 + tEnd * (x1 - x0);
+          vCtx.lineTo(xEnd, y0);
+          vCtx.closePath();
+          vCtx.fillStyle = "rgba(64, 81, 181, 0.22)";
+          vCtx.fill();
+        }
+
+        // Stroke
+        vCtx.strokeStyle = "#c62828";
+        vCtx.lineWidth = 2.5;
+        vCtx.beginPath();
+        for (let i = 0; i <= n; i++) {
+          const t = i / n;
+          if (t > p) break;
+          let v = 0;
+          if (t >= slipStart && t <= slipEnd) {
+            const u = (t - slipStart) / (slipEnd - slipStart);
+            v = amp * pulseShape(u);
+          }
+          const x = x0 + t * (x1 - x0);
+          const y = y0 - v * yScale;
+          if (i === 0) vCtx.moveTo(x, y);
+          else vCtx.lineTo(x, y);
+        }
+        vCtx.stroke();
+
+        vCtx.fillStyle = "rgba(0,0,0,0.45)";
+        vCtx.font = "11px Roboto, sans-serif";
+        vCtx.textAlign = "left";
+        vCtx.fillText("area = Φ₀  |  Vavg ≈ " + formatVavg(dt), x0 + 8, pads.padT + 4);
+      }
+    }
+
+    function resetLab() {
+      slipCount = 0;
+      totalArea = 0;
+      history = [];
+      animProgress = 1;
+      displayDt = Number(dtSlider.value);
+      updateStats(null);
+      renderTable();
+      drawPlots(displayDt, 1);
+      fireBtn.disabled = false;
+    }
+
+    function fireSlip() {
+      if (animating) return;
+      const dt = Number(dtSlider.value);
+      displayDt = dt;
+      animating = true;
+      fireBtn.disabled = true;
+      animProgress = 0;
+
+      const durationMs = Math.min(900, 280 + dt * 2);
+      const t0 = performance.now();
+
+      function frame(now) {
+        const u = Math.min(1, (now - t0) / durationMs);
+        animProgress = u;
+        drawPlots(dt, u);
+        if (u < 1) {
+          requestAnimationFrame(frame);
+        } else {
+          slipCount += 1;
+          totalArea += PHI0;
+          const row = { id: slipCount, dt: dt, vAvg: PHI0 / dt, area: PHI0 };
+          history.push(row);
+          if (history.length > MAX_ROWS) history.shift();
+          updateStats(row);
+          renderTable();
+          animating = false;
+          fireBtn.disabled = false;
+        }
+      }
+      requestAnimationFrame(frame);
+    }
+
+    dtSlider.addEventListener("input", () => {
+      syncSliderUI();
+      if (!animating) {
+        displayDt = Number(dtSlider.value);
+        drawPlots(displayDt, 1);
+      }
+    });
+
+    presetBtns.forEach((b) => {
+      b.addEventListener("click", () => {
+        dtSlider.value = b.dataset.dt;
+        syncSliderUI();
+        if (!animating) {
+          displayDt = Number(dtSlider.value);
+          drawPlots(displayDt, 1);
+        }
+      });
+    });
+
+    fireBtn.addEventListener("click", fireSlip);
+    clearBtn.addEventListener("click", resetLab);
+    window.addEventListener("resize", () => drawPlots(displayDt, animProgress));
+
+    syncSliderUI();
+    drawPlots(displayDt, 1);
+  </script>
+</body>
+</html>

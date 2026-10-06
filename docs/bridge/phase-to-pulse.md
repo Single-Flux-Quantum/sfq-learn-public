@@ -113,6 +113,20 @@ V_{\mathrm{avg}} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{1000\,\text{ps}} \
 
 That is not an RSFQ token useful for gate-to-gate digital communication. RSFQ engineers choose damping and bias so that the slip is **fast** — few picoseconds — so the pulse is millivolt-scale and short enough to fit in high-rate logic timing. The constant does not change; the **dynamics** do.
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/phase-to-pulse.html).
+
+1. Leave **Δt ≈ 4 ps** (fast RSFQ preset) and fire a slip. Watch φ advance by \(2\pi\) and \(V(t)\) spike; the shaded area is \(\Phi_0\).
+2. Switch to **~200 ps** (very slow) and fire again. Average height collapses; the area stays \(\Phi_0\). Peak is not the digital token — **area** is.
+
+<iframe
+  src="../../labs/phase-to-pulse.html"
+  title="Phase to SFQ pulse lab"
+  style="width:100%;height:780px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Overdamped switching: the SFQ pulse story
 
 Classical RSFQ gates use **overdamped** junctions (see [overdamped vs underdamped](../fundamentals/overdamped-vs-underdamped-jj.md)). The operating story is:

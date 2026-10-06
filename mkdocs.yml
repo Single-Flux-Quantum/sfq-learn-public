@@ -64,6 +64,7 @@ nav:
       - SFQ Pulse to Voltage Levels: bridge/sfq-pulse-to-volt-level.md
   - Labs:
       - Labs hub: labs/README.md
+      - Phase to pulse: labs/phase-to-pulse.html
       - Windowed encoding: labs/pulse-to-logic-state.html
   - Concepts:
       - CMOS vs SFQ: concepts/cmos-vs-sfq.md
