@@ -3,7 +3,7 @@
 **Prereqs:** [Photon detectors](superconducting-photon-detectors.md) · [Field map hub](README.md)  
 **Next:** [Logic families](../sfq-among-logic-families.md) · [Cryogenics](../cryogenics-for-electronics.md)
 
-**In one minute.** Cryo-CMOS = silicon electronics run **cold**. Hybrids mix SFQ + CMOS + warm FPGAs by stage. “At 4 K” is placement, not a technology name.
+**In one minute.** Cryo-CMOS = silicon electronics run **cold**. Hybrids mix SFQ + CMOS + warm FPGAs by stage. "At 4 K" is placement, not a technology name.
 
 ## Job
 
@@ -34,9 +34,9 @@ CMOS operated at cryogenic temperatures near cold payloads.
 </details>
 
 <details markdown="1">
-<summary markdown="span">2. Does “4 K controller” tell you SFQ vs CMOS?</summary>
+<summary markdown="span">2. Does "4 K controller" tell you SFQ vs CMOS?</summary>
 
-No — ask which device.
+No --- ask which device.
 </details>
 
 <details markdown="1">

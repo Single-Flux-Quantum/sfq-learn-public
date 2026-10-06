@@ -8,13 +8,13 @@
 
 ## Why this matters
 
-Local RSFQ wiring loves [JTLs](jtl-interconnects.md): regenerating pulses is robust. Chip-scale distances make endless JTL chains expensive in junctions, bias, and delay. **Passive transmission lines (PTLs)** — superconducting striplines/microstrips — can carry a pulse over longer spans with far fewer intermediate active junctions, at the cost of **driver** and **receiver** cells and careful matching.
+Local RSFQ wiring loves [JTLs](jtl-interconnects.md): regenerating pulses is robust. Chip-scale distances make endless JTL chains expensive in junctions, bias, and delay. **Passive transmission lines (PTLs)** --- superconducting striplines/microstrips --- can carry a pulse over longer spans with far fewer intermediate active junctions, at the cost of **driver** and **receiver** cells and careful matching.
 
-**Hybrid routing** means short/local hops stay on JTLs; longer spans use PTL when the tradeoff wins — and [STA](sfq-static-timing-analysis.md) must understand both delay kinds. Without that vocabulary, floorplans either burn bias on needless regenerations or sprinkle passive lines where fine delay control was needed.
+**Hybrid routing** means short/local hops stay on JTLs; longer spans use PTL when the tradeoff wins --- and [STA](sfq-static-timing-analysis.md) must understand both delay kinds. Without that vocabulary, floorplans either burn bias on needless regenerations or sprinkle passive lines where fine delay control was needed.
 
 Glossary: [JTL](../glossary.md), [PTL](../glossary.md), [SFQ pulse](../glossary.md), [$\Phi_0$](../glossary.md).
 
-## Intuition — regenerate locally, fly farther when worth it
+## Intuition --- regenerate locally, fly farther when worth it
 
 | | **JTL** | **PTL** |
 |--|---------|---------|
@@ -34,15 +34,15 @@ t_{\mathrm{net}} \approx t_{\mathrm{JTL,local}} + t_{\mathrm{driver}} + t_{\math
 
 where $\ell$ is PTL length. Exact $t_{\mathrm{flight}}(\ell)$ models are process-specific; the **additive structure** is public.
 
-## Analogy — bucket brigade vs gym toss
+## Analogy --- bucket brigade vs gym toss
 
 - **JTL** = bucket brigade hand-to-hand across a room (reliable, many people, pay per handoff).
 - **PTL** = tossing a ball across the gym (few people, careful throw and catch, flight time dominates).
 - **Hybrid** = walk, throw, walk again.
 
-Bad analogy: “PTL is just CMOS RC interconnect.” Superconducting PTL aims to propagate a **fluxon pulse**, not hold a logic voltage level on a capacitor. Another bad analogy: “PTL means zero Josephson junctions.” Drivers and receivers still use junctions; the **line** is passive.
+Bad analogy: "PTL is just CMOS RC interconnect." Superconducting PTL aims to propagate a **fluxon pulse**, not hold a logic voltage level on a capacitor. Another bad analogy: "PTL means zero Josephson junctions." Drivers and receivers still use junctions; the **line** is passive.
 
-## Picture — topology and STA view
+## Picture --- topology and STA view
 
 ```text
 All-JTL:   gate ─X─X─X─X─X─X─ gate
@@ -87,12 +87,12 @@ sequenceDiagram
 
 Try this in place. Prefer full-screen? Open the [lab page](../labs/hybrid-jtl-ptl-routing.html).
 
-1. **All-JTL:** raise span — stage count and $t_{\mathrm{net}}$ explode; bias feel turns heavy.
-2. **Hybrid:** same span — local JTLs + DRV/PTL/RX; compare $t_{\mathrm{net}}$ and active JJ count. **Send pulse** to watch the hop.
+1. **All-JTL:** raise span --- stage count and $t_{\mathrm{net}}$ explode; bias feel turns heavy.
+2. **Hybrid:** same span --- local JTLs + DRV/PTL/RX; compare $t_{\mathrm{net}}$ and active JJ count. **Send pulse** to watch the hop.
 
 <iframe
   src="../../labs/hybrid-jtl-ptl-routing.html"
-  title="Hybrid JTL–PTL routing lab"
+  title="Hybrid JTL-PTL routing lab"
   style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
   loading="lazy"
 ></iframe>
@@ -115,9 +115,9 @@ Ask, in order:
 
 1. **Is the hop local abutment or a few stages of intentional delay?** Prefer JTL.
 2. **Is the hop long enough that stage count would dominate area/bias/delay?** Consider PTL.
-3. **Do you need many fine delay taps along the path?** JTL (or delay cells) — PTL is a coarse flight.
+3. **Do you need many fine delay taps along the path?** JTL (or delay cells) --- PTL is a coarse flight.
 4. **Can you afford driver/receiver cells and matching at both ends?** If not, all-JTL may still win locally.
-5. **Will STA and layout tools model the hybrid discontinuity?** If the flow cannot see driver/flight/rx, do not pretend the net is “just wire.”
+5. **Will STA and layout tools model the hybrid discontinuity?** If the flow cannot see driver/flight/rx, do not pretend the net is "just wire."
 
 Public answer shape: **local → JTL; long → consider PTL; hybrid = mix by span.**
 
@@ -129,13 +129,13 @@ Public answer shape: **local → JTL; long → consider PTL; hybrid = mix by spa
 | Long wire | Repeaters / fat wires / SerDes | PTL + driver/receiver |
 | Repeater | Restores voltage levels | JTL regenerates $\Phi_0$ pulses |
 | Timing model | Elmore / SPEF / SI | Stage sums + ballistic flight abstracts |
-| “Buffer tree” | Invert/buffer chain | Splitter + JTL stubs; PTL for long trunks |
+| "Buffer tree" | Invert/buffer chain | Splitter + JTL stubs; PTL for long trunks |
 
-CMOS repeaters restore **levels**. JTL stages remake **flux quanta**. PTL is closer to a carefully launched transmission-line hop than to a CMOS RC Elmore wire — still carrying an SFQ token at the digital pins.
+CMOS repeaters restore **levels**. JTL stages remake **flux quanta**. PTL is closer to a carefully launched transmission-line hop than to a CMOS RC Elmore wire --- still carrying an SFQ token at the digital pins.
 
-## Worked example 1 — 1 mm fantasy path
+## Worked example 1 --- 1 mm fantasy path
 
-A path needs $\sim 1\,\text{mm}$ of routing. Ten JTL stages might burn ten regenerations of $\Phi_0$ pulses (energy + bias + area). One PTL hop with a driver/receiver pair might cross the same distance with different delay and fewer intermediate junctions — but adds fixed interface cost and matching work.
+A path needs $\sim 1\,\text{mm}$ of routing. Ten JTL stages might burn ten regenerations of $\Phi_0$ pulses (energy + bias + area). One PTL hop with a driver/receiver pair might cross the same distance with different delay and fewer intermediate junctions --- but adds fixed interface cost and matching work.
 
 Designers (and routers) pick the break-even; **numbers are process- and library-specific** → private explainers. Public answer shape: compare **$n\times$ (JJ + bias + $\tau$)** against **(driver + rx + flight + matching)**.
 
@@ -145,9 +145,9 @@ Designers (and routers) pick the break-even; **numbers are process- and library-
 | Hybrid | 2 interfaces + $t_{\mathrm{flight}}(\ell)$ + short JTLs at ends |
 | Winner | Whichever meets timing with less painful resource total |
 
-## Worked example 2 — Hold pad stays on JTL
+## Worked example 2 --- Hold pad stays on JTL
 
-You need $+3$ JTL stages of hold delay next to a DFF. Do **not** replace that with a PTL hop “because PTL is fancy.” Fine, local, discrete delay is a JTL job. PTL shines when **distance** dominates, not when you need three regenerations of intentional delay in $100\,\mu\text{m}$.
+You need $+3$ JTL stages of hold delay next to a DFF. Do **not** replace that with a PTL hop "because PTL is fancy." Fine, local, discrete delay is a JTL job. PTL shines when **distance** dominates, not when you need three regenerations of intentional delay in $100\,\mu\text{m}$.
 
 Checklist:
 
@@ -156,9 +156,9 @@ Checklist:
 3. Long span → estimate hybrid break-even.
 4. Re-run [STA](sfq-static-timing-analysis.md) with the chosen model.
 
-## Worked example 3 — STA sees a discontinuity
+## Worked example 3 --- STA sees a discontinuity
 
-A hybrid net’s delay is not “$n\times\tau_{\mathrm{JTL}}$” alone. The tool must add:
+A hybrid net's delay is not "$n\times\tau_{\mathrm{JTL}}$" alone. The tool must add:
 
 1. local JTL,
 2. driver cell delay,
@@ -168,31 +168,31 @@ A hybrid net’s delay is not “$n\times\tau_{\mathrm{JTL}}$” alone. The tool
 
 Missing the interface cells in the timing graph underestimates delay and can flag false optimism on setup. Public lesson: **hybrid nets are multi-segment timing objects.**
 
-## Worked example 4 — Clock trunk candidate
+## Worked example 4 --- Clock trunk candidate
 
 A clock source must reach two distant clusters. Options:
 
-- **Deep splitter + JTL tree everywhere** — many regenerations, skew managed by matching.
-- **Splitter locally, PTL trunk between clusters, then local splitter trees** — fewer long active chains; STA must include trunk flight and interfaces.
+- **Deep splitter + JTL tree everywhere** --- many regenerations, skew managed by matching.
+- **Splitter locally, PTL trunk between clusters, then local splitter trees** --- fewer long active chains; STA must include trunk flight and interfaces.
 
 Neither is universally best. Hybrid clock distribution is common in spirit even when papers use different names. Skew still matters ([splitters](splitter-and-confluence.md)).
 
-## Worked example 5 — Energy intuition without claiming watts
+## Worked example 5 --- Energy intuition without claiming watts
 
 Each JTL stage that fires dissipates switching energy and draws from the bias network. A long all-JTL run fires many stages per pulse transit. A PTL hop moves much of the span into a passive flight; energy concentrates in driver/receiver events plus whatever bias those cells need.
 
-Public caution: do not quote a universal “PTL always saves energy” rule. Activity, length, and cell design decide. The **accounting categories** (per-stage JTL vs interface events) are what you keep straight.
+Public caution: do not quote a universal "PTL always saves energy" rule. Activity, length, and cell design decide. The **accounting categories** (per-stage JTL vs interface events) are what you keep straight.
 
 ## Common misconceptions
 
-- **“PTL means no Josephson junctions at all.”** Drivers/receivers still use junctions; the **line** is passive.
-- **“All-JTL is always simpler/better.”** At length, it can be the expensive choice.
-- **“Hybrid routing is only an academic slogan.”** It is a practical distance/energy tradeoff.
-- **“PTL pulses are CMOS levels.”** Still SFQ pulse tokens at the digital pins.
-- **“Once you have PTL, forget splitters.”** Local fanout still uses splitters; PTL is a span technology.
-- **“Router papers belong on this card.”** Algorithms → private explainers.
-- **“Flight time is negligible.”** On chip-scale trunks it is first-class in STA.
-- **“Any superconducting wire is a PTL interconnect strategy.”** PTL-as-routing implies intentional driver/receiver + matching discipline.
+- **"PTL means no Josephson junctions at all."** Drivers/receivers still use junctions; the **line** is passive.
+- **"All-JTL is always simpler/better."** At length, it can be the expensive choice.
+- **"Hybrid routing is only an academic slogan."** It is a practical distance/energy tradeoff.
+- **"PTL pulses are CMOS levels."** Still SFQ pulse tokens at the digital pins.
+- **"Once you have PTL, forget splitters."** Local fanout still uses splitters; PTL is a span technology.
+- **"Router papers belong on this card."** Algorithms → private explainers.
+- **"Flight time is negligible."** On chip-scale trunks it is first-class in STA.
+- **"Any superconducting wire is a PTL interconnect strategy."** PTL-as-routing implies intentional driver/receiver + matching discipline.
 
 ## Bridge to SFQ circuits
 
@@ -236,13 +236,13 @@ Junction/bias count and accumulated stage delay (also energy).
 <details markdown="1">
 <summary markdown="span">5. Should a 3-stage hold pad be replaced by PTL by default?</summary>
 
-No — fine local delay is typically a JTL job; PTL is for distance-dominated spans.
+No --- fine local delay is typically a JTL job; PTL is for distance-dominated spans.
 </details>
 
 <details markdown="1">
 <summary markdown="span">6. How does hybrid interconnect change STA?</summary>
 
-Delay graphs must include driver, flight time, and receiver — not only JTL stage sums.
+Delay graphs must include driver, flight time, and receiver --- not only JTL stage sums.
 </details>
 
 <details markdown="1">
@@ -254,7 +254,7 @@ $t \approx t_{\mathrm{JTL,local}} + t_{\mathrm{driver}} + t_{\mathrm{flight}} + 
 <details markdown="1">
 <summary markdown="span">8. Does adopting PTL remove the need for splitter trees?</summary>
 
-No — local fanout and clock leaves still use splitters; PTL addresses long spans.
+No --- local fanout and clock leaves still use splitters; PTL addresses long spans.
 </details>
 
 ## Next steps

@@ -5,7 +5,7 @@
 
 ## Pathway Overview
 
-SFQ-native flux/vortex memory, then Josephson–CMOS hybrids that buy semiconductor density behind SFQ control and I/O.
+SFQ-native flux/vortex memory, then Josephson-CMOS hybrids that buy semiconductor density behind SFQ control and I/O.
 
 ```mermaid
 graph TD
@@ -21,8 +21,8 @@ graph TD
 3. [Vortex Transitional RAM](../../concepts/vortex-transitional-ram.md)
 4. [From SFQ Pulses to Voltage Levels](../../bridge/sfq-pulse-to-volt-level.md)
 5. [Four-JL Latching Driver](../../concepts/four-jl-latching-driver.md) · [SQUID Stack Driver](../../concepts/squid-stack-driver.md)
-6. [Josephson–CMOS Hybrid Memory](../../concepts/josephson-cmos-hybrid-memory.md)
+6. [Josephson-CMOS Hybrid Memory](../../concepts/josephson-cmos-hybrid-memory.md)
 
 ## Later (public TBD / private papers)
 
-Magnetic JJ memory, 0-π SQUID cells, decoder/driver arrays — private explainers / future public cards.
+Magnetic JJ memory, 0-π SQUID cells, decoder/driver arrays --- private explainers / future public cards.

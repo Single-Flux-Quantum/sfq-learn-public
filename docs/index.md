@@ -1,19 +1,19 @@
-# SFQ Learning — Home
+# SFQ Learning --- Home
 
 **Prereqs:** none (curriculum entry)  
 **Next:** [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md) (express lane)
 
-A guided path from **field orientation** through **device fundamentals**, **bridge** pages, and **concept** cards into curated **tracks**. Written so newcomers can follow with patience — no prior superconductivity course assumed.
+A guided path from **field orientation** through **device fundamentals**, **bridge** pages, and **concept** cards into curated **tracks**. Written so newcomers can follow with patience --- no prior superconductivity course assumed.
 
 **Lookup:** [Glossary](glossary.md) · [Symbol card (5 symbols)](fundamentals/sfq-symbol-card.md) · [Paper map](paper-map.md) · [CMOS vs SFQ](concepts/cmos-vs-sfq.md) (preview anytime)
 
-More pages and more wording are **intentional**. Prefer clarity over compression — but use the **express lane** so you are not forced to read every field guide before symbols.
+More pages and more wording are **intentional**. Prefer clarity over compression --- but use the **express lane** so you are not forced to read every field guide before symbols.
 
 ## Who this is for
 
-| You are… | Start at |
+| You are... | Start at |
 |----------|----------|
-| Brand new (first visit) | **Express lane** below — then device path |
+| Brand new (first visit) | **Express lane** below --- then device path |
 | Confused about qubits vs SFQ | [Qubits page](fundamentals/fields/superconducting-qubits-and-quantum-computing.md) (canonical contrast) → optional [QC platforms](fundamentals/fields/quantum-computing-hardware-platforms.md) |
 | Coming from CMOS | Express lane + preview [CMOS vs SFQ](concepts/cmos-vs-sfq.md) |
 | Only need symbols | [Symbol card](fundamentals/sfq-symbol-card.md) or [Notation](fundamentals/reading-sfq-notation.md) |
@@ -23,7 +23,7 @@ More pages and more wording are **intentional**. Prefer clarity over compression
 
 ## Express lane vs full orientation
 
-**Express lane (must before device physics)** — about five pages:
+**Express lane (must before device physics)** --- about five pages:
 
 1. [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md)  
 2. [History](fundamentals/history-of-superconducting-electronics.md)  
@@ -33,7 +33,7 @@ More pages and more wording are **intentional**. Prefer clarity over compression
 
 Then jump to [Symbol card](fundamentals/sfq-symbol-card.md) → [Notation](fundamentals/reading-sfq-notation.md) → device fundamentals.
 
-**Optional field survey** (when titles confuse you — not required on day one):
+**Optional field survey** (when titles confuse you --- not required on day one):
 
 - Hub: [Field guides](fundamentals/fields/README.md)  
 - Especially: [Qubits ≠ SFQ](fundamentals/fields/superconducting-qubits-and-quantum-computing.md) · [QC platforms](fundamentals/fields/quantum-computing-hardware-platforms.md)  
@@ -49,7 +49,7 @@ Then jump to [Symbol card](fundamentals/sfq-symbol-card.md) → [Notation](funda
 
 ### Device path (core walk)
 
-1. [Symbol card](fundamentals/sfq-symbol-card.md) — five-symbol cheatsheet · [lab](labs/sfq-symbol-card.html)  
+1. [Symbol card](fundamentals/sfq-symbol-card.md) --- five-symbol cheatsheet · [lab](labs/sfq-symbol-card.html)  
 2. [How to read SFQ notation](fundamentals/reading-sfq-notation.md) · [lab](labs/sfq-symbol-card.html)  
 3. [Superconductivity intuition](fundamentals/superconductivity-intuition.md)  
 4. [Josephson junction (RCSJ)](fundamentals/josephson-junction-rcsj.md) · [lab](labs/josephson-junction-rcsj.html)  
@@ -89,7 +89,7 @@ SFQ vocabulary cards. Best after the matching bridge pages.
 - [Concurrent / counter-flow clocking](concepts/concurrent-and-counter-flow-clocking.md) · [lab](labs/concurrent-and-counter-flow-clocking.html)  
 - [Path balancing overhead](concepts/path-balancing-overhead.md) · [lab](labs/path-balancing-overhead.html)  
 - [SFQ static timing analysis](concepts/sfq-static-timing-analysis.md) · [lab](labs/sfq-static-timing-analysis.html)  
-- [Hybrid JTL–PTL routing](concepts/hybrid-jtl-ptl-routing.md) · [lab](labs/hybrid-jtl-ptl-routing.html)  
+- [Hybrid JTL-PTL routing](concepts/hybrid-jtl-ptl-routing.md) · [lab](labs/hybrid-jtl-ptl-routing.html)  
 - [Serial biasing / current recycling](concepts/serial-biasing-current-recycling.md) · [lab](labs/serial-biasing-current-recycling.html)  
 
 **I/O & memory**
@@ -97,11 +97,11 @@ SFQ vocabulary cards. Best after the matching bridge pages.
 - [SQUID stack driver](concepts/squid-stack-driver.md) · [lab](labs/squid-stack-and-four-jl-driver.html)  
 - [Four-JL latching driver](concepts/four-jl-latching-driver.md) · [lab](labs/squid-stack-and-four-jl-driver.html)  
 - [Vortex transitional RAM](concepts/vortex-transitional-ram.md) · [lab](labs/vortex-transitional-ram.html)  
-- [Josephson–CMOS hybrid memory](concepts/josephson-cmos-hybrid-memory.md) · [lab](labs/josephson-cmos-hybrid-memory.html)  
+- [Josephson-CMOS hybrid memory](concepts/josephson-cmos-hybrid-memory.md) · [lab](labs/josephson-cmos-hybrid-memory.html)  
 
 ## 4. Tracks
 
-- [SFQ logic primitives](tracks/sfq-logic-primitives/ROADMAP.md) — primary curated path  
+- [SFQ logic primitives](tracks/sfq-logic-primitives/ROADMAP.md) --- primary curated path  
 - [Clocking, biasing & power](tracks/clocking-biasing-power/ROADMAP.md)  
 - [EDA timing & verification](tracks/eda-timing-verification/ROADMAP.md)  
 - [Cryogenic interfaces & I/O](tracks/cryogenic-interfaces-io/ROADMAP.md)  

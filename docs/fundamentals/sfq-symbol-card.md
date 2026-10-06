@@ -17,11 +17,11 @@
 
 | Symbol | Say it | Means (teaching) | Not |
 |--------|--------|------------------|-----|
-| $\Phi_0$ | “phi-zero” | One flux packet / pulse token size ($\approx 2.07\,\text{mV}\cdot\text{ps}$) | A CMOS voltage rail |
-| $I_c$ | “I-sub-c” | Max supercurrent before the junction switches | Supply voltage $V_{DD}$ |
-| $\phi$ | “phi” | Phase across the junction | Magnetic flux $\Phi$ (related but different letter) |
-| $\beta_C$ | “beta-C” | Damping: small → short pulse; large → can latch | Transistor gain |
-| $\int V\,dt$ | “integral V dt” | Voltage–time area of a pulse | Peak millivolts alone |
+| $\Phi_0$ | "phi-zero" | One flux packet / pulse token size ($\approx 2.07\,\text{mV}\cdot\text{ps}$) | A CMOS voltage rail |
+| $I_c$ | "I-sub-c" | Max supercurrent before the junction switches | Supply voltage $V_{DD}$ |
+| $\phi$ | "phi" | Phase across the junction | Magnetic flux $\Phi$ (related but different letter) |
+| $\beta_C$ | "beta-C" | Damping: small → short pulse; large → can latch | Transistor gain |
+| $\int V\,dt$ | "integral V dt" | Voltage-time area of a pulse | Peak millivolts alone |
 
 ## Interactive lab
 

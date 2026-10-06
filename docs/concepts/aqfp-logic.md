@@ -10,18 +10,18 @@
 
 Not all superconducting digital logic is RSFQ pulse wiring. **AQFP** (Adiabatic Quantum Flux Parametron) is another major family you will meet in IEEE TASC, architecture, and cryogenic-computing papers. It uses **multiphase AC clocks**, aims for **adiabatic** (comparatively slow, low-dissipation) switching, and often builds logic from **majority gates** and buffers with transformer coupling.
 
-If you only know [RSFQ](rsfq-logic.md) / [ERSFQ](ersfq-logic.md), AQFP papers feel like a different language: different excitation, different encoding cartoons, different “padding” story. This page is the public decoder ring — field-fundamental teaching, not a substitute for a specific chip paper’s schematics or measured joules.
+If you only know [RSFQ](rsfq-logic.md) / [ERSFQ](ersfq-logic.md), AQFP papers feel like a different language: different excitation, different encoding cartoons, different "padding" story. This page is the public decoder ring --- field-fundamental teaching, not a substitute for a specific chip paper's schematics or measured joules.
 
-See also: [Glossary](../glossary.md) — **AQFP**, **bias current** (here AC excitation is the headline), **path balancing**, **flux quantum $\Phi_0$**.
+See also: [Glossary](../glossary.md) --- **AQFP**, **bias current** (here AC excitation is the headline), **path balancing**, **flux quantum $\Phi_0$**.
 
-## Intuition — rock the see-saws, do not only pass batons
+## Intuition --- rock the see-saws, do not only pass batons
 
 | Theme | RSFQ / ERSFQ | AQFP (public cartoon) |
 |-------|--------------|------------------------|
 | Excitation | DC bias (+ pulse clocks for gates) | Multiphase **AC** excitation |
 | Energy story | Pulse switching; ERSFQ cuts resistor static | Adiabatic switching intent |
 | Bit representation | Pulse in window / loop fluxon storage | Direction / state of circulating current in parametron-like cells |
-| Logic style | Pulse gate libraries (AND/OR/XOR/DFF, …) | Majority + buffers (common teaching story) |
+| Logic style | Pulse gate libraries (AND/OR/XOR/DFF, ...) | Majority + buffers (common teaching story) |
 | Alignment problem | Epoch / path balancing with DFFs | **Phase scheduling** and buffer insertion |
 | Interconnect feel | [JTL](jtl-interconnects.md) / [PTL](hybrid-jtl-ptl-routing.md) pulse hops | Transformer-heavy coupling in many explanations |
 
@@ -33,23 +33,23 @@ Public energy slogan (intent, not a measured promise):
 E_{\mathrm{switch}} \text{ tends to shrink when excitation changes slowly relative to intrinsic dynamics.}
 \]
 
-Faster AC clocks can raise dissipation — the speed–energy tension is part of the family’s identity.
+Faster AC clocks can raise dissipation --- the speed-energy tension is part of the family's identity.
 
-## Analogy — stadium batons vs multiphase see-saws
+## Analogy --- stadium batons vs multiphase see-saws
 
 - **RSFQ:** batons ([SFQ pulses](../glossary.md)) on a DC-powered track; starter pistols (clock pulses) everywhere.
 - **AQFP:** many see-saws rocked by a shared multiphase motor; each see-saw settles left/right to encode a bit; gentle rocking (**adiabatic**) saves energy versus slamming.
 
-A second picture: a three-shift factory. Shift $\phi_1$ workers finish a station; shift $\phi_2$ takes over; shift $\phi_3$ continues. Work flows because shifts are staggered — that is **phase handoff**.
+A second picture: a three-shift factory. Shift $\phi_1$ workers finish a station; shift $\phi_2$ takes over; shift $\phi_3$ continues. Work flows because shifts are staggered --- that is **phase handoff**.
 
-Bad analogy: “AQFP is just three RSFQ clocks.” Multiphase AC is not merely “more RSFQ clock pulses.” Device physics, cell library philosophy, and bit encoding cartoons differ. Another bad analogy: “adiabatic means free.” It means a low-dissipation **regime** with tradeoffs.
+Bad analogy: "AQFP is just three RSFQ clocks." Multiphase AC is not merely "more RSFQ clock pulses." Device physics, cell library philosophy, and bit encoding cartoons differ. Another bad analogy: "adiabatic means free." It means a low-dissipation **regime** with tradeoffs.
 
-## Picture — topology and phase handoff
+## Picture --- topology and phase handoff
 
 ```text
 RSFQ/ERSFQ cartoon:   DC bias + SFQ pulses between cells
 
-AQFP cartoon:         AC φ1, φ2, φ3, … excite cells in order
+AQFP cartoon:         AC φ1, φ2, φ3, ... excite cells in order
                       bit ≈ direction of circulating current
                       logic often built from majority + buffers
 ```
@@ -68,7 +68,7 @@ Phase handoff cartoon:
   φ1:  cell A evaluates / settles
   φ2:  cell B evaluates (sees A's settled state via coupling)
   φ3:  cell C evaluates
-  … then phases repeat for the next wave of computation
+  ... then phases repeat for the next wave of computation
 ```
 
 ```mermaid
@@ -92,7 +92,7 @@ Try this in place. Prefer full-screen? Open the [lab page](../labs/aqfp-logic.ht
 
 1. **Phase handoff:** run φ1→φ2→φ3; try adiabatic (slow) vs slam (fast) and watch the energy cartoon.
 2. **Majority:** flip inputs; enable **misaligned phase** to see a buffer tax (cousin of DFF pads).
-3. **vs RSFQ:** keep the decoder ring straight — different family, not “three more clocks.”
+3. **vs RSFQ:** keep the decoder ring straight --- different family, not "three more clocks."
 
 <iframe
   src="../../labs/aqfp-logic.html"
@@ -116,19 +116,19 @@ You do not need a full parametron textbook. Keep five sentences:
 1. **Excitation:** an AC current (or multiphase family of AC currents) rocks the cell through active windows.
 2. **Bistable settle:** under that rocking, the cell settles into one of two circulating-current / fluxoid-related states that encode the bit.
 3. **Coupling:** neighboring cells influence each other through transformers / inductive coupling so majority and buffer networks can be built.
-4. **Phasing:** information advances when later phases evaluate using earlier cells’ settled states.
-5. **Buffers:** inserted not only for drive, but so inputs arrive in the **correct phases** — AQFP’s cousin of [DFF padding](rsfq-dff-and-retiming.md).
+4. **Phasing:** information advances when later phases evaluate using earlier cells' settled states.
+5. **Buffers:** inserted not only for drive, but so inputs arrive in the **correct phases** --- AQFP's cousin of [DFF padding](rsfq-dff-and-retiming.md).
 
 Exact transformer turns ratios, $I_c$ values, and measured millivolts stay **process- and paper-specific**. Public takeaway: **AC + settle + couple + schedule**.
 
 ### Adiabatic switching (plain language)
 
-**Adiabatic** here means changing the excitation slowly compared with the circuit’s intrinsic dynamics so the system stays near equilibrium and dissipates less per switch. Public takeaways:
+**Adiabatic** here means changing the excitation slowly compared with the circuit's intrinsic dynamics so the system stays near equilibrium and dissipates less per switch. Public takeaways:
 
-1. Faster is not always better for energy in AQFP — there is a speed–energy tension.
-2. “Adiabatic” is a **design intent / regime**, not a magic zero.
+1. Faster is not always better for energy in AQFP --- there is a speed-energy tension.
+2. "Adiabatic" is a **design intent / regime**, not a magic zero.
 3. Comparing AQFP energy-per-op numbers to RSFQ without stating activity, temperature, clock frequency, and what was counted is a common paper-reading trap (details private).
-4. AC generation and distribution still cost cryogenic budget — “efficient logic” does not erase [power delivery](../bridge/dc-bias-current-delivery.md) engineering (here often AC plant + matching).
+4. AC generation and distribution still cost cryogenic budget --- "efficient logic" does not erase [power delivery](../bridge/dc-bias-current-delivery.md) engineering (here often AC plant + matching).
 
 ## Majority logic intuition
 
@@ -141,12 +141,12 @@ A **majority** gate of three inputs outputs the value held by at least two input
 Boolean completeness comes from majority plus constants / inverters / buffers depending on the library. Why newcomers care:
 
 - AQFP datapaths often look like networks of majority cells and buffers rather than CMOS NAND clouds or RSFQ pulse-gate catalogs,
-- buffers are not cosmetic — they exist for **phase alignment** and drive, similar in spirit to RSFQ padding DFFs,
-- architecture diagrams that show “MAJ” boxes are asking you to think in majority networks, not to invent new Boolean laws.
+- buffers are not cosmetic --- they exist for **phase alignment** and drive, similar in spirit to RSFQ padding DFFs,
+- architecture diagrams that show "MAJ" boxes are asking you to think in majority networks, not to invent new Boolean laws.
 
 Exact transformer coupling schematics stay at private/paper depth.
 
-## Phase scheduling ≈ path balancing’s cousin
+## Phase scheduling ≈ path balancing's cousin
 
 An AQFP datapath assigns each gate to an AC phase so information flows forward in order. If two inputs to a majority gate are not ready in the correct phases, designers insert **buffers** (costing junctions, area, and phases of latency).
 
@@ -158,11 +158,11 @@ An AQFP datapath assigns each gate to an AC phase so information flows forward i
 | [Path-balancing overhead](path-balancing-overhead.md) | Buffer / phase tax |
 | [STA](sfq-static-timing-analysis.md) windows | Phase-legal schedules + delay margins |
 
-Concrete scheduler algorithms and “% buffers” statistics → private explainers. The **tax category** is public: synchronization cells that do not invent new Boolean function.
+Concrete scheduler algorithms and "% buffers" statistics → private explainers. The **tax category** is public: synchronization cells that do not invent new Boolean function.
 
 ## Family placement table (keep this straight)
 
-| Family | Headline change vs classical RSFQ teaching | Still needs… |
+| Family | Headline change vs classical RSFQ teaching | Still needs... |
 |--------|--------------------------------------------|--------------|
 | RSFQ (resistive bias) | Default pulse vocabulary | Epochs, JTLs, splitters, DFFs, STA |
 | [ERSFQ](ersfq-logic.md) | Bias feeding / static resistor heat | Same pulse timing story |
@@ -176,15 +176,15 @@ A large cryogenic system might discuss **several** of these at once. Do not merg
 | Topic | CMOS | RSFQ/ERSFQ | AQFP |
 |-------|------|------------|------|
 | Clocking | Edge-triggered FFs; combinational clouds | Gate-level pulse clocks | Multiphase AC excitation |
-| Logic atom | NAND/NOR/AOI, … | Pulse gates + DFF | Majority + buffer (typical story) |
+| Logic atom | NAND/NOR/AOI, ... | Pulse gates + DFF | Majority + buffer (typical story) |
 | Energy knob | VT, voltage, gating | Bias topology (ERSFQ), activity | Adiabatic AC regime |
 | Interconnect mindset | RC wires | JTL/PTL pulses | Transformer-heavy coupling common in explanations |
-| “Padding” | Pipeline regs / retiming | DFF/JTL pads | Buffers for phase match |
+| "Padding" | Pipeline regs / retiming | DFF/JTL pads | Buffers for phase match |
 | Idle story | Leakage / clock gating | Bias networks (ERSFQ helps static $R$) | AC still rocks even quiet regions unless gated by design |
 
 Use [CMOS vs SFQ](cmos-vs-sfq.md) for the pulse-vs-level cheat sheet; treat AQFP as a **second column** once you leave pure RSFQ.
 
-## Worked example 1 — Three-phase handoff
+## Worked example 1 --- Three-phase handoff
 
 Suppose phases $\phi_1,\phi_2,\phi_3$ in order.
 
@@ -192,16 +192,16 @@ Suppose phases $\phi_1,\phi_2,\phi_3$ in order.
 2. Gate $G_2$ in $\phi_2$ reads $G_1$ through coupling and settles.
 3. Gate $G_3$ in $\phi_3$ continues the chain.
 
-If $G_3$ needed an input that only becomes ready in $\phi_1$ of the *next* cycle without a buffer, the schedule is illegal — insert buffers or reassign phases. That is phase scheduling in one story.
+If $G_3$ needed an input that only becomes ready in $\phi_1$ of the *next* cycle without a buffer, the schedule is illegal --- insert buffers or reassign phases. That is phase scheduling in one story.
 
 Checklist:
 
-1. List each gate’s assigned phase.
+1. List each gate's assigned phase.
 2. For every multi-input gate, ask: are all inputs ready in the required earlier phases?
 3. If not, insert buffers or re-phase.
-4. Recount latency in phases (AQFP’s cousin of pipeline depth).
+4. Recount latency in phases (AQFP's cousin of pipeline depth).
 
-## Worked example 2 — Majority truth sketch
+## Worked example 2 --- Majority truth sketch
 
 For inputs $a,b,c \in \{0,1\}$:
 
@@ -214,7 +214,7 @@ For inputs $a,b,c \in \{0,1\}$:
 
 In AQFP, physical encoding of $0/1$ is the cell state under AC excitation, not a CMOS $V_{DD}$ level. The Boolean identity still helps you read architecture diagrams that show majority symbols.
 
-## Worked example 3 — Choosing a family for a mental design
+## Worked example 3 --- Choosing a family for a mental design
 
 | Goal emphasis | Family to study first |
 |---------------|------------------------|
@@ -225,50 +225,50 @@ In AQFP, physical encoding of $0/1$ is the cell state under AC excitation, not a
 
 Public curriculum teaches **all** as vocabulary; research focus may specialize later.
 
-## Worked example 4 — Buffer tax on a reconvergent majority
+## Worked example 4 --- Buffer tax on a reconvergent majority
 
-Two inputs to a majority gate: one ready in $\phi_2$, the other only ready in $\phi_1$ of the next AC cycle relative to the sink’s phase. Public fix shape:
+Two inputs to a majority gate: one ready in $\phi_2$, the other only ready in $\phi_1$ of the next AC cycle relative to the sink's phase. Public fix shape:
 
 - insert buffers so both inputs present in legal phases before the majority evaluates,
 - accept extra junctions and extra phase latency,
-- do not “hope” the late input is somehow still coupled correctly.
+- do not "hope" the late input is somehow still coupled correctly.
 
 This is the same **synchronization tax** spirit as [path balancing](path-balancing-overhead.md), spoken in AC phases instead of RSFQ epochs.
 
-## Worked example 5 — Reading an energy claim honestly
+## Worked example 5 --- Reading an energy claim honestly
 
-A paper says “AQFP uses far less energy than RSFQ.” Public checklist before believing the slogan:
+A paper says "AQFP uses far less energy than RSFQ." Public checklist before believing the slogan:
 
 1. Same **activity factor** / throughput assumption?
-2. What was counted — logic only, or AC generation, cables, interfaces?
+2. What was counted --- logic only, or AC generation, cables, interfaces?
 3. Temperature and clock/AC frequency stated?
 4. Compared against resistive-bias RSFQ, ERSFQ, or both?
 5. Is the comparison a gate, an ALU, or a whole chip including I/O?
 
 Numbers stay private; the **honesty checklist** is curriculum content.
 
-## Worked example 6 — Why RSFQ STA vocabulary only partially transfers
+## Worked example 6 --- Why RSFQ STA vocabulary only partially transfers
 
-[SFQ STA](sfq-static-timing-analysis.md) intuition (windows, skew, pads) still trains you to ask “is information ready when the sink evaluates?” In AQFP that question becomes **phase-legal schedules** plus delay margins under AC excitation. Do not paste a JTL-stage delay sum into an AQFP majority network and call it done — remodel the timing graph for the family you are actually using.
+[SFQ STA](sfq-static-timing-analysis.md) intuition (windows, skew, pads) still trains you to ask "is information ready when the sink evaluates?" In AQFP that question becomes **phase-legal schedules** plus delay margins under AC excitation. Do not paste a JTL-stage delay sum into an AQFP majority network and call it done --- remodel the timing graph for the family you are actually using.
 
 ## Common misconceptions
 
-- **“AQFP is ERSFQ with AC clocks.”** No — different encoding/excitation/logic style.
-- **“Adiabatic means free.”** It means a low-dissipation regime with speed tradeoffs.
-- **“Majority gates replace the need for timing.”** Phase scheduling is still mandatory.
-- **“RSFQ knowledge transfers schematic-for-schematic.”** Vocabulary transfers partially; cell libraries do not.
-- **“One AC phase is enough.”** Multiphase handoff is part of the standard story.
-- **“AQFP needs no power delivery engineering.”** AC generation, distribution, and cryogenic budgets remain hard — different hard.
-- **“Buffers are only drive strength.”** Many exist for phase alignment (overhead).
-- **“$\Phi_0$ pulses are the native AQFP wire token everywhere.”** Teaching cartoons emphasize circulating-current / parametron states under AC; do not force every AQFP sentence into RSFQ baton language.
-- **“Serial biasing is an AQFP feature.”** Serial biasing is an ampere-recycling architecture; it can appear in multiple families’ system stories ([serial biasing](serial-biasing-current-recycling.md)).
+- **"AQFP is ERSFQ with AC clocks."** No --- different encoding/excitation/logic style.
+- **"Adiabatic means free."** It means a low-dissipation regime with speed tradeoffs.
+- **"Majority gates replace the need for timing."** Phase scheduling is still mandatory.
+- **"RSFQ knowledge transfers schematic-for-schematic."** Vocabulary transfers partially; cell libraries do not.
+- **"One AC phase is enough."** Multiphase handoff is part of the standard story.
+- **"AQFP needs no power delivery engineering."** AC generation, distribution, and cryogenic budgets remain hard --- different hard.
+- **"Buffers are only drive strength."** Many exist for phase alignment (overhead).
+- **"$\Phi_0$ pulses are the native AQFP wire token everywhere."** Teaching cartoons emphasize circulating-current / parametron states under AC; do not force every AQFP sentence into RSFQ baton language.
+- **"Serial biasing is an AQFP feature."** Serial biasing is an ampere-recycling architecture; it can appear in multiple families' system stories ([serial biasing](serial-biasing-current-recycling.md)).
 
 ## Bridge to SFQ circuits
 
 - Pulse family power story: [ERSFQ](ersfq-logic.md) and [resistive bias → ERSFQ](../bridge/resistive-bias-to-ersfq.md).
 - Current into the fridge: [DC Bias Delivery](../bridge/dc-bias-current-delivery.md), [Serial Biasing](serial-biasing-current-recycling.md).
 - RSFQ alignment cousin: [Path Balancing](path-balancing-overhead.md), [DFF retiming](rsfq-dff-and-retiming.md).
-- Pulse interconnect (different family, related STA habits): [JTL](jtl-interconnects.md), [Hybrid JTL–PTL](hybrid-jtl-ptl-routing.md).
+- Pulse interconnect (different family, related STA habits): [JTL](jtl-interconnects.md), [Hybrid JTL-PTL](hybrid-jtl-ptl-routing.md).
 - Track placement: [SFQ Logic Primitives Roadmap](../tracks/sfq-logic-primitives/ROADMAP.md) · [Clocking, Biasing & Power](../tracks/clocking-biasing-power/ROADMAP.md).
 
 ## What stays private
@@ -290,33 +290,33 @@ Majority gates (with buffers), rather than only NAND/NOR pulse catalogs.
 </details>
 
 <details markdown="1">
-<summary markdown="span">3. Is AQFP “the same as ERSFQ”?</summary>
+<summary markdown="span">3. Is AQFP "the same as ERSFQ"?</summary>
 
-No — different family, encoding/excitation style, and design constraints.
+No --- different family, encoding/excitation style, and design constraints.
 </details>
 
 <details markdown="1">
 <summary markdown="span">4. What is phase scheduling?</summary>
 
-Assigning gates to AC phases (and inserting buffers) so data flows in legal order — AQFP’s cousin of path balancing.
+Assigning gates to AC phases (and inserting buffers) so data flows in legal order --- AQFP's cousin of path balancing.
 </details>
 
 <details markdown="1">
-<summary markdown="span">5. Does “adiabatic” mean zero energy per operation?</summary>
+<summary markdown="span">5. Does "adiabatic" mean zero energy per operation?</summary>
 
-No — it means aiming for low dissipation by switching slowly relative to intrinsic dynamics; tradeoffs remain.
+No --- it means aiming for low dissipation by switching slowly relative to intrinsic dynamics; tradeoffs remain.
 </details>
 
 <details markdown="1">
-<summary markdown="span">6. How is an AQFP “bit” often described for newcomers?</summary>
+<summary markdown="span">6. How is an AQFP "bit" often described for newcomers?</summary>
 
-As the direction/state of a circulating current in a parametron-like cell under AC excitation — not as an RSFQ baton pulse by default.
+As the direction/state of a circulating current in a parametron-like cell under AC excitation --- not as an RSFQ baton pulse by default.
 </details>
 
 <details markdown="1">
 <summary markdown="span">7. Why insert buffers that compute no new Boolean function?</summary>
 
-To align inputs into legal phases (and sometimes for drive) — a synchronization/overhead tax.
+To align inputs into legal phases (and sometimes for drive) --- a synchronization/overhead tax.
 </details>
 
 <details markdown="1">
@@ -334,7 +334,7 @@ Matched activity/throughput assumptions, and a clear statement of what energy wa
 <details markdown="1">
 <summary markdown="span">10. Does learning AQFP let you skip DC bias / serial-biasing pages?</summary>
 
-No — ampere delivery and island recycling are system themes that can still matter; AQFP changes the logic/excitation story, not every cryogenic power problem.
+No --- ampere delivery and island recycling are system themes that can still matter; AQFP changes the logic/excitation story, not every cryogenic power problem.
 </details>
 
 ## Next steps

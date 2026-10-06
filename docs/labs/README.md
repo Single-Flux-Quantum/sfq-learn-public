@@ -1,9 +1,9 @@
 # Interactive labs
 
 **Prereqs:** none (index for demos)  
-**Next:** [Phase to pulse lab](phase-to-pulse.html) · [Pulse to logic state lab](pulse-to-logic-state.html) · [Gate-level pipelining lab](gate-level-pipelining.html) · [JTL hop lab](jtl-interconnects.html) · [Splitter & confluence lab](splitter-and-confluence.html) · [DFF lab](rsfq-dff-and-retiming.html) · [Clock-flow lab](concurrent-and-counter-flow-clocking.html) · [Path-balancing lab](path-balancing-overhead.html) · [Bias → ERSFQ lab](resistive-bias-to-ersfq.html) · [Pulse → volt lab](sfq-pulse-to-volt-level.html) · [AQFP lab](aqfp-logic.html) · [RCSJ washboard lab](josephson-junction-rcsj.html) · [DC bias delivery lab](dc-bias-current-delivery.html) · [Serial biasing lab](serial-biasing-current-recycling.html) · [SFQ STA lab](sfq-static-timing-analysis.html) · [I/O megaphone lab](squid-stack-and-four-jl-driver.html) · [Flux / SQUID loop lab](flux-quantization-squid-loop.html) · [Overdamped / underdamped lab](overdamped-vs-underdamped-jj.html) · [Hybrid JTL–PTL lab](hybrid-jtl-ptl-routing.html) · [ERSFQ lab](ersfq-logic.html) · [VT-RAM lab](vortex-transitional-ram.html) · [Hybrid memory lab](josephson-cmos-hybrid-memory.html) · [CMOS vs SFQ lab](cmos-vs-sfq.html) · [RSFQ overview lab](rsfq-logic.html) · [Symbol card lab](sfq-symbol-card.html) · [Bridge hub](../bridge/README.md)
+**Next:** [Phase to pulse lab](phase-to-pulse.html) · [Pulse to logic state lab](pulse-to-logic-state.html) · [Gate-level pipelining lab](gate-level-pipelining.html) · [JTL hop lab](jtl-interconnects.html) · [Splitter & confluence lab](splitter-and-confluence.html) · [DFF lab](rsfq-dff-and-retiming.html) · [Clock-flow lab](concurrent-and-counter-flow-clocking.html) · [Path-balancing lab](path-balancing-overhead.html) · [Bias → ERSFQ lab](resistive-bias-to-ersfq.html) · [Pulse → volt lab](sfq-pulse-to-volt-level.html) · [AQFP lab](aqfp-logic.html) · [RCSJ washboard lab](josephson-junction-rcsj.html) · [DC bias delivery lab](dc-bias-current-delivery.html) · [Serial biasing lab](serial-biasing-current-recycling.html) · [SFQ STA lab](sfq-static-timing-analysis.html) · [I/O megaphone lab](squid-stack-and-four-jl-driver.html) · [Flux / SQUID loop lab](flux-quantization-squid-loop.html) · [Overdamped / underdamped lab](overdamped-vs-underdamped-jj.html) · [Hybrid JTL-PTL lab](hybrid-jtl-ptl-routing.html) · [ERSFQ lab](ersfq-logic.html) · [VT-RAM lab](vortex-transitional-ram.html) · [Hybrid memory lab](josephson-cmos-hybrid-memory.html) · [CMOS vs SFQ lab](cmos-vs-sfq.html) · [RSFQ overview lab](rsfq-logic.html) · [Symbol card lab](sfq-symbol-card.html) · [Bridge hub](../bridge/README.md)
 
-Self-contained HTML labs that let newcomers **click, watch events, and read stats** — the same teaching pattern as a small in-browser simulator, not SPICE or netlists.
+Self-contained HTML labs that let newcomers **click, watch events, and read stats** --- the same teaching pattern as a small in-browser simulator, not SPICE or netlists.
 
 ## Convention
 
@@ -11,7 +11,7 @@ Self-contained HTML labs that let newcomers **click, watch events, and read stat
 |------|--------|
 | **Where** | `docs/labs/<topic-id>.html` (copied to the site as `/labs/<topic-id>.html`) |
 | **What** | Pedagogical interaction only: discrete events, timelines, match/miss, simple counters |
-| **Not here** | JoSIM / WRspice netlists, PDK decks, or “run this circuit for real” flows — those stay in projects / tracks |
+| **Not here** | JoSIM / WRspice netlists, PDK decks, or "run this circuit for real" flows --- those stay in projects / tracks |
 | **Embed in chapter** | Required: `<iframe>` on the matching Markdown page so readers see the lab while reading |
 | **Fallback link** | Also link the standalone HTML (full tab / share URL) |
 | **Optional hub** | This README; do not invent a nav mega-menu until several labs exist |
@@ -29,13 +29,13 @@ Short how-to (2 steps). Prefer full-screen? Open the [lab page](../labs/<topic-i
 
 <iframe
   src="../../labs/<topic-id>.html"
-  title="…"
+  title="..."
   style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
   loading="lazy"
 ></iframe>
 ```
 
-**Path rule:** MkDocs serves each page as `/section/page/` (trailing slash). Markdown links like `../labs/…` are rewritten correctly, but **raw `<iframe src>` is not**. From a bridge/concept/fundamental page, use `../../labs/<file>.html` (two levels up). From a nested page (e.g. `fundamentals/fields/…`), use three levels (`../../../labs/…`). Wrong depth → iframe 404 under `/bridge/labs/…`.
+**Path rule:** MkDocs serves each page as `/section/page/` (trailing slash). Markdown links like `../labs/...` are rewritten correctly, but **raw `<iframe src>` is not**. From a bridge/concept/fundamental page, use `../../labs/<file>.html` (two levels up). From a nested page (e.g. `fundamentals/fields/...`), use three levels (`../../../labs/...`). Wrong depth → iframe 404 under `/bridge/labs/...`.
 
 **Colors:** Match Material default light + indigo (`#4051b5` primary, white page, `#f5f5f5` code/panel surfaces) so the iframe blends with the chapter.
 
@@ -63,10 +63,10 @@ Use height ≥ 700px so controls, stats, and the table fit without clipping.
 | [squid-stack-and-four-jl-driver.html](squid-stack-and-four-jl-driver.html) | [SQUID stack](../concepts/squid-stack-driver.md) · [4JL latching](../concepts/four-jl-latching-driver.md) | Series \(N\cdot V\) vs latch+hold+reset megaphones |
 | [flux-quantization-squid-loop.html](flux-quantization-squid-loop.html) | [Flux quantization](../fundamentals/flux-quantization.md) · [Loop / SQUID](../fundamentals/superconducting-loop-squid.md) | \(n\Phi_0\) only; \(2\pi\) write/read; \(I_{\mathrm{circ}}\approx\Phi_0/L\) |
 | [overdamped-vs-underdamped-jj.html](overdamped-vs-underdamped-jj.html) | [Overdamped vs underdamped JJ](../fundamentals/overdamped-vs-underdamped-jj.md) | β_C slider: pulse→V≈0 vs latch until reset |
-| [hybrid-jtl-ptl-routing.html](hybrid-jtl-ptl-routing.html) | [Hybrid JTL–PTL routing](../concepts/hybrid-jtl-ptl-routing.md) | All-JTL stage tax vs hybrid flight; span sweep |
+| [hybrid-jtl-ptl-routing.html](hybrid-jtl-ptl-routing.html) | [Hybrid JTL-PTL routing](../concepts/hybrid-jtl-ptl-routing.md) | All-JTL stage tax vs hybrid flight; span sweep |
 | [ersfq-logic.html](ersfq-logic.html) | [ERSFQ logic](../concepts/ersfq-logic.md) | Static I²R vs ERSFQ feed; activity still costs switching |
 | [vortex-transitional-ram.html](vortex-transitional-ram.html) | [Vortex transitional RAM](../concepts/vortex-transitional-ram.md) | Flux-state cells; write/hold/read; NDRO vs DRO |
-| [josephson-cmos-hybrid-memory.html](josephson-cmos-hybrid-memory.html) | [Josephson–CMOS hybrid memory](../concepts/josephson-cmos-hybrid-memory.md) | Pulse↔volt embassy; write/read across domains |
+| [josephson-cmos-hybrid-memory.html](josephson-cmos-hybrid-memory.html) | [Josephson-CMOS hybrid memory](../concepts/josephson-cmos-hybrid-memory.md) | Pulse↔volt embassy; write/read across domains |
 | [cmos-vs-sfq.html](cmos-vs-sfq.html) | [CMOS vs SFQ](../concepts/cmos-vs-sfq.md) | Translate CMOS intuitions; catch false analogies |
 | [rsfq-logic.html](rsfq-logic.html) | [RSFQ overview](../concepts/rsfq-logic.md) | Plumbing cell map + 3-window pulse encoding |
 | [sfq-symbol-card.html](sfq-symbol-card.html) | [SFQ symbol card](../fundamentals/sfq-symbol-card.md) · [Reading SFQ notation](../fundamentals/reading-sfq-notation.md) | Flash drill: Φ₀, I_c, φ, β_C, ∫V dt |

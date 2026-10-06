@@ -3,11 +3,11 @@
 **Prereqs:** [Field map hub](README.md) · [Landscape](../superconducting-electronics-landscape.md)  
 **Next:** [Qubits & quantum computing](superconducting-qubits-and-quantum-computing.md) · [Logic families](../sfq-among-logic-families.md)
 
-**In one minute.** Classical digital SFQ = Josephson **pulse/flux bits**, not qubits. This curriculum’s deep path is here. Dialects: [logic families](../sfq-among-logic-families.md). Optional on day one — express lane can skip this page after landscape.
+**In one minute.** Classical digital SFQ = Josephson **pulse/flux bits**, not qubits. This curriculum's deep path is here. Dialects: [logic families](../sfq-among-logic-families.md). Optional on day one --- express lane can skip this page after landscape.
 
 ## What this field is
 
-**Digital SFQ** processes **classical** information with Josephson junctions: short voltage pulses (area $\sim\Phi_0$) and/or flux stored in loops. It is a specialty cryogenic digital platform (speed, co-location, tooling taxes) — not quantum computing.
+**Digital SFQ** processes **classical** information with Josephson junctions: short voltage pulses (area $\sim\Phi_0$) and/or flux stored in loops. It is a specialty cryogenic digital platform (speed, co-location, tooling taxes) --- not quantum computing.
 
 **Analogy palette:** telegraph/clicks = SFQ pulses; airport = whole superconducting electronics map; music hall = qubits (elsewhere).
 
@@ -31,11 +31,11 @@
 <details markdown="1">
 <summary markdown="span">1. Is digital SFQ quantum computing?</summary>
 
-No — classical digital electronics using superconducting devices.
+No --- classical digital electronics using superconducting devices.
 </details>
 
 <details markdown="1">
-<summary markdown="span">2. What bit “shape” does RSFQ-style SFQ emphasize?</summary>
+<summary markdown="span">2. What bit "shape" does RSFQ-style SFQ emphasize?</summary>
 
 Short $\Phi_0$-area pulses and/or stored loop flux, timed into windows.
 </details>
@@ -43,7 +43,7 @@ Short $\Phi_0$-area pulses and/or stored loop flux, timed into windows.
 <details markdown="1">
 <summary markdown="span">3. Can the express lane skip this page?</summary>
 
-Yes — after landscape, go to logic families → cryogenics → symbols; return here only if you want a SFQ-only recap.
+Yes --- after landscape, go to logic families → cryogenics → symbols; return here only if you want a SFQ-only recap.
 </details>
 
 ## Next steps

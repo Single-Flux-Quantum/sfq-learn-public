@@ -5,11 +5,11 @@
 
 **In one minute.** ~4 K is a common Nb SFQ neighborhood; many qubits need mK. Fridge wall power and cables dominate systems. Next: symbol card / notation.
 
-**Learning goals.** After this page you should be able to (1) explain why Nb-based SFQ logic commonly targets liquid-helium temperatures around ~4 K, (2) contrast that with millikelvin stacks used for many superconducting qubits, (3) list practical system taxes (coolers, heat leaks, connectors, turnaround time), and (4) carry a “thermal stage” mindset into later I/O and quantum-interface topics without becoming a cryogenics engineer yet.
+**Learning goals.** After this page you should be able to (1) explain why Nb-based SFQ logic commonly targets liquid-helium temperatures around ~4 K, (2) contrast that with millikelvin stacks used for many superconducting qubits, (3) list practical system taxes (coolers, heat leaks, connectors, turnaround time), and (4) carry a "thermal stage" mindset into later I/O and quantum-interface topics without becoming a cryogenics engineer yet.
 
 ## Why this matters
 
-Every superconducting electronics advantage sits behind a wall labeled **cold**. If you skip cryogenics, later sentences — “4 K Nb process,” “mK qubit,” “heat load of cables” — sound like flavor text. They are not flavor text. They are **design constraints** as real as fanout or timing.
+Every superconducting electronics advantage sits behind a wall labeled **cold**. If you skip cryogenics, later sentences --- "4 K Nb process," "mK qubit," "heat load of cables" --- sound like flavor text. They are not flavor text. They are **design constraints** as real as fanout or timing.
 
 This page is intentionally **light**. It will not size cryocoolers or teach cryostat vacuum practice. It will give electronics learners a durable thermal map.
 
@@ -21,19 +21,19 @@ Imagine chip design as a factory:
 - **Nb SFQ** often needs a deep walk-in freezer (~liquid helium temperatures).
 - **Many superconducting qubits** need a nested set of colder rooms (dilution refrigerator stages down toward millikelvin).
 
-Moving people (signals) between floors costs energy and complexity — elevators, doors, coats (attenuators, filters, thermalization). Co-locating work on one floor can help, but building that floor was expensive.
+Moving people (signals) between floors costs energy and complexity --- elevators, doors, coats (attenuators, filters, thermalization). Co-locating work on one floor can help, but building that floor was expensive.
 
 ```text
   Room temp (~300 K)     warm electronics, most CMOS
         |
-     50–4 K stages       shields, some cryo-CMOS / amplifiers
+     50-4 K stages       shields, some cryo-CMOS / amplifiers
         |
       ~4 K               many Nb SFQ digital demos live here
         |
      1 K → mK            many qubit devices + ultra-sensitive stages
 ```
 
-## Picture 1 — Temperature landmarks for this curriculum
+## Picture 1 --- Temperature landmarks for this curriculum
 
 ```mermaid
 flowchart TB
@@ -48,9 +48,9 @@ flowchart TB
 
 ### Why ~4 K shows up for Nb SFQ
 
-Niobium’s critical temperature is near **9 K**. Liquid helium at atmospheric pressure is about **4.2 K**, giving comfortable margin for many Nb circuits to remain superconducting with practical cryostat technology. That is why so much classical SFQ literature sounds like a **4 K story**.
+Niobium's critical temperature is near **9 K**. Liquid helium at atmospheric pressure is about **4.2 K**, giving comfortable margin for many Nb circuits to remain superconducting with practical cryostat technology. That is why so much classical SFQ literature sounds like a **4 K story**.
 
-Liquid nitrogen (~77 K) is cold compared with room temperature but **far too warm** for bulk Nb superconductivity. Do not equate “cryogenic” with “cold enough for Nb SFQ.”
+Liquid nitrogen (~77 K) is cold compared with room temperature but **far too warm** for bulk Nb superconductivity. Do not equate "cryogenic" with "cold enough for Nb SFQ."
 
 ### Why millikelvin shows up for qubits
 
@@ -58,7 +58,7 @@ Superconducting qubits and some ultra-sensitive experiments need much colder sta
 
 **Teaching consequence:** an SFQ helper circuit at 4 K and a qubit at 20 mK are **neighbors in a thermal stack**, not roommates on the same plate by default.
 
-## Picture 2 — System taxes (the bill you pay for cold)
+## Picture 2 --- System taxes (the bill you pay for cold)
 
 ```text
   Tax                    What it feels like to an electronics team
@@ -71,7 +71,7 @@ Superconducting qubits and some ultra-sensitive experiments need much colder sta
   Access                 You cannot probe like a PCB on a bench
 ```
 
-### Worked example 1 — “The chip uses microwatts, so the system is green”
+### Worked example 1 --- "The chip uses microwatts, so the system is green"
 
 **Prompt:** A demo quotes tiny on-chip dissipation.
 
@@ -83,13 +83,13 @@ Superconducting qubits and some ultra-sensitive experiments need much colder sta
 
 **Moral:** microwatts at 4 K can still sit behind hundreds of watts at the wall. Both numbers can be true.
 
-### Worked example 2 — Cable counting as architecture
+### Worked example 2 --- Cable counting as architecture
 
 **Prompt:** A quantum system needs thousands of control lines from room temperature.
 
-**Moral:** each line can inject heat and noise. That pushes architectures toward **multiplexing, proximal classical logic (SFQ or cryo-CMOS), and careful filtering** — which is why [landscape](superconducting-electronics-landscape.md) terminals meet in the cryostat.
+**Moral:** each line can inject heat and noise. That pushes architectures toward **multiplexing, proximal classical logic (SFQ or cryo-CMOS), and careful filtering** --- which is why [landscape](superconducting-electronics-landscape.md) terminals meet in the cryostat.
 
-### Worked example 3 — Who sits at which stage?
+### Worked example 3 --- Who sits at which stage?
 
 **Prompt:** A block diagram shows an RSFQ ALU, a cryo-CMOS sense amp, and a room-temperature FPGA.
 
@@ -101,9 +101,9 @@ Superconducting qubits and some ultra-sensitive experiments need much colder sta
 | Cryo-CMOS helper | Often tens of K → ~4 K | Cold FETs, not Josephson pulses |
 | FPGA / servers | ~300 K | Ecosystem, density, bring-up |
 
-**Moral:** “In the fridge” is not one temperature. Crossing stages is an [I/O](../bridge/sfq-pulse-to-volt-level.md) and cabling problem — practice the pulse↔volt gap in the [I/O lab](../labs/sfq-pulse-to-volt-level.html) later.
+**Moral:** "In the fridge" is not one temperature. Crossing stages is an [I/O](../bridge/sfq-pulse-to-volt-level.md) and cabling problem --- practice the pulse↔volt gap in the [I/O lab](../labs/sfq-pulse-to-volt-level.html) later.
 
-## Comparison table — thermal homes
+## Comparison table --- thermal homes
 
 | Platform | Typical teaching temperature home | Cold enough for Nb SFQ? |
 |----------|-----------------------------------|-------------------------|
@@ -114,22 +114,22 @@ Superconducting qubits and some ultra-sensitive experiments need much colder sta
 
 ## Common misconceptions
 
-1. **“Cryogenic means liquid nitrogen.”**  
+1. **"Cryogenic means liquid nitrogen."**  
    LN2 is cryogenic but not Nb-SFQ-cold.
 
-2. **“If the chip is superconducting, fridge power is negligible.”**  
+2. **"If the chip is superconducting, fridge power is negligible."**  
    Fridge power often dominates system energy.
 
-3. **“4 K and mK are basically the same.”**  
+3. **"4 K and mK are basically the same."**  
    Orders of magnitude apart in temperature and in refrigerator technology.
 
-4. **“SFQ chips are tested like USB gadgets.”**  
+4. **"SFQ chips are tested like USB gadgets."**  
    Cool-down cycles and limited access change lab culture.
 
-5. **“Co-locating logic in the cold always wins.”**  
+5. **"Co-locating logic in the cold always wins."**  
    It can win on cables/heat/latency, but you must budget cooler capacity and complexity.
 
-6. **“Only physicists need to care about stages.”**  
+6. **"Only physicists need to care about stages."**  
    Digital architects meet stages when planning I/O and partitioning.
 
 ## CMOS contrast
@@ -160,7 +160,7 @@ Nb $T_c$ is near 9 K; liquid helium ~4.2 K provides practical margin for man
 <details markdown="1">
 <summary markdown="span">2. Is liquid nitrogen cold enough for bulk Nb SFQ?</summary>
 
-No — ~77 K is far above Nb $T_c$.
+No --- ~77 K is far above Nb $T_c$.
 </details>
 
 <details markdown="1">
@@ -178,13 +178,13 @@ Examples: cooler wall power, slow thermal cycles, cable heat leaks, hard I/O, li
 <details markdown="1">
 <summary markdown="span">5. Does a microwatt chip dissipation imply a microwatt system?</summary>
 
-No — refrigeration and bias/I/O can dominate the wall-plug story.
+No --- refrigeration and bias/I/O can dominate the wall-plug story.
 </details>
 
 <details markdown="1">
-<summary markdown="span">6. Place RSFQ ALU, cryo-CMOS amp, and warm FPGA on a thermal stack — what problem appears between them?</summary>
+<summary markdown="span">6. Place RSFQ ALU, cryo-CMOS amp, and warm FPGA on a thermal stack --- what problem appears between them?</summary>
 
-Stage crossings (cables, heat, encoding). The ALU wants ~4 K Nb; the FPGA is warm; helpers may sit in between — I/O and thermalization become architecture.
+Stage crossings (cables, heat, encoding). The ALU wants ~4 K Nb; the FPGA is warm; helpers may sit in between --- I/O and thermalization become architecture.
 </details>
 
 <details markdown="1">
@@ -200,4 +200,4 @@ Glossary: critical temperature $T_c$, cryogenic, Nb / niobium (as process metal)
 ## Next steps
 
 - Enter the symbol layer: [How to read SFQ notation](reading-sfq-notation.md).  
-- Orientation complete — device intuition begins after notation.
+- Orientation complete --- device intuition begins after notation.

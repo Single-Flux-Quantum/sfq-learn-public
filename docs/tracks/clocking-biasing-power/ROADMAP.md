@@ -27,4 +27,4 @@ graph TD
 
 ## Later (public TBD / private papers)
 
-Resonant clocking, AC flux-bias transformers, measured power tables, CAD for island assignment — private explainers after this public path.
+Resonant clocking, AC flux-bias transformers, measured power tables, CAD for island assignment --- private explainers after this public path.

@@ -16,11 +16,11 @@ This page is field-fundamental. Exact recycling networks, measured ampere reduct
 
 Glossary: [Serial biasing / current recycling](../glossary.md), [Ground island](../glossary.md), [Bias current](../glossary.md), [ERSFQ](../glossary.md).
 
-## Intuition — one loop current, many floors
+## Intuition --- one loop current, many floors
 
 In parallel feed, think of many faucets on one city main: total flow into the building is roughly the sum of what every faucet draws.
 
-In serial / recycled feed, think of one pipe that runs **through** apartment 1’s plumbing, then apartment 2’s, then apartment 3’s before returning. The **same flow** serves many floors. Each floor still gets water pressure relative to its own local “ground,” but the floors no longer share one common ground potential — so messengers between floors need special bridges.
+In serial / recycled feed, think of one pipe that runs **through** apartment 1's plumbing, then apartment 2's, then apartment 3's before returning. The **same flow** serves many floors. Each floor still gets water pressure relative to its own local "ground," but the floors no longer share one common ground potential --- so messengers between floors need special bridges.
 
 For SFQ:
 
@@ -35,15 +35,15 @@ Public slogan:
 I_{\mathrm{supply,\,parallel}} \sim \sum_i I_i \qquad\text{vs}\qquad I_{\mathrm{supply,\,serial}} \sim \max_i I_i
 \]
 
-(in the ideal cartoon where each island needs comparable current $I_i$ and recycling is perfect). Voltage compliance and margins get harder — that is the other side of the trade.
+(in the ideal cartoon where each island needs comparable current $I_i$ and recycling is perfect). Voltage compliance and margins get harder --- that is the other side of the trade.
 
-## Analogy — batteries in series vs apartments on one riser
+## Analogy --- batteries in series vs apartments on one riser
 
 Batteries in series share one loop current while each cell still contributes its own voltage. Serial biasing is the **current** cousin of that idea applied to logic blocks: one bias current threads many islands; the supply must tolerate a taller voltage stack.
 
-The apartment-riser analogy teaches **shared flow + different floor potentials**. It must not teach false physics: water is continuous; SFQ bias is DC current into Josephson networks; inter-floor “messengers” are pulse/flux interfaces, not literal messengers.
+The apartment-riser analogy teaches **shared flow + different floor potentials**. It must not teach false physics: water is continuous; SFQ bias is DC current into Josephson networks; inter-floor "messengers" are pulse/flux interfaces, not literal messengers.
 
-## Picture — parallel vs serial cartoons
+## Picture --- parallel vs serial cartoons
 
 ```text
 Parallel (cartoon):                Serial / recycled (cartoon):
@@ -78,7 +78,7 @@ Potential step cartoon (not to scale):
   island1 local GND ─────
   island2 local GND  ─────   (offset along series string)
   island3 local GND   ─────
-       common “chip GND” is no longer one equipotential for all logic
+       common "chip GND" is no longer one equipotential for all logic
 ```
 
 ```mermaid
@@ -98,8 +98,8 @@ sequenceDiagram
 
 Try this in place. Prefer full-screen? Open the [lab page](../labs/serial-biasing-current-recycling.html).
 
-1. **Parallel:** raise islands $M$ and $I$ per island — $I_{\mathrm{supply}}$ is the sum; shared GND, no isolation sites.
-2. **Serial recycle:** same $M$ — $I_{\mathrm{supply}}$ collapses toward one island’s $I$; voltage stack grows; **ISO** marks appear between islands. Toggle **Send pulse across islands** and launch.
+1. **Parallel:** raise islands $M$ and $I$ per island --- $I_{\mathrm{supply}}$ is the sum; shared GND, no isolation sites.
+2. **Serial recycle:** same $M$ --- $I_{\mathrm{supply}}$ collapses toward one island's $I$; voltage stack grows; **ISO** marks appear between islands. Toggle **Send pulse across islands** and launch.
 
 <iframe
   src="../../labs/serial-biasing-current-recycling.html"
@@ -110,15 +110,15 @@ Try this in place. Prefer full-screen? Open the [lab page](../labs/serial-biasin
 
 ## What a ground island is (public definition)
 
-A **ground island** is a circuit region whose local return / ground reference is intentionally **not** tied to every other region’s ground as one shared equipotential. In serial biasing, islands appear because the series bias string forces potential steps.
+A **ground island** is a circuit region whose local return / ground reference is intentionally **not** tied to every other region's ground as one shared equipotential. In serial biasing, islands appear because the series bias string forces potential steps.
 
 Consequences for digital SFQ:
 
-1. **Intra-island** logic can look familiar: JTLs, DFFs, splitters, clocks — subject to ordinary timing ([STA](sfq-static-timing-analysis.md), [clock flow](concurrent-and-counter-flow-clocking.md)).
+1. **Intra-island** logic can look familiar: JTLs, DFFs, splitters, clocks --- subject to ordinary timing ([STA](sfq-static-timing-analysis.md), [clock flow](concurrent-and-counter-flow-clocking.md)).
 2. **Inter-island** nets are special: you cannot casually abut a JTL from island A into island B as if grounds matched.
 3. **EDA** must know island membership: placement, routing, and verification treat islands as domains.
 
-Public rule: **island = bias/return domain**, not “just another floorplan rectangle.”
+Public rule: **island = bias/return domain**, not "just another floorplan rectangle."
 
 ## What you gain / what you pay
 
@@ -146,14 +146,14 @@ A large system may care about **ERSFQ and serial biasing together**. They are co
 | Topic | CMOS habit | Serial-biased SFQ |
 |-------|------------|-------------------|
 | Power delivery | Voltage rails; current is consequence | Current bias is first-class; recycling attacks amperes |
-| “Ground” | Often one digital GND plane (with IR drop) | Multiple intentional ground islands |
+| "Ground" | Often one digital GND plane (with IR drop) | Multiple intentional ground islands |
 | Crossing domains | Level shifters between voltage domains | Isolation / transformers between islands |
 | Scaling pain | Wire IR, electromigration, package pins | Cryostat current, magnetics, island isolation |
 | Low-power cousin | Clock gating, VT, DVFS | ERSFQ feeding (heat) + recycling (amperes) |
 
-A CMOS designer who hears “series” may picture stacked FETs for voltage tolerance. Here series means **reusing bias current through stacked return domains**.
+A CMOS designer who hears "series" may picture stacked FETs for voltage tolerance. Here series means **reusing bias current through stacked return domains**.
 
-## Worked example 1 — Three islands, parallel vs serial amperes
+## Worked example 1 --- Three islands, parallel vs serial amperes
 
 Suppose three identical islands each need $0.5\,\text{A}$ of bias if fed in parallel:
 
@@ -170,22 +170,22 @@ Public checklist:
 3. Ask what voltage headroom and regulation the string requires (paper/private depth for numbers).
 4. Budget isolation cells for every necessary inter-island SFQ net.
 
-## Worked example 2 — Where isolation appears in a pipeline
+## Worked example 2 --- Where isolation appears in a pipeline
 
-Imagine a four-stage RSFQ pipeline that does not fit on one island’s current budget, so stages 1–2 sit on island A and stages 3–4 on island B.
+Imagine a four-stage RSFQ pipeline that does not fit on one island's current budget, so stages 1-2 sit on island A and stages 3-4 on island B.
 
 Data must cross A→B once:
 
-1. Inside A: ordinary JTLs / DFFs / clocks relative to A’s ground.
-2. At the boundary: an **isolation** interface (transformer-style or other galvanic isolation — exact cell is library-specific).
-3. Inside B: continue the pipeline relative to B’s ground.
-4. Clocking: either each island has its own clock tree leaf strategy, or clocks also cross with isolation — both are architectural choices.
+1. Inside A: ordinary JTLs / DFFs / clocks relative to A's ground.
+2. At the boundary: an **isolation** interface (transformer-style or other galvanic isolation --- exact cell is library-specific).
+3. Inside B: continue the pipeline relative to B's ground.
+4. Clocking: either each island has its own clock tree leaf strategy, or clocks also cross with isolation --- both are architectural choices.
 
-If you forget step 2 and “just wire” a JTL across grounds, you have mixed return potentials. That is not a timing tweak; it is a **domain error**.
+If you forget step 2 and "just wire" a JTL across grounds, you have mixed return potentials. That is not a timing tweak; it is a **domain error**.
 
-## Worked example 3 — Complementary to ERSFQ, not a substitute
+## Worked example 3 --- Complementary to ERSFQ, not a substitute
 
-A team reports: “We moved to ERSFQ, so we do not need serial biasing.”
+A team reports: "We moved to ERSFQ, so we do not need serial biasing."
 
 Public response:
 
@@ -196,9 +196,9 @@ Public response:
 
 Fair system thinking quotes **both** heat and amperes. See [Resistive Bias to ERSFQ](../bridge/resistive-bias-to-ersfq.md) and [DC Bias Current Delivery](../bridge/dc-bias-current-delivery.md).
 
-## Worked example 4 — Failure mode categories (no recipes)
+## Worked example 4 --- Failure mode categories (no recipes)
 
-When serial biasing “misbehaves,” public debugging buckets include:
+When serial biasing "misbehaves," public debugging buckets include:
 
 | Symptom class | Often look at |
 |---------------|---------------|
@@ -207,27 +207,27 @@ When serial biasing “misbehaves,” public debugging buckets include:
 | Supply hits compliance limit | Series voltage stack taller than expected |
 | Timing fails only after floorplanning islands | Clock trees and skew across domains |
 
-Do not jump to “Josephson physics is broken” before checking **domain and bias** hypotheses.
+Do not jump to "Josephson physics is broken" before checking **domain and bias** hypotheses.
 
 ## Design checklist (field-fundamental)
 
 1. Estimate total parallel bias current for the block you want to build.
 2. Decide whether ampere delivery into the cryostat forces recycling.
 3. Partition into islands with comparable current and manageable communication.
-4. Mark every SFQ net that crosses islands — each needs an isolation plan.
+4. Mark every SFQ net that crosses islands --- each needs an isolation plan.
 5. Keep timing closure **inside** islands using ordinary [path balance](path-balancing-overhead.md) / [STA](sfq-static-timing-analysis.md) thinking.
 6. Coordinate with feeding style: resistive vs [ERSFQ](ersfq-logic.md).
 7. Leave measured ampere tables and CAD algorithms to private explainers.
 
 ## Common misconceptions
 
-- **“Serial biasing means the logic is wired in series like a shift register.”** No — it is about **bias current** threading islands, not about Boolean series connection.
-- **“Current recycling = ERSFQ.”** Different problems (amperes vs resistor static heat).
-- **“Ground islands are only a layout prettiness.”** They are electrical domains required by series potentials.
-- **“If grounds differ, ignore it for short wires.”** Short does not cancel galvanic domain mismatch.
-- **“Recycling removes all power problems.”** It shrinks supply current; switching energy, regulation, and (for classical RSFQ) resistor heat may remain.
-- **“AQFP already solved this because it uses AC.”** AQFP is another family; it does not erase the need to understand DC recycling vocabulary in the RSFQ/ERSFQ world.
-- **“One isolation transformer fixes the whole chip.”** Every necessary crossing is a site; crossings have delay and margin costs that STA must see.
+- **"Serial biasing means the logic is wired in series like a shift register."** No --- it is about **bias current** threading islands, not about Boolean series connection.
+- **"Current recycling = ERSFQ."** Different problems (amperes vs resistor static heat).
+- **"Ground islands are only a layout prettiness."** They are electrical domains required by series potentials.
+- **"If grounds differ, ignore it for short wires."** Short does not cancel galvanic domain mismatch.
+- **"Recycling removes all power problems."** It shrinks supply current; switching energy, regulation, and (for classical RSFQ) resistor heat may remain.
+- **"AQFP already solved this because it uses AC."** AQFP is another family; it does not erase the need to understand DC recycling vocabulary in the RSFQ/ERSFQ world.
+- **"One isolation transformer fixes the whole chip."** Every necessary crossing is a site; crossings have delay and margin costs that STA must see.
 
 ## Bridge to SFQ circuits
 
@@ -270,13 +270,13 @@ About $0.4\,\text{A}$ once through the series string (voltage compliance still r
 <details markdown="1">
 <summary markdown="span">5. Does ERSFQ make serial biasing unnecessary?</summary>
 
-Not automatically — ERSFQ targets resistor static heat; recycling targets total supply amperes. Chips may need both themes.
+Not automatically --- ERSFQ targets resistor static heat; recycling targets total supply amperes. Chips may need both themes.
 </details>
 
 <details markdown="1">
 <summary markdown="span">6. What must happen before an SFQ pulse crosses from island A to island B?</summary>
 
-An isolation interface appropriate to the library — you cannot treat mismatched grounds as ordinary JTL abutment.
+An isolation interface appropriate to the library --- you cannot treat mismatched grounds as ordinary JTL abutment.
 </details>
 
 <details markdown="1">
@@ -288,7 +288,7 @@ Current shrinks toward a per-island scale, but the supply must support a taller 
 <details markdown="1">
 <summary markdown="span">8. Is path balancing obsolete inside an island once recycling is used?</summary>
 
-No — epoch alignment and timing windows still apply to pulse logic inside each island.
+No --- epoch alignment and timing windows still apply to pulse logic inside each island.
 </details>
 
 ## Next steps

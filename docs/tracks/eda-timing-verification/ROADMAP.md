@@ -22,8 +22,8 @@ graph TD
 3. [Path Balancing Overhead](../../concepts/path-balancing-overhead.md)
 4. [SFQ Static Timing Analysis](../../concepts/sfq-static-timing-analysis.md)
 5. [JTL Interconnects](../../concepts/jtl-interconnects.md)
-6. [Hybrid JTL–PTL Routing](../../concepts/hybrid-jtl-ptl-routing.md)
+6. [Hybrid JTL-PTL Routing](../../concepts/hybrid-jtl-ptl-routing.md)
 
 ## Later (public TBD / private papers)
 
-qSTA tool flows, CPPR, placement & routing engines, ColdFlux SEDA — private explainers.
+qSTA tool flows, CPPR, placement & routing engines, ColdFlux SEDA --- private explainers.

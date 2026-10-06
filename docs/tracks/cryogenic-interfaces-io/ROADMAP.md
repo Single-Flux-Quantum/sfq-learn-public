@@ -26,4 +26,4 @@ graph TD
 
 ## Later (public TBD / private papers)
 
-PAM-3 / multi-level links, thermal/BER co-optimization, SFQ↔AQFP self-resetting interfaces — private explainers.
+PAM-3 / multi-level links, thermal/BER co-optimization, SFQ↔AQFP self-resetting interfaces --- private explainers.

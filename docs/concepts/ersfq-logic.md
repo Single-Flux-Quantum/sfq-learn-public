@@ -8,23 +8,23 @@
 
 ## Why this matters
 
-Classical RSFQ libraries often feed junctions through **bias resistors**. Those resistors dissipate heat even when the logic is idle — **static power** that grows painfully as junction count grows. At cryogenic budgets, that heat is not a footnote; it can dominate.
+Classical RSFQ libraries often feed junctions through **bias resistors**. Those resistors dissipate heat even when the logic is idle --- **static power** that grows painfully as junction count grows. At cryogenic budgets, that heat is not a footnote; it can dominate.
 
-**ERSFQ** (Energy-efficient RSFQ) keeps the familiar **SFQ pulse encoding** and much of the cell vocabulary (JTL, DFF, splitters, …) but redesigns **how bias current is delivered** so idle dissipation drops dramatically. Public message: **same pulse-logic language, different power/bias story.**
+**ERSFQ** (Energy-efficient RSFQ) keeps the familiar **SFQ pulse encoding** and much of the cell vocabulary (JTL, DFF, splitters, ...) but redesigns **how bias current is delivered** so idle dissipation drops dramatically. Public message: **same pulse-logic language, different power/bias story.**
 
 Read the story bridge first if needed: [Resistive Bias to ERSFQ](../bridge/resistive-bias-to-ersfq.md). Glossary: [ERSFQ](../glossary.md), [Bias current](../glossary.md), [RSFQ](../glossary.md), [JTL](../glossary.md).
 
-## Intuition — attack static bias heat
+## Intuition --- attack static bias heat
 
 | Piece | Classical resistive-bias RSFQ | ERSFQ (public cartoon) |
 |-------|------------------------------|-------------------------|
 | Bit encoding | SFQ pulses / loop flux | Same family of ideas |
-| Cell roles | JTL, DFF, gates, … | Still pulse automata |
+| Cell roles | JTL, DFF, gates, ... | Still pulse automata |
 | Bias feed | Resistors → continuous $I^2R$ heat | Inductive / JJ feeding networks aimed at near-zero static resistor power |
 | What remains | Switching energy when pulses fire | Switching energy remains; static resistor tax shrinks |
 | Timing story | Epochs, path balance, STA | Still required |
 
-ERSFQ is **not** “a new Boolean algebra.” It is an **implementation family** for pulse logic with a different power-delivery contract.
+ERSFQ is **not** "a new Boolean algebra." It is an **implementation family** for pulse logic with a different power-delivery contract.
 
 Static resistor heat cartoon (classical):
 
@@ -32,14 +32,14 @@ Static resistor heat cartoon (classical):
 P_{\mathrm{static,\,R}} \sim I_b^2 R_{\mathrm{bias}}
 \]
 
-per biased path that still drops voltage across a resistor while idle. ERSFQ’s design intent is to drive that class of term toward negligible — without claiming zero switching energy.
+per biased path that still drops voltage across a resistor while idle. ERSFQ's design intent is to drive that class of term toward negligible --- without claiming zero switching energy.
 
-## Analogy — city water leaks
+## Analogy --- city water leaks
 
 Resistive-bias RSFQ ≈ a city water system that **leaks at every junction all night** (static heat).  
 ERSFQ ≈ redesign the supply network so **leaks stop**; faucets still splash when someone uses them (switching when pulses occur).
 
-Bad analogy: “ERSFQ uses zero energy always.” Adiabatic or switching energy still exists; the headline win is **static bias**. Another bad analogy: “ERSFQ = AQFP.” Different families.
+Bad analogy: "ERSFQ uses zero energy always." Adiabatic or switching energy still exists; the headline win is **static bias**. Another bad analogy: "ERSFQ = AQFP." Different families.
 
 ## Picture
 
@@ -87,8 +87,8 @@ sequenceDiagram
 
 Try this in place. Prefer full-screen? Open the [lab page](../labs/ersfq-logic.html).
 
-1. **Resistive RSFQ**, activity 0% — static bar stays large (leak all night). Raise **N**.
-2. Flip to **ERSFQ feed** — static collapses; raise **Activity %** so switching (and soft feed recovery) grow. Encoding stays SFQ pulses.
+1. **Resistive RSFQ**, activity 0% --- static bar stays large (leak all night). Raise **N**.
+2. Flip to **ERSFQ feed** --- static collapses; raise **Activity %** so switching (and soft feed recovery) grow. Encoding stays SFQ pulses.
 
 <iframe
   src="../../labs/ersfq-logic.html"
@@ -100,9 +100,9 @@ Try this in place. Prefer full-screen? Open the [lab page](../labs/ersfq-logic.h
 ## What changes for a designer (public checklist)
 
 1. **Logical thinking** (pulses, epochs, DFFs, path balance) largely carries over from RSFQ.
-2. **Bias network design** becomes a first-class architecture problem — feeding junctions, margins, and recovery after bursts of activity.
-3. **Power reports** must split static vs dynamic; comparing “RSFQ vs ERSFQ” without that split is misleading.
-4. **Total supply current** may still be large — that is why [DC bias delivery](../bridge/dc-bias-current-delivery.md) and [serial biasing](serial-biasing-current-recycling.md) matter even for efficient families.
+2. **Bias network design** becomes a first-class architecture problem --- feeding junctions, margins, and recovery after bursts of activity.
+3. **Power reports** must split static vs dynamic; comparing "RSFQ vs ERSFQ" without that split is misleading.
+4. **Total supply current** may still be large --- that is why [DC bias delivery](../bridge/dc-bias-current-delivery.md) and [serial biasing](serial-biasing-current-recycling.md) matter even for efficient families.
 5. **Timing closure** still uses [STA](sfq-static-timing-analysis.md) and [clock-flow](concurrent-and-counter-flow-clocking.md) intuition.
 
 ## CMOS contrast
@@ -112,23 +112,23 @@ Try this in place. Prefer full-screen? Open the [lab page](../labs/ersfq-logic.h
 | Idle power | Leakage / static paths | Bias $I^2R$ can dominate | Aims to remove resistor static tax |
 | Dynamic power | $CV^2f$-ish | Pulse switching + bias interactions | Pulse switching remains central |
 | Rails | $V_{DD}$/GND grid | Current bias network | Current bias with inductive/JJ feed |
-| “Low power variant” | Process / VT / clock gating | — | ERSFQ-style feeding (among options) |
+| "Low power variant" | Process / VT / clock gating | --- | ERSFQ-style feeding (among options) |
 | Clock gating cousin | Stops activity | Helps dynamic; may not stop resistor leaks | Feeding topology is the headline move |
 
-CMOS “clock gating” reduces activity; ERSFQ’s headline move is **feeding topology**, not only activity.
+CMOS "clock gating" reduces activity; ERSFQ's headline move is **feeding topology**, not only activity.
 
-## Worked example 1 — Same shift register, different idle bill
+## Worked example 1 --- Same shift register, different idle bill
 
 Imagine two functionally similar $N$-bit shift registers: one classical RSFQ, one ERSFQ.
 
 Idle (no data activity), public expectation:
 
-- classical: bias resistors still dissipate — heat scales with how the bias network is built,
-- ERSFQ: static resistor contribution collapses by design intent; remaining idle draw depends on the feeding network’s nonidealities (paper depth).
+- classical: bias resistors still dissipate --- heat scales with how the bias network is built,
+- ERSFQ: static resistor contribution collapses by design intent; remaining idle draw depends on the feeding network's nonidealities (paper depth).
 
 During activity, both move $\Phi_0$ pulses; switching energy appears in both. A fair comparison quotes **static** and **dynamic** separately.
 
-## Worked example 2 — Do not confuse ERSFQ with serial biasing
+## Worked example 2 --- Do not confuse ERSFQ with serial biasing
 
 | Technique | Main problem attacked |
 |-----------|----------------------|
@@ -136,21 +136,21 @@ During activity, both move $\Phi_0$ pulses; switching energy appears in both. A 
 | [Serial biasing / current recycling](serial-biasing-current-recycling.md) | Huge **total ampere** into the cryostat by stacking ground islands |
 | AQFP | Different logic family (AC multiphase, adiabatic parametron-style) |
 
-A large chip might care about **both** ERSFQ *and* serial biasing — they are complementary themes, not synonyms.
+A large chip might care about **both** ERSFQ *and* serial biasing --- they are complementary themes, not synonyms.
 
-## Worked example 3 — Margin thinking without numbers
+## Worked example 3 --- Margin thinking without numbers
 
 Suppose an ERSFQ feeding network must replenish bias after a burst of $M$ pulses in a local region. Public reasoning:
 
 1. Each switched junction briefly disturbs the bias node.
 2. The feeding network must restore bias before the next critical window.
-3. If restoration is too slow, margins collapse — errors look like “timing” or “logic” but root cause is **bias dynamics**.
+3. If restoration is too slow, margins collapse --- errors look like "timing" or "logic" but root cause is **bias dynamics**.
 
 Quantitative recovery times and schematics → private explainers. The **failure mode category** is public.
 
-## Worked example 4 — Reading a power table honestly
+## Worked example 4 --- Reading a power table honestly
 
-A paper quotes “ERSFQ uses $X$× less power than RSFQ.” Public checklist before believing the slogan:
+A paper quotes "ERSFQ uses $X$× less power than RSFQ." Public checklist before believing the slogan:
 
 1. Was **static** separated from **dynamic**?
 2. Same activity factor / throughput assumption?
@@ -159,11 +159,11 @@ A paper quotes “ERSFQ uses $X$× less power than RSFQ.” Public checklist bef
 
 Numbers stay private; the **honesty checklist** is curriculum content.
 
-## Worked example 5 — Cell vocabulary transfer
+## Worked example 5 --- Cell vocabulary transfer
 
-You already know [JTL](jtl-interconnects.md), [splitter](splitter-and-confluence.md), [DFF](rsfq-dff-and-retiming.md). In ERSFQ those **roles** still exist. What you re-learn is how bias arrives and how power is budgeted — not a new meaning of “pulse in a window.”
+You already know [JTL](jtl-interconnects.md), [splitter](splitter-and-confluence.md), [DFF](rsfq-dff-and-retiming.md). In ERSFQ those **roles** still exist. What you re-learn is how bias arrives and how power is budgeted --- not a new meaning of "pulse in a window."
 
-## Bias feeding — public physics cartoon
+## Bias feeding --- public physics cartoon
 
 Classical resistive bias sets a working point by dropping part of a supply voltage across a resistor into a Josephson bias node. Even when **no** SFQ pulse fires, current still flows through that resistor, so heat continues:
 
@@ -184,9 +184,9 @@ A useful mental split:
 | Logic | What is a bit? | Same: pulse in a window / loop flux |
 | Cell | What does a JTL/DFF do? | Same roles as RSFQ cousins |
 | Feed | How does $I_b$ arrive without resistor heat? | Inductive / JJ feeding network |
-| System | Are amperes and islands still a problem? | Often yes — see [DC bias delivery](../bridge/dc-bias-current-delivery.md) |
+| System | Are amperes and islands still a problem? | Often yes --- see [DC bias delivery](../bridge/dc-bias-current-delivery.md) |
 
-Do **not** flatten “ERSFQ” into “any circuit that uses an inductor somewhere.” The name points at an **energy-efficient bias-delivery approach** for RSFQ-like pulse logic. Named schematic variants and measured watt tables belong in private explainers.
+Do **not** flatten "ERSFQ" into "any circuit that uses an inductor somewhere." The name points at an **energy-efficient bias-delivery approach** for RSFQ-like pulse logic. Named schematic variants and measured watt tables belong in private explainers.
 
 ## Interaction with activity and recovery
 
@@ -206,7 +206,7 @@ Burst cartoon:
   next window must see bias restored
 ```
 
-## Relationship to other “efficient SFQ” words
+## Relationship to other "efficient SFQ" words
 
 Newcomers meet many acronyms. Keep this public map:
 
@@ -217,18 +217,18 @@ Newcomers meet many acronyms. Keep this public map:
 | [AQFP](aqfp-logic.md) | AC multiphase parametron-style | Adiabatic / AC excitation family (different encoding choreography) |
 | [Serial biasing](serial-biasing-current-recycling.md) | Orthogonal to encoding | Reuse one supply current across stacked ground islands |
 
-You may eventually care about **both** ERSFQ feeding **and** serial biasing on one large system — complementary levers, not synonyms.
+You may eventually care about **both** ERSFQ feeding **and** serial biasing on one large system --- complementary levers, not synonyms.
 
 ## Common misconceptions
 
-- **“ERSFQ invents a new bit encoding.”** No — still SFQ pulses / flux storage.
-- **“ERSFQ means zero power.”** Static resistor power ↓; switching and other losses remain.
-- **“ERSFQ = AQFP.”** Different families ([AQFP](aqfp-logic.md)).
-- **“If I learn ERSFQ I can ignore DC bias delivery.”** Ampere-scale delivery and island recycling are separate scaling problems.
-- **“Any inductive bias is automatically ERSFQ.”** ERSFQ refers to a design approach/family; read papers for the exact feeding style — private depth.
-- **“MIDSFQ / other names are required on day one.”** Variant taxonomy debates stay private until you study those papers.
-- **“ERSFQ deletes path balancing.”** Epoch alignment remains.
-- **“Clock gating alone equals ERSFQ.”** Feeding topology is the distinctive public theme.
+- **"ERSFQ invents a new bit encoding."** No --- still SFQ pulses / flux storage.
+- **"ERSFQ means zero power."** Static resistor power ↓; switching and other losses remain.
+- **"ERSFQ = AQFP."** Different families ([AQFP](aqfp-logic.md)).
+- **"If I learn ERSFQ I can ignore DC bias delivery."** Ampere-scale delivery and island recycling are separate scaling problems.
+- **"Any inductive bias is automatically ERSFQ."** ERSFQ refers to a design approach/family; read papers for the exact feeding style --- private depth.
+- **"MIDSFQ / other names are required on day one."** Variant taxonomy debates stay private until you study those papers.
+- **"ERSFQ deletes path balancing."** Epoch alignment remains.
+- **"Clock gating alone equals ERSFQ."** Feeding topology is the distinctive public theme.
 
 ## Bridge to SFQ circuits
 
@@ -248,7 +248,7 @@ Paper-specific bias-network schematics, quantitative watt tables, process design
 <details markdown="1">
 <summary markdown="span">1. Does ERSFQ invent a new bit encoding?</summary>
 
-No — it still uses SFQ pulses / flux storage; the big change is bias / static power.
+No --- it still uses SFQ pulses / flux storage; the big change is bias / static power.
 </details>
 
 <details markdown="1">
@@ -278,7 +278,7 @@ Private paper explainers; this public page stays conceptual.
 <details markdown="1">
 <summary markdown="span">6. Why might an ERSFQ chip still need careful DC bias delivery engineering?</summary>
 
-Total current, distribution, and margins can still be large; feeding efficiency ≠ “no ampere problem.”
+Total current, distribution, and margins can still be large; feeding efficiency ≠ "no ampere problem."
 </details>
 
 <details markdown="1">
@@ -290,7 +290,7 @@ Separate static vs dynamic, and matched activity / what was counted.
 <details markdown="1">
 <summary markdown="span">8. Do JTLs and DFFs disappear in ERSFQ?</summary>
 
-No — pulse-cell roles largely carry over; the bias/power contract changes.
+No --- pulse-cell roles largely carry over; the bias/power contract changes.
 </details>
 
 ## Next steps
