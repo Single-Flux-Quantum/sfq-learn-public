@@ -69,7 +69,9 @@ Use height ≥ 700px so controls, stats, and the table fit without clipping.
 | [josephson-cmos-hybrid-memory.html](josephson-cmos-hybrid-memory.html) | [Josephson–CMOS hybrid memory](../concepts/josephson-cmos-hybrid-memory.md) | Pulse↔volt embassy; write/read across domains |
 | [cmos-vs-sfq.html](cmos-vs-sfq.html) | [CMOS vs SFQ](../concepts/cmos-vs-sfq.md) | Translate CMOS intuitions; catch false analogies |
 | [rsfq-logic.html](rsfq-logic.html) | [RSFQ overview](../concepts/rsfq-logic.md) | Plumbing cell map + 3-window pulse encoding |
-| [sfq-symbol-card.html](sfq-symbol-card.html) | [SFQ symbol card](../fundamentals/sfq-symbol-card.md) | Flash drill: Φ₀, I_c, φ, β_C, ∫V dt |
+| [sfq-symbol-card.html](sfq-symbol-card.html) | [SFQ symbol card](../fundamentals/sfq-symbol-card.md) · [Reading SFQ notation](../fundamentals/reading-sfq-notation.md) | Flash drill: Φ₀, I_c, φ, β_C, ∫V dt |
+
+**Coverage.** Core walk device path, all bridges, and concept cards that suit click-and-watch demos now have labs (25 HTML files). Orientation express-lane pages and optional `fields/` guides stay prose-first by design.
 
 ## Adding a lab
 

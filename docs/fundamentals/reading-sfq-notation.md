@@ -35,6 +35,20 @@ V
 
 they are not claiming a precise triangle formula. They are saying: “a short voltage event occurred; treat its area as one flux quantum.”
 
+## Interactive lab
+
+Same five-symbol drill as the [Symbol card](sfq-symbol-card.md). Prefer full-screen? Open the [lab page](../labs/sfq-symbol-card.html).
+
+1. Tap to peek, then pick the meaning for $\Phi_0$, $I_c$, $\phi$, $\beta_C$, $\int V\,dt$.
+2. Misses highlight the “not” column (e.g. $\Phi_0$ is not $V_{DD}$).
+
+<iframe
+  src="../../labs/sfq-symbol-card.html"
+  title="SFQ symbol card lab"
+  style="width:100%;height:700px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## The five symbols you will see everywhere
 
 ### 1. Flux quantum $\Phi_0$

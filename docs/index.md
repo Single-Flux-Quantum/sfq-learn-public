@@ -50,7 +50,7 @@ Then jump to [Symbol card](fundamentals/sfq-symbol-card.md) → [Notation](funda
 ### Device path (core walk)
 
 1. [Symbol card](fundamentals/sfq-symbol-card.md) — five-symbol cheatsheet · [lab](labs/sfq-symbol-card.html)  
-2. [How to read SFQ notation](fundamentals/reading-sfq-notation.md)  
+2. [How to read SFQ notation](fundamentals/reading-sfq-notation.md) · [lab](labs/sfq-symbol-card.html)  
 3. [Superconductivity intuition](fundamentals/superconductivity-intuition.md)  
 4. [Josephson junction (RCSJ)](fundamentals/josephson-junction-rcsj.md) · [lab](labs/josephson-junction-rcsj.html)  
 5. [Flux quantization](fundamentals/flux-quantization.md) · [lab](labs/flux-quantization-squid-loop.html)  
