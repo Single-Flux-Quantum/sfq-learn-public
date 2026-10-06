@@ -64,7 +64,7 @@ Start here: [bridge/README.md](bridge/README.md)
 
 1. [Phase to pulse](bridge/phase-to-pulse.md) · [lab](labs/phase-to-pulse.html)  
 2. [Pulse to logic state](bridge/pulse-to-logic-state.md) · [lab](labs/pulse-to-logic-state.html)  
-3. [Gate-level pipelining](bridge/gate-level-pipelining.md)  
+3. [Gate-level pipelining](bridge/gate-level-pipelining.md) · [lab](labs/gate-level-pipelining.html)  
 4. [Resistive bias to ERSFQ](bridge/resistive-bias-to-ersfq.md)  
 5. [DC bias current delivery](bridge/dc-bias-current-delivery.md)  
 6. [SFQ pulse to voltage levels](bridge/sfq-pulse-to-volt-level.md)  

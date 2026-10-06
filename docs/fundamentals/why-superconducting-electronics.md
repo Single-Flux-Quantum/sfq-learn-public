@@ -152,13 +152,13 @@ Teaching takeaway: sometimes you choose superconducting electronics because **th
 4. **“If it is cold and superconducting, it must be quantum computing.”**  
    False. Classical SFQ logic is classical digital engineering that happens to use superconducting devices.
 
-4b. **“SFQ is fast because of superposition / entanglement / interference.”**  
+5. **“SFQ is fast because of superposition / entanglement / interference.”**  
    False for the classical SFQ path. Those three power *algorithmic* QC speedups; SFQ’s pitch here is picosecond **device** switching. Details: [qubits page](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations).
 
-5. **“Motivation is only energy.”**  
+6. **“Motivation is only energy.”**  
    Speed and co-location matter at least as often in real proposals.
 
-6. **“You must master BCS theory before caring.”**  
+7. **“You must master BCS theory before caring.”**  
    No. This path starts with systems motivation and device *intuition*, not microscopic many-body physics.
 
 ## CMOS contrast (preview)
@@ -180,6 +180,8 @@ This page argued **why a specialty platform exists**. The next pages answer:
 2. **What else sits in the same cryogenic toolbox?** → [Landscape](superconducting-electronics-landscape.md)  
 3. **Where does SFQ sit among Josephson logic styles?** → [Logic families](sfq-among-logic-families.md)  
 4. **What does “cryogenic” cost in practice?** → [Cryogenics for electronics](cryogenics-for-electronics.md)  
+
+If you came for **algorithmic quantum speedup** (superposition / entanglement / interference), peek at [Qubits & QC](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations) — then return here for the classical SFQ path.
 
 Only then do we teach symbols and Josephson device intuition — so $\Phi_0$ arrives as a tool, not a surprise.
 
@@ -216,13 +218,19 @@ No. Cryo-CMOS is related but different device physics; SFQ uses Josephson juncti
 </details>
 
 <details>
-<summary>6. Where should a CMOS designer peek for contrast without leaving orientation forever?</summary>
+<summary>6. Name two different meanings of “quantum + speed.”</summary>
+
+(1) Device-fast classical SFQ: picosecond Josephson switching / pulse pipelines. (2) Algorithmic QC speedup: superposition + entanglement + interference for some problems — see the [qubits page](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations).
+</details>
+
+<details>
+<summary>7. Where should a CMOS designer peek for contrast without leaving orientation forever?</summary>
 
 The [CMOS vs SFQ](../concepts/cmos-vs-sfq.md) cheat-sheet — as a preview now, more deeply after pulse/flux fundamentals.
 </details>
 
 <details>
-<summary>7. What should you learn next after this page?</summary>
+<summary>8. What should you learn next after this page?</summary>
 
 [History of superconducting electronics](history-of-superconducting-electronics.md), then landscape and logic-family map, before notation and device physics.
 </details>

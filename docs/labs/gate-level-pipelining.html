@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gate-Level Pipelining Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --path-a: #4051b5;
+      --path-b: #ef6c00;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 1rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: flex-end;
+      margin-bottom: 0.85rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .field input[type="number"] {
+      width: 4.2rem;
+      padding: 0.4rem 0.45rem;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.9rem;
+    }
+
+    button {
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    #runBtn {
+      background: var(--md-primary);
+      color: #fff;
+      box-shadow: 0 1px 2px #00000024;
+    }
+
+    #runBtn:hover { background: var(--md-primary-light); }
+    #runBtn:disabled { opacity: 0.55; cursor: wait; }
+
+    #autoBtn, #clearBtn {
+      background: transparent;
+      color: var(--md-primary);
+      border: 1px solid var(--border);
+    }
+
+    #autoBtn:hover, #clearBtn:hover { background: var(--code-bg); }
+
+    .balance-pill {
+      margin-left: auto;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.4rem 0.75rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--border);
+      background: var(--code-bg);
+    }
+
+    .balance-pill.ok { color: var(--ok); background: #e8f5e9; border-color: #a5d6a7; }
+    .balance-pill.bad { color: var(--bad); background: #ffebee; border-color: #ef9a9a; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.65rem 0.5rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .stat-value {
+      font-size: 1.15rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.45rem 0.7rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 220px;
+      background: #fff;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    th {
+      padding: 0.55rem 0.4rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--code-bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.55rem 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .ok { color: var(--ok); font-weight: 700; }
+    .bad { color: var(--bad); font-weight: 700; }
+    .muted { color: var(--muted); }
+
+    .hint {
+      margin-top: 0.85rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Gate-Level Pipelining Lab</h1>
+    <p class="lede">
+      Two paths meet at a <strong>merge</strong>. Each stage is one clocked gate/DFF.
+      Pulses advance <strong>one stage per beat</strong>. Same stage count → same epoch → merge OK.
+      Different counts → wrong epoch (logic error), even if both pulses “exist.”
+    </p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="stagesA">Path A stages</label>
+        <input type="number" id="stagesA" min="1" max="6" value="3">
+      </div>
+      <div class="field">
+        <label for="stagesB">Path B stages</label>
+        <input type="number" id="stagesB" min="1" max="6" value="1">
+      </div>
+      <div class="field">
+        <label for="padsB">Pads on B (DFFs)</label>
+        <input type="number" id="padsB" min="0" max="6" value="0">
+      </div>
+      <button type="button" id="runBtn">Advance 1 clock</button>
+      <button type="button" id="autoBtn">Run to merge</button>
+      <button type="button" id="clearBtn">Reset</button>
+      <div class="balance-pill bad" id="balancePill">Unbalanced</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Clock beat</div>
+        <div class="stat-value" id="statBeat">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">A depth</div>
+        <div class="stat-value" id="statDepthA">3</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">B depth (+pads)</div>
+        <div class="stat-value" id="statDepthB">1</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Pads needed</div>
+        <div class="stat-value" id="statNeed">2</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Merge result</div>
+        <div class="stat-value" id="statMerge">—</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">Fork → stages → merge (dots = pulses advancing each clock)</div>
+      <canvas id="pipeCanvas" width="880" height="220" aria-label="Pipeline diagram"></canvas>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Beat</th>
+            <th>A position</th>
+            <th>B position</th>
+            <th>A epoch @ merge</th>
+            <th>B epoch @ merge</th>
+            <th>Merge</th>
+          </tr>
+        </thead>
+        <tbody id="resultsTable">
+          <tr>
+            <td colspan="6" class="muted" style="padding: 20px;">
+              Default is unbalanced (A=3, B=1). Click “Run to merge”, then add pads on B until depths match.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="hint">
+      <strong>Path balancing:</strong> pads needed = |depth&nbsp;A − depth&nbsp;B| on the short path.
+      Throughput can stay high (new wave each beat) while cycle latency equals stage depth — different metrics.
+    </p>
+  </div>
+
+  <script>
+    const stagesAEl = document.getElementById("stagesA");
+    const stagesBEl = document.getElementById("stagesB");
+    const padsBEl = document.getElementById("padsB");
+    const runBtn = document.getElementById("runBtn");
+    const autoBtn = document.getElementById("autoBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const balancePill = document.getElementById("balancePill");
+    const resultsTable = document.getElementById("resultsTable");
+    const canvas = document.getElementById("pipeCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let beat = 0;
+    let posA = 0; // 0 = at fork, depthA = at merge
+    let posB = 0;
+    let finished = false;
+    let animating = false;
+    /** @type {object[]} */
+    let log = [];
+
+    function clamp(el) {
+      let v = parseInt(el.value, 10);
+      if (Number.isNaN(v)) v = 1;
+      v = Math.max(parseInt(el.min, 10), Math.min(parseInt(el.max, 10), v));
+      el.value = String(v);
+      return v;
+    }
+
+    function depths() {
+      const a = clamp(stagesAEl);
+      const b = clamp(stagesBEl);
+      const pads = clamp(padsBEl);
+      return { a, bRaw: b, pads, b: b + pads };
+    }
+
+    function isBalanced() {
+      const d = depths();
+      return d.a === d.b;
+    }
+
+    function padsNeeded() {
+      const d = depths();
+      return Math.abs(d.a - d.bRaw);
+    }
+
+    function updateBalanceUI() {
+      const d = depths();
+      const bal = d.a === d.b;
+      balancePill.textContent = bal ? "Balanced — same epoch" : "Unbalanced — wrong epoch risk";
+      balancePill.className = "balance-pill " + (bal ? "ok" : "bad");
+      document.getElementById("statDepthA").textContent = String(d.a);
+      document.getElementById("statDepthB").textContent = String(d.b);
+      document.getElementById("statNeed").textContent = String(Math.abs(d.a - d.bRaw));
+      document.getElementById("statBeat").textContent = String(beat);
+    }
+
+    function resetSim(keepConfig) {
+      beat = 0;
+      posA = 0;
+      posB = 0;
+      finished = false;
+      log = [];
+      if (!keepConfig) {
+        /* keep inputs */
+      }
+      document.getElementById("statMerge").textContent = "—";
+      document.getElementById("statMerge").className = "stat-value";
+      resultsTable.innerHTML =
+        '<tr><td colspan="6" class="muted" style="padding: 20px;">Click “Advance 1 clock” or “Run to merge”.</td></tr>';
+      updateBalanceUI();
+      draw();
+      runBtn.disabled = false;
+      autoBtn.disabled = false;
+    }
+
+    function appendLogRow(row) {
+      if (log.length === 1) resultsTable.innerHTML = "";
+      const tr = document.createElement("tr");
+      const mergeClass = row.merge === "OK" ? "ok" : row.merge === "—" ? "muted" : "bad";
+      tr.innerHTML =
+        "<td>" + row.beat + "</td>" +
+        "<td>" + row.posA + "</td>" +
+        "<td>" + row.posB + "</td>" +
+        "<td>" + row.epochA + "</td>" +
+        "<td>" + row.epochB + "</td>" +
+        "<td class=\"" + mergeClass + "\">" + row.merge + "</td>";
+      resultsTable.appendChild(tr);
+    }
+
+    function stepOnce() {
+      if (finished || animating) return false;
+      const d = depths();
+      beat += 1;
+
+      if (posA < d.a) posA += 1;
+      if (posB < d.b) posB += 1;
+
+      const atMergeA = posA >= d.a;
+      const atMergeB = posB >= d.b;
+      let merge = "—";
+      let epochA = "—";
+      let epochB = "—";
+
+      if (atMergeA && atMergeB) {
+        // Logical epoch label = stage depth of that path (arrival generation)
+        epochA = "gen-" + d.a;
+        epochB = "gen-" + d.b;
+        merge = d.a === d.b ? "OK" : "EPOCH MISMATCH";
+        finished = true;
+        const el = document.getElementById("statMerge");
+        el.textContent = merge;
+        el.className = "stat-value " + (merge === "OK" ? "ok" : "bad");
+      }
+
+      const row = {
+        beat,
+        posA: atMergeA ? "merge" : "stage " + posA + "/" + d.a,
+        posB: atMergeB ? "merge" : "stage " + posB + "/" + d.b,
+        epochA,
+        epochB,
+        merge
+      };
+      log.push(row);
+      appendLogRow(row);
+      updateBalanceUI();
+      draw();
+
+      if (finished) {
+        runBtn.disabled = true;
+        autoBtn.disabled = true;
+      }
+      return !finished;
+    }
+
+    async function runToMerge() {
+      if (animating) return;
+      animating = true;
+      runBtn.disabled = true;
+      autoBtn.disabled = true;
+      // restart wave from fork
+      beat = 0;
+      posA = 0;
+      posB = 0;
+      finished = false;
+      log = [];
+      resultsTable.innerHTML = "";
+      document.getElementById("statMerge").textContent = "—";
+      document.getElementById("statMerge").className = "stat-value";
+      updateBalanceUI();
+      draw();
+
+      while (!finished) {
+        stepOnce();
+        await new Promise((r) => setTimeout(r, 380));
+        if (beat > 20) break;
+      }
+      animating = false;
+    }
+
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const cssW = canvas.clientWidth || 880;
+      const cssH = 220;
+      canvas.width = Math.floor(cssW * dpr);
+      canvas.height = Math.floor(cssH * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w: cssW, h: cssH };
+    }
+
+    function draw() {
+      const { w, h } = resizeCanvas();
+      const d = depths();
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const padL = 56;
+      const padR = 72;
+      const usable = w - padL - padR;
+      const maxDepth = Math.max(d.a, d.b, 1);
+      const slot = usable / maxDepth;
+
+      const yFork = h / 2;
+      const yA = h * 0.28;
+      const yB = h * 0.72;
+      const yMerge = h / 2;
+
+      // Fork and merge nodes
+      function node(x, y, label, fill) {
+        ctx.beginPath();
+        ctx.fillStyle = fill || "#fff";
+        ctx.strokeStyle = "#4051b5";
+        ctx.lineWidth = 2;
+        ctx.arc(x, y, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "rgba(0,0,0,0.7)";
+        ctx.font = "600 11px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(label, x, y + 28);
+      }
+
+      const xFork = padL;
+      const xMerge = padL + maxDepth * slot;
+
+      // Path A stages
+      ctx.strokeStyle = "rgba(64,81,181,0.35)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(xFork, yFork);
+      ctx.lineTo(xFork + 20, yA);
+      for (let i = 1; i <= d.a; i++) {
+        const x = padL + i * slot;
+        ctx.lineTo(x, yA);
+      }
+      ctx.lineTo(xMerge, yMerge);
+      ctx.stroke();
+
+      // Path B stages (raw + pads)
+      ctx.strokeStyle = "rgba(239,108,0,0.4)";
+      ctx.beginPath();
+      ctx.moveTo(xFork, yFork);
+      ctx.lineTo(xFork + 20, yB);
+      for (let i = 1; i <= d.b; i++) {
+        const x = padL + i * (usable / d.b);
+        ctx.lineTo(x, yB);
+      }
+      ctx.lineTo(xMerge, yMerge);
+      ctx.stroke();
+
+      // Stage boxes on A
+      for (let i = 1; i <= d.a; i++) {
+        const x = padL + i * slot - slot * 0.35;
+        const boxW = slot * 0.55;
+        ctx.fillStyle = "#4051b514";
+        ctx.strokeStyle = "#4051b5";
+        ctx.lineWidth = 1.5;
+        roundRect(x, yA - 16, boxW, 32, 4);
+        ctx.fillStyle = "#4051b5";
+        ctx.font = "600 10px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("A" + i, x + boxW / 2, yA + 4);
+      }
+
+      // Stage boxes on B (logic then pads)
+      for (let i = 1; i <= d.b; i++) {
+        const x = padL + i * (usable / d.b) - (usable / d.b) * 0.35;
+        const boxW = (usable / d.b) * 0.55;
+        const isPad = i > d.bRaw;
+        ctx.fillStyle = isPad ? "#ef6c001a" : "#ef6c0014";
+        ctx.strokeStyle = "#ef6c00";
+        ctx.lineWidth = 1.5;
+        roundRect(x, yB - 16, boxW, 32, 4);
+        ctx.fillStyle = "#ef6c00";
+        ctx.font = "600 10px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(isPad ? "pad" : "B" + i, x + boxW / 2, yB + 4);
+      }
+
+      node(xFork, yFork, "fork", "#fff");
+      node(xMerge, yMerge, "merge", isBalanced() && finished ? "#e8f5e9" : finished ? "#ffebee" : "#fff");
+
+      // Pulses
+      function pulseAt(pathDepth, pos, isA, color) {
+        const y = isA ? yA : yB;
+        if (pos <= 0) {
+          drawPulse(xFork + 18, yFork + (y - yFork) * 0.25, color);
+          return;
+        }
+        if (pos >= pathDepth) {
+          drawPulse(xMerge - 18, yMerge + (isA ? -10 : 10), color);
+          return;
+        }
+        if (isA) {
+          drawPulse(padL + pos * slot, yA, color);
+        } else {
+          drawPulse(padL + pos * (usable / pathDepth), yB, color);
+        }
+      }
+
+      pulseAt(d.a, posA, true, "#4051b5");
+      pulseAt(d.b, posB, false, "#ef6c00");
+
+      // Legend
+      ctx.font = "12px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#4051b5";
+      ctx.fillText("Path A", 12, 18);
+      ctx.fillStyle = "#ef6c00";
+      ctx.fillText("Path B (+pads)", 70, 18);
+    }
+
+    function roundRect(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    function drawPulse(x, y, color) {
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.arc(x, y, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x, y - 16);
+      ctx.lineTo(x, y + 4);
+      ctx.stroke();
+    }
+
+    [stagesAEl, stagesBEl, padsBEl].forEach((el) => {
+      el.addEventListener("change", () => resetSim(true));
+      el.addEventListener("input", () => {
+        updateBalanceUI();
+        if (!animating && beat === 0 && !finished) draw();
+      });
+    });
+
+    runBtn.addEventListener("click", () => {
+      if (beat === 0 && log.length === 0) {
+        resultsTable.innerHTML = "";
+      }
+      stepOnce();
+    });
+    autoBtn.addEventListener("click", runToMerge);
+    clearBtn.addEventListener("click", () => resetSim(true));
+    window.addEventListener("resize", draw);
+
+    updateBalanceUI();
+    draw();
+  </script>
+</body>
+</html>

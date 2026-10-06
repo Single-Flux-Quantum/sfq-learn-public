@@ -118,6 +118,20 @@ Here $k$ is the number of padding stages to place on the short path into a share
 | Bit “skipped” a generation | Epoch misalignment | Retime / rebalance |
 | Works in one pattern, fails in another | Race into neighboring epoch | Timing arcs + pads |
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/gate-level-pipelining.html).
+
+1. Leave **Path A = 3**, **Path B = 1**, **pads = 0** and click **Run to merge**. The merge reports an **epoch mismatch**.
+2. Set **pads on B = 2** (so both depths are 3) and run again. Same stage count → **merge OK**.
+
+<iframe
+  src="../../labs/gate-level-pipelining.html"
+  title="Gate-level pipelining lab"
+  style="width:100%;height:820px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Worked example 1 — Pad the short input
 
 Suppose an XOR-style cell needs inputs $A$ and $B$ in the same window:

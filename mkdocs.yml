@@ -66,6 +66,7 @@ nav:
       - Labs hub: labs/README.md
       - Phase to pulse: labs/phase-to-pulse.html
       - Windowed encoding: labs/pulse-to-logic-state.html
+      - Gate-level pipelining: labs/gate-level-pipelining.html
   - Concepts:
       - CMOS vs SFQ: concepts/cmos-vs-sfq.md
       - RSFQ Overview: concepts/rsfq-logic.md
