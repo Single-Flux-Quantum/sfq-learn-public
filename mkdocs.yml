@@ -85,6 +85,11 @@ nav:
       - SFQ STA windows: labs/sfq-static-timing-analysis.html
       - I/O megaphone (SQUID / 4JL): labs/squid-stack-and-four-jl-driver.html
       - Flux / SQUID loop: labs/flux-quantization-squid-loop.html
+      - Overdamped vs underdamped: labs/overdamped-vs-underdamped-jj.html
+      - Hybrid JTL–PTL: labs/hybrid-jtl-ptl-routing.html
+      - ERSFQ feeding: labs/ersfq-logic.html
+      - VT-RAM: labs/vortex-transitional-ram.html
+      - Josephson–CMOS memory: labs/josephson-cmos-hybrid-memory.html
   - Concepts:
       - CMOS vs SFQ: concepts/cmos-vs-sfq.md
       - RSFQ Overview: concepts/rsfq-logic.md

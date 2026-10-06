@@ -78,6 +78,20 @@ flowchart LR
   Design -->|keep βC large| Under[Underdamped stack / latch]
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/overdamped-vs-underdamped-jj.html).
+
+1. **RSFQ preset** (β_C ≲ 1): **Trigger kick** — short pulse, returns to V≈0; ∫V dt ≈ Φ₀ cartoon.
+2. **Latch preset** (β_C ≫ 1): kick again — voltage holds until **Reset latch**. Same Ic story, different personality.
+
+<iframe
+  src="../../labs/overdamped-vs-underdamped-jj.html"
+  title="Overdamped vs underdamped JJ lab"
+  style="width:100%;height:740px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## IV-curve intuition (without a full course)
 
 Underdamped junctions often show **hysteresis** on a DC $I$–$V$ trace: the current where the junction switches up to a voltage state differs from the current where it returns to zero voltage. Overdamped junctions are much less hysteretic — they are built to be **nonlatching** pulse switches.

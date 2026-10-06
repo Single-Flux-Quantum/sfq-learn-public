@@ -102,6 +102,20 @@ Array cartoon (not a layout):
     select / write / sense lines (pulse sequences)
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/vortex-transitional-ram.html).
+
+1. Select a cell, **Write 1** — loop shows circulating Φ₀; $I_{\mathrm{circ}}\approx\Phi_0/L$ updates with **L**.
+2. **Read / sense** (NDRO vs toggle **DRO**). DRO empties then rewrites. Sweep addresses to fill the 8-cell strip.
+
+<iframe
+  src="../../labs/vortex-transitional-ram.html"
+  title="Vortex transitional RAM lab"
+  style="width:100%;height:740px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Storage physics in one page of math intuition
 
 For a storage loop of inductance $L$ holding about one flux quantum,

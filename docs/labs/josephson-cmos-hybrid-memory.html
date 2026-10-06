@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Josephson–CMOS Hybrid Memory Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5; --md-primary-light: #5d6cc0;
+      --bg: #fff; --border: #0000001f; --text: #000000de; --muted: #00000099;
+      --code-bg: #f5f5f5; --ok: #2e7d32; --bad: #c62828; --warn: #ef6c00;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 12px 4px 4px; font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 0.95rem; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 920px; margin: 0 auto; border: 1px solid var(--border); border-radius: 0.35rem; padding: 1rem 1.15rem 1.25rem; }
+    h1 { margin: 0 0 0.35rem; font-size: 1.15rem; font-weight: 700; color: var(--md-primary); }
+    .lede { margin: 0 0 0.85rem; color: var(--muted); font-size: 0.92rem; }
+    .lede strong { color: var(--text); }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: flex-end; margin-bottom: 0.75rem; }
+    .seg { display: flex; border: 1px solid var(--border); border-radius: 0.25rem; overflow: hidden; }
+    .seg button { border: none; background: var(--code-bg); color: var(--md-primary); padding: 0.45rem 0.7rem; font-size: 0.8rem; font-weight: 500; font-family: inherit; cursor: pointer; }
+    .seg button.active { background: #4051b51a; font-weight: 700; }
+    .field label { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 0.2rem; }
+    .field input[type="range"] { width: 110px; accent-color: var(--md-primary); }
+    .field .val { font-family: "Roboto Mono", ui-monospace, Consolas, monospace; font-size: 0.8rem; font-weight: 600; margin-left: 0.3rem; }
+    button.primary { border: none; border-radius: 0.25rem; padding: 0.5rem 0.85rem; font-size: 0.85rem; font-weight: 500; font-family: inherit; cursor: pointer; background: var(--md-primary); color: #fff; }
+    button.primary:hover { background: var(--md-primary-light); }
+    button.primary:disabled { opacity: 0.55; cursor: wait; }
+    .formula { font-family: "Roboto Mono", ui-monospace, Consolas, monospace; font-size: 0.82rem; padding: 0.5rem 0.7rem; background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.25rem; margin-bottom: 0.75rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
+    .stat { background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.35rem; padding: 0.5rem 0.35rem; text-align: center; }
+    .stat-label { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .stat-value { font-size: 0.9rem; font-weight: 700; font-family: "Roboto Mono", ui-monospace, Consolas, monospace; }
+    .ok { color: var(--ok); } .warn { color: var(--warn); }
+    .canvas-wrap { border: 1px solid var(--border); border-radius: 0.35rem; overflow: hidden; margin-bottom: 0.65rem; background: var(--code-bg); }
+    .canvas-label { padding: 0.35rem 0.65rem; font-size: 0.76rem; color: var(--muted); background: #fff; border-bottom: 1px solid var(--border); }
+    canvas { display: block; width: 100%; height: 240px; background: #fff; }
+    .hint { margin: 0; font-size: 0.8rem; color: var(--muted); }
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Josephson–CMOS Hybrid Memory Lab</h1>
+    <p class="lede">SFQ control speaks <strong>pulses</strong>; CMOS array speaks <strong>levels</strong>. Embassy = megaphone (SQUID stack / 4JL) outbound + return interface. Density in the warehouse; speed in the pit crew.</p>
+    <div class="controls">
+      <div class="seg">
+        <button type="button" class="active" id="btnW">Write txn</button>
+        <button type="button" id="btnR">Read txn</button>
+      </div>
+      <div class="seg">
+        <button type="button" class="active" id="btnSquid">SQUID stack IF</button>
+        <button type="button" id="btn4jl">4JL latch IF</button>
+      </div>
+      <div class="field"><label for="addr">Address</label><input type="range" id="addr" min="0" max="15" step="1" value="3"><span class="val" id="addrLabel">3</span></div>
+      <div class="field"><label for="data">Data bit</label><input type="range" id="data" min="0" max="1" step="1" value="1"><span class="val" id="dataLabel">1</span></div>
+      <button type="button" class="primary" id="goBtn">Run transaction</button>
+    </div>
+    <div class="formula" id="formula">…</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Phase</div><div class="stat-value" id="statPhase">idle</div></div>
+      <div class="stat"><div class="stat-label">Domain</div><div class="stat-value" id="statDom">SFQ</div></div>
+      <div class="stat"><div class="stat-label">CMOS[addr]</div><div class="stat-value" id="statMem">?</div></div>
+      <div class="stat"><div class="stat-label">Return pulse</div><div class="stat-value" id="statRet">—</div></div>
+    </div>
+    <div class="canvas-wrap">
+      <div class="canvas-label">SFQ controller → interface → CMOS array → return</div>
+      <canvas id="c" width="880" height="240"></canvas>
+    </div>
+    <p class="hint">Hybrid does <strong>not</strong> erase encoding differences — it manages them at a boundary. VT-RAM keeps bits in flux; this warehouse keeps them as CMOS levels.</p>
+  </div>
+  <script>
+    let txn = "write", iface = "squid", phase = "idle", animating = false, tokenX = 0;
+    let mem = new Array(16).fill(0);
+    const addr = document.getElementById("addr"), data = document.getElementById("data");
+    const canvas = document.getElementById("c"), ctx = canvas.getContext("2d");
+
+    function refreshLabels() {
+      document.getElementById("addrLabel").textContent = String(addr.value);
+      document.getElementById("dataLabel").textContent = String(data.value);
+      document.getElementById("formula").innerHTML =
+        (txn === "write" ? "WRITE" : "READ") + " @" + addr.value +
+        " via <strong>" + (iface === "squid" ? "SQUID stack" : "4JL latch") +
+        "</strong> · CMOS[" + addr.value + "]=" + mem[Number(addr.value)];
+      document.getElementById("statPhase").textContent = phase;
+      document.getElementById("statMem").textContent = String(mem[Number(addr.value)]);
+      draw();
+    }
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+    function resize() {
+      const dpr = window.devicePixelRatio || 1, w = canvas.clientWidth || 880, h = 240;
+      canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); return { w, h };
+    }
+    function box(x, y, w, h, label, color) {
+      ctx.fillStyle = color + "14"; ctx.strokeStyle = color; ctx.lineWidth = 1.75;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(x, y, w, h, 6); else ctx.rect(x, y, w, h);
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = color; ctx.font = "700 12px Roboto, sans-serif"; ctx.textAlign = "center";
+      ctx.fillText(label, x + w / 2, y + h / 2 + 4);
+    }
+    function draw() {
+      const { w, h } = resize();
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+      const y = h * 0.38;
+      const bw = Math.min(140, w * 0.18);
+      const gap = (w - 40 - 4 * bw) / 3;
+      const xs = [20, 20 + bw + gap, 20 + 2 * (bw + gap), 20 + 3 * (bw + gap)];
+      box(xs[0], y - 30, bw, 60, "SFQ ctrl", "#4051b5");
+      box(xs[1], y - 30, bw, 60, iface === "squid" ? "SQUID IF" : "4JL IF", "#ef6c00");
+      box(xs[2], y - 30, bw, 60, "CMOS array", "#2e7d32");
+      box(xs[3], y - 30, bw, 60, "Return IF", "#7b1fa2");
+      // arrows
+      ctx.strokeStyle = "rgba(0,0,0,0.25)"; ctx.lineWidth = 2;
+      for (let i = 0; i < 3; i++) {
+        ctx.beginPath();
+        ctx.moveTo(xs[i] + bw, y); ctx.lineTo(xs[i + 1], y); ctx.stroke();
+      }
+      ctx.fillStyle = "rgba(0,0,0,0.45)"; ctx.font = "10px Roboto, sans-serif"; ctx.textAlign = "center";
+      ctx.fillText("pulses", xs[0] + bw / 2, y + 50);
+      ctx.fillText("volt events", xs[1] + bw / 2, y + 50);
+      ctx.fillText("levels", xs[2] + bw / 2, y + 50);
+      ctx.fillText("pulses again", xs[3] + bw / 2, y + 50);
+
+      // tiny array
+      const ay = h - 55;
+      for (let i = 0; i < 16; i++) {
+        const x = 40 + i * ((w - 80) / 16);
+        ctx.fillStyle = mem[i] ? "#2e7d32" : "#e0e0e0";
+        ctx.fillRect(x, ay, (w - 80) / 16 - 3, 18);
+        if (i === Number(addr.value)) {
+          ctx.strokeStyle = "#4051b5"; ctx.lineWidth = 2;
+          ctx.strokeRect(x - 1, ay - 1, (w - 80) / 16 - 1, 20);
+        }
+      }
+      ctx.fillStyle = "rgba(0,0,0,0.45)"; ctx.font = "10px Roboto, sans-serif"; ctx.textAlign = "left";
+      ctx.fillText("CMOS bits (selected outlined)", 40, ay - 8);
+
+      if (animating || phase !== "idle") {
+        const path = [xs[0] + bw / 2, xs[1] + bw / 2, xs[2] + bw / 2, xs[3] + bw / 2];
+        const idx = Math.min(3, Math.floor(tokenX * 3.999));
+        const frac = tokenX * 4 - idx;
+        const xA = path[Math.min(idx, 3)], xB = path[Math.min(idx + 1, 3)];
+        const x = xA + (xB - xA) * Math.min(1, Math.max(0, frac));
+        ctx.beginPath();
+        ctx.fillStyle = tokenX < 0.5 ? "#4051b5" : (tokenX < 0.75 ? "#ef6c00" : "#7b1fa2");
+        ctx.arc(x, y - 48, 8, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+
+    async function run() {
+      if (animating) return;
+      animating = true; document.getElementById("goBtn").disabled = true;
+      document.getElementById("statRet").textContent = "—";
+      const a = Number(addr.value), d = Number(data.value);
+      const steps = [
+        { phase: "SFQ cmd pulses", dom: "SFQ", t: 0.15 },
+        { phase: "Interface amplify", dom: "IF → volt", t: 0.4 },
+        { phase: txn === "write" ? "CMOS write" : "CMOS read", dom: "CMOS", t: 0.65 },
+        { phase: "Return → SFQ", dom: "return", t: 0.95 },
+      ];
+      for (const s of steps) {
+        phase = s.phase;
+        document.getElementById("statDom").textContent = s.dom;
+        document.getElementById("statDom").className = "stat-value " + (s.dom.includes("CMOS") ? "ok" : "warn");
+        for (let i = 0; i <= 12; i++) {
+          tokenX = s.t - 0.15 + (0.15 * i) / 12;
+          if (tokenX < 0) tokenX = 0;
+          refreshLabels();
+          await sleep(28);
+        }
+        if (s.phase.includes("CMOS write")) mem[a] = d;
+        if (s.phase.includes("CMOS read")) {
+          document.getElementById("statRet").textContent = "SFQ★=" + mem[a];
+          document.getElementById("statRet").className = "stat-value ok";
+        }
+        if (txn === "write" && s.phase.includes("Return")) {
+          document.getElementById("statRet").textContent = "ACK★";
+          document.getElementById("statRet").className = "stat-value ok";
+        }
+      }
+      phase = "idle"; tokenX = 0; animating = false;
+      document.getElementById("goBtn").disabled = false;
+      document.getElementById("statDom").textContent = "SFQ";
+      refreshLabels();
+    }
+
+    document.getElementById("btnW").addEventListener("click", () => {
+      txn = "write";
+      document.getElementById("btnW").classList.add("active");
+      document.getElementById("btnR").classList.remove("active");
+      refreshLabels();
+    });
+    document.getElementById("btnR").addEventListener("click", () => {
+      txn = "read";
+      document.getElementById("btnR").classList.add("active");
+      document.getElementById("btnW").classList.remove("active");
+      refreshLabels();
+    });
+    document.getElementById("btnSquid").addEventListener("click", () => {
+      iface = "squid";
+      document.getElementById("btnSquid").classList.add("active");
+      document.getElementById("btn4jl").classList.remove("active");
+      refreshLabels();
+    });
+    document.getElementById("btn4jl").addEventListener("click", () => {
+      iface = "4jl";
+      document.getElementById("btn4jl").classList.add("active");
+      document.getElementById("btnSquid").classList.remove("active");
+      refreshLabels();
+    });
+    addr.addEventListener("input", refreshLabels);
+    data.addEventListener("input", refreshLabels);
+    document.getElementById("goBtn").addEventListener("click", run);
+    window.addEventListener("resize", draw);
+    refreshLabels();
+  </script>
+</body>
+</html>

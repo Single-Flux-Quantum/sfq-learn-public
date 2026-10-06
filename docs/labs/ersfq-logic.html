@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ERSFQ Logic Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5; --md-primary-light: #5d6cc0;
+      --bg: #fff; --border: #0000001f; --text: #000000de; --muted: #00000099;
+      --code-bg: #f5f5f5; --ok: #2e7d32; --bad: #c62828; --warn: #ef6c00;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 12px 4px 4px; font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 0.95rem; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 920px; margin: 0 auto; border: 1px solid var(--border); border-radius: 0.35rem; padding: 1rem 1.15rem 1.25rem; }
+    h1 { margin: 0 0 0.35rem; font-size: 1.2rem; font-weight: 700; color: var(--md-primary); }
+    .lede { margin: 0 0 0.85rem; color: var(--muted); font-size: 0.92rem; }
+    .lede strong { color: var(--text); }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: flex-end; margin-bottom: 0.75rem; }
+    .seg { display: flex; border: 1px solid var(--border); border-radius: 0.25rem; overflow: hidden; }
+    .seg button { border: none; background: var(--code-bg); color: var(--md-primary); padding: 0.45rem 0.7rem; font-size: 0.8rem; font-weight: 500; font-family: inherit; cursor: pointer; }
+    .seg button.active { background: #4051b51a; font-weight: 700; }
+    .field label { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 0.2rem; }
+    .field input[type="range"] { width: 120px; accent-color: var(--md-primary); }
+    .field .val { font-family: "Roboto Mono", ui-monospace, Consolas, monospace; font-size: 0.8rem; font-weight: 600; margin-left: 0.3rem; }
+    button.primary { border: none; border-radius: 0.25rem; padding: 0.5rem 0.85rem; font-size: 0.85rem; font-weight: 500; font-family: inherit; cursor: pointer; background: var(--md-primary); color: #fff; }
+    button.primary:hover { background: var(--md-primary-light); }
+    .formula { font-family: "Roboto Mono", ui-monospace, Consolas, monospace; font-size: 0.82rem; padding: 0.5rem 0.7rem; background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.25rem; margin-bottom: 0.75rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(105px, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
+    .stat { background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.35rem; padding: 0.5rem 0.35rem; text-align: center; }
+    .stat-label { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .stat-value { font-size: 0.92rem; font-weight: 700; font-family: "Roboto Mono", ui-monospace, Consolas, monospace; }
+    .ok { color: var(--ok); } .warn { color: var(--warn); } .bad { color: var(--bad); }
+    .canvas-wrap { border: 1px solid var(--border); border-radius: 0.35rem; overflow: hidden; margin-bottom: 0.65rem; background: var(--code-bg); }
+    .canvas-label { padding: 0.35rem 0.65rem; font-size: 0.76rem; color: var(--muted); background: #fff; border-bottom: 1px solid var(--border); }
+    canvas { display: block; width: 100%; height: 220px; background: #fff; }
+    .hint { margin: 0; font-size: 0.8rem; color: var(--muted); }
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>ERSFQ Logic Lab</h1>
+    <p class="lede">Same <strong>pulse logic</strong> language. Classical bias leaks I²R all night; ERSFQ feeding aims to stop the leak. Switching energy remains. Not AQFP, not serial recycling.</p>
+    <div class="controls">
+      <div class="seg">
+        <button type="button" class="active" id="btnR">Resistive RSFQ</button>
+        <button type="button" id="btnE">ERSFQ feed</button>
+      </div>
+      <div class="field"><label for="nCell">Cells N</label><input type="range" id="nCell" min="10" max="200" step="10" value="80"><span class="val" id="nLabel">80</span></div>
+      <div class="field"><label for="act">Activity %</label><input type="range" id="act" min="0" max="100" step="5" value="20"><span class="val" id="actLabel">20</span></div>
+      <button type="button" class="primary" id="tickBtn">Advance epoch</button>
+    </div>
+    <div class="formula" id="formula">…</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">P_static (arb.)</div><div class="stat-value" id="statS">—</div></div>
+      <div class="stat"><div class="stat-label">P_switch (arb.)</div><div class="stat-value" id="statD">—</div></div>
+      <div class="stat"><div class="stat-label">P_total</div><div class="stat-value" id="statT">—</div></div>
+      <div class="stat"><div class="stat-label">Encoding</div><div class="stat-value ok">SFQ pulses</div></div>
+      <div class="stat"><div class="stat-label">≠ AQFP / serial?</div><div class="stat-value ok">YES</div></div>
+    </div>
+    <div class="canvas-wrap">
+      <div class="canvas-label">Power bars · red = static resistor · blue = switching · feed recovery soft on ERSFQ</div>
+      <canvas id="c" width="880" height="220"></canvas>
+    </div>
+    <p class="hint">Idle (activity 0%): classical still burns static; ERSFQ static ≈ 0. Raise activity: both pay switching. Amperes into the fridge are a <strong>different</strong> problem.</p>
+  </div>
+  <script>
+    let mode = "R", epoch = 0, hist = [];
+    const nCell = document.getElementById("nCell"), act = document.getElementById("act");
+    const canvas = document.getElementById("c"), ctx = canvas.getContext("2d");
+
+    function power() {
+      const N = Number(nCell.value), a = Number(act.value) / 100;
+      // arbitrary units: static per cell 1.0 classical, 0.05 ERSFQ; switch 0.8 * a * N
+      const pStatic = mode === "R" ? N * 1.0 : N * 0.05;
+      const pSw = N * 0.8 * a;
+      const pRec = mode === "E" ? N * 0.15 * a : 0; // soft recovery
+      return { N, a, pStatic, pSw, pRec, pTot: pStatic + pSw + pRec };
+    }
+    function refresh() {
+      const p = power();
+      document.getElementById("nLabel").textContent = String(p.N);
+      document.getElementById("actLabel").textContent = String(Math.round(p.a * 100));
+      document.getElementById("formula").innerHTML = mode === "R"
+        ? "Classical: P_static ∼ N·I_b²R (always on) + P_sw(activity) = <strong>" + p.pTot.toFixed(0) + "</strong> arb."
+        : "ERSFQ: P_static ≈ 0 intent + P_sw + soft feed recovery = <strong>" + p.pTot.toFixed(0) + "</strong> arb.";
+      document.getElementById("statS").textContent = p.pStatic.toFixed(0);
+      document.getElementById("statS").className = "stat-value " + (p.pStatic > 40 ? "bad" : "ok");
+      document.getElementById("statD").textContent = (p.pSw + p.pRec).toFixed(0);
+      document.getElementById("statT").textContent = p.pTot.toFixed(0);
+      draw();
+    }
+    function setMode(m) {
+      mode = m;
+      document.getElementById("btnR").classList.toggle("active", m === "R");
+      document.getElementById("btnE").classList.toggle("active", m === "E");
+      hist = []; refresh();
+    }
+    function resize() {
+      const dpr = window.devicePixelRatio || 1, w = canvas.clientWidth || 880, h = 220;
+      canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); return { w, h };
+    }
+    function draw() {
+      const { w, h } = resize(); const p = power();
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+      const maxP = Math.max(200, p.pTot * 1.2);
+      const barW = 70, x0 = 80, y1 = h - 40, y0 = 30;
+      const hOf = v => (v / maxP) * (y1 - y0);
+      // static
+      const hs = hOf(p.pStatic);
+      ctx.fillStyle = "#c62828"; ctx.fillRect(x0, y1 - hs, barW, hs);
+      ctx.fillStyle = "#00000099"; ctx.font = "10px Roboto, sans-serif"; ctx.textAlign = "center";
+      ctx.fillText("static", x0 + barW / 2, y1 + 14);
+      // switch
+      const hd = hOf(p.pSw);
+      ctx.fillStyle = "#4051b5"; ctx.fillRect(x0 + 100, y1 - hd, barW, hd);
+      ctx.fillText("switch", x0 + 100 + barW / 2, y1 + 14);
+      if (p.pRec > 0) {
+        const hr = hOf(p.pRec);
+        ctx.fillStyle = "#ef6c00"; ctx.fillRect(x0 + 200, y1 - hr, barW, hr);
+        ctx.fillText("feed rec.", x0 + 200 + barW / 2, y1 + 14);
+      }
+      // sparkline history
+      hist.push(p.pTot); if (hist.length > 40) hist.shift();
+      const sx = w * 0.45, sy0 = 30, sy1 = h - 40;
+      ctx.strokeStyle = "rgba(0,0,0,0.15)"; ctx.beginPath(); ctx.moveTo(sx, sy1); ctx.lineTo(w - 20, sy1); ctx.stroke();
+      ctx.strokeStyle = "#4051b5"; ctx.lineWidth = 2; ctx.beginPath();
+      hist.forEach((v, i) => {
+        const x = sx + (i / 39) * (w - 20 - sx);
+        const y = sy1 - (v / maxP) * (sy1 - sy0);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+      ctx.fillStyle = "rgba(0,0,0,0.45)"; ctx.font = "11px Roboto, sans-serif"; ctx.textAlign = "left";
+      ctx.fillText("P_total over epochs (arb. units)", sx, 20);
+      ctx.fillText(mode === "R" ? "R bias always dripping" : "ERSFQ: idle nearly dry", 20, 20);
+    }
+    document.getElementById("btnR").addEventListener("click", () => setMode("R"));
+    document.getElementById("btnE").addEventListener("click", () => setMode("E"));
+    nCell.addEventListener("input", refresh); act.addEventListener("input", refresh);
+    document.getElementById("tickBtn").addEventListener("click", () => { epoch++; refresh(); });
+    window.addEventListener("resize", draw);
+    refresh();
+  </script>
+</body>
+</html>

@@ -83,6 +83,20 @@ sequenceDiagram
   Act->>ER: + switching + feed recovery
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/ersfq-logic.html).
+
+1. **Resistive RSFQ**, activity 0% — static bar stays large (leak all night). Raise **N**.
+2. Flip to **ERSFQ feed** — static collapses; raise **Activity %** so switching (and soft feed recovery) grow. Encoding stays SFQ pulses.
+
+<iframe
+  src="../../labs/ersfq-logic.html"
+  title="ERSFQ logic lab"
+  style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## What changes for a designer (public checklist)
 
 1. **Logical thinking** (pulses, epochs, DFFs, path balance) largely carries over from RSFQ.

@@ -99,6 +99,20 @@ Latency budget cartoon (qualitative):
                  ↑ pulse land        ↑ embassy      ↑ volt land
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/josephson-cmos-hybrid-memory.html).
+
+1. **Write txn** via SQUID or 4JL interface — watch the token cross SFQ → IF → CMOS array.
+2. **Read txn** — CMOS levels return through the embassy as an SFQ pulse cartoon. Pick address / data bit first.
+
+<iframe
+  src="../../labs/josephson-cmos-hybrid-memory.html"
+  title="Josephson–CMOS hybrid memory lab"
+  style="width:100%;height:760px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Why not all-SFQ memory? Why not all-CMOS compute?
 
 **All-SFQ memory** keeps one encoding and one cryogenic digital culture. Cost: junction/inductor budget and wiring explode as capacity grows; VT-style cells are wonderful locally and expensive globally.

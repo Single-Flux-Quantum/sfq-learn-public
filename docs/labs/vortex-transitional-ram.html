@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vortex Transitional RAM Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5; --md-primary-light: #5d6cc0;
+      --bg: #fff; --border: #0000001f; --text: #000000de; --muted: #00000099;
+      --code-bg: #f5f5f5; --ok: #2e7d32; --bad: #c62828; --warn: #ef6c00;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 12px 4px 4px; font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 0.95rem; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 920px; margin: 0 auto; border: 1px solid var(--border); border-radius: 0.35rem; padding: 1rem 1.15rem 1.25rem; }
+    h1 { margin: 0 0 0.35rem; font-size: 1.2rem; font-weight: 700; color: var(--md-primary); }
+    .lede { margin: 0 0 0.85rem; color: var(--muted); font-size: 0.92rem; }
+    .lede strong { color: var(--text); }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.55rem; align-items: flex-end; margin-bottom: 0.75rem; }
+    .field label { display: block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 0.2rem; }
+    .field input[type="range"] { width: 120px; accent-color: var(--md-primary); }
+    .field .val { font-family: "Roboto Mono", ui-monospace, Consolas, monospace; font-size: 0.8rem; font-weight: 600; margin-left: 0.3rem; }
+    .toggle { display: flex; align-items: center; gap: 0.35rem; font-size: 0.85rem; cursor: pointer; padding-bottom: 0.3rem; user-select: none; }
+    .toggle input { accent-color: var(--md-primary); }
+    button.primary, button.ghost { border-radius: 0.25rem; padding: 0.5rem 0.85rem; font-size: 0.85rem; font-weight: 500; font-family: inherit; cursor: pointer; }
+    button.primary { border: none; background: var(--md-primary); color: #fff; }
+    button.primary:hover { background: var(--md-primary-light); }
+    button.primary:disabled { opacity: 0.55; cursor: wait; }
+    button.ghost { border: 1px solid var(--border); background: transparent; color: var(--md-primary); }
+    button.ghost:hover { background: var(--code-bg); }
+    button.ghost:disabled { opacity: 0.45; cursor: not-allowed; }
+    .formula { font-family: "Roboto Mono", ui-monospace, Consolas, monospace; font-size: 0.82rem; padding: 0.5rem 0.7rem; background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.25rem; margin-bottom: 0.75rem; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
+    .stat { background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.35rem; padding: 0.5rem 0.35rem; text-align: center; }
+    .stat-label { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .stat-value { font-size: 0.92rem; font-weight: 700; font-family: "Roboto Mono", ui-monospace, Consolas, monospace; }
+    .ok { color: var(--ok); } .warn { color: var(--warn); }
+    .canvas-wrap { border: 1px solid var(--border); border-radius: 0.35rem; overflow: hidden; margin-bottom: 0.65rem; background: var(--code-bg); }
+    .canvas-label { padding: 0.35rem 0.65rem; font-size: 0.76rem; color: var(--muted); background: #fff; border-bottom: 1px solid var(--border); }
+    canvas { display: block; width: 100%; height: 230px; background: #fff; }
+    .hint { margin: 0; font-size: 0.8rem; color: var(--muted); }
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Vortex Transitional RAM Lab</h1>
+    <p class="lede">SFQ-native memory: the bit is a <strong>flux / vortex state</strong> in a loop — not capacitor charge. Write = transition. Hold = leave alone. Read = sense (optional DRO rewrite).</p>
+    <div class="controls">
+      <div class="field"><label for="addr">Cell address</label><input type="range" id="addr" min="0" max="7" step="1" value="0"><span class="val" id="addrLabel">0</span></div>
+      <div class="field"><label for="Lval">L (pH)</label><input type="range" id="Lval" min="4" max="16" step="1" value="8"><span class="val" id="LLabel">8</span></div>
+      <label class="toggle"><input type="checkbox" id="dro"><span>Destructive readout (DRO)</span></label>
+      <button type="button" class="primary" id="write0">Write 0</button>
+      <button type="button" class="primary" id="write1">Write 1</button>
+      <button type="button" class="ghost" id="readBtn">Read / sense</button>
+    </div>
+    <div class="formula" id="formula">…</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Selected bit</div><div class="stat-value" id="statBit">0</div></div>
+      <div class="stat"><div class="stat-label">I_circ ≈ Φ₀/L</div><div class="stat-value" id="statI">—</div></div>
+      <div class="stat"><div class="stat-label">Last sense</div><div class="stat-value" id="statSense">—</div></div>
+      <div class="stat"><div class="stat-label">Array (8)</div><div class="stat-value" id="statArr">00000000</div></div>
+    </div>
+    <div class="canvas-wrap">
+      <div class="canvas-label">8-cell strip · selected cell shows loop + circulating current when “1”</div>
+      <canvas id="c" width="880" height="230"></canvas>
+    </div>
+    <p class="hint">Density pressure is why hybrids exist later — each VT cell costs junctions / inductance / bias. This lab is the <strong>native</strong> flux memory cartoon.</p>
+  </div>
+  <script>
+    let cells = [0,0,0,0,0,0,0,0], animating = false, banner = "";
+    const addr = document.getElementById("addr"), Lval = document.getElementById("Lval"), dro = document.getElementById("dro");
+    const canvas = document.getElementById("c"), ctx = canvas.getContext("2d");
+
+    function sel() { return Number(addr.value); }
+    function iCirc() { return Math.round(2070 / Number(Lval.value)); }
+
+    function refresh() {
+      document.getElementById("addrLabel").textContent = String(sel());
+      document.getElementById("LLabel").textContent = String(Lval.value);
+      document.getElementById("formula").innerHTML =
+        "Cell " + sel() + ": flux state = <strong>" + cells[sel()] + "</strong> · I_circ ≈ Φ₀/L = " + iCirc() + " µA when “1” · write = vortex transition";
+      document.getElementById("statBit").textContent = String(cells[sel()]);
+      document.getElementById("statBit").className = "stat-value " + (cells[sel()] ? "ok" : "");
+      document.getElementById("statI").textContent = cells[sel()] ? iCirc() + " µA" : "0";
+      document.getElementById("statArr").textContent = cells.join("");
+      draw();
+    }
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+    function resize() {
+      const dpr = window.devicePixelRatio || 1, w = canvas.clientWidth || 880, h = 230;
+      canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); return { w, h };
+    }
+    function draw() {
+      const { w, h } = resize();
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+      const pad = 30, usable = w - 2 * pad;
+      for (let i = 0; i < 8; i++) {
+        const x = pad + ((i + 0.5) / 8) * usable;
+        const y = h * 0.48;
+        const selCell = i === sel();
+        ctx.fillStyle = selCell ? "#4051b514" : "#f5f5f5";
+        ctx.strokeStyle = selCell ? "#4051b5" : "rgba(0,0,0,0.2)";
+        ctx.lineWidth = selCell ? 2 : 1;
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(x - 42, y - 55, 84, 110, 6); else ctx.rect(x - 42, y - 55, 84, 110);
+        ctx.fill(); ctx.stroke();
+        // loop
+        ctx.strokeStyle = cells[i] ? "#2e7d32" : "#90a4ae";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.arc(x, y - 8, 22, 0, Math.PI * 2); ctx.stroke();
+        if (cells[i]) {
+          ctx.strokeStyle = "#2e7d32"; ctx.beginPath(); ctx.arc(x, y - 8, 12, -0.5, Math.PI * 1.3); ctx.stroke();
+          ctx.fillStyle = "#2e7d32"; ctx.font = "700 10px Roboto, sans-serif"; ctx.textAlign = "center";
+          ctx.fillText("Φ₀", x, y - 5);
+        } else {
+          ctx.fillStyle = "rgba(0,0,0,0.35)"; ctx.font = "10px Roboto, sans-serif"; ctx.textAlign = "center";
+          ctx.fillText("empty", x, y - 5);
+        }
+        ctx.fillStyle = selCell ? "#4051b5" : "rgba(0,0,0,0.45)";
+        ctx.font = "700 11px Roboto, sans-serif";
+        ctx.fillText("[" + i + "]=" + cells[i], x, y + 42);
+      }
+      if (banner) {
+        ctx.fillStyle = "#4051b5"; ctx.font = "700 12px Roboto, sans-serif"; ctx.textAlign = "left";
+        ctx.fillText(banner, 20, 20);
+      }
+    }
+    async function writeBit(v) {
+      if (animating) return; animating = true;
+      banner = "Write transition → state " + v;
+      cells[sel()] = v; refresh();
+      await sleep(400); banner = ""; animating = false; refresh();
+    }
+    async function readCell() {
+      if (animating) return; animating = true;
+      const v = cells[sel()];
+      document.getElementById("statSense").textContent = "sensed " + v;
+      document.getElementById("statSense").className = "stat-value ok";
+      banner = dro.checked ? "DRO sense " + v + " — rewriting…" : "NDRO sense " + v;
+      refresh();
+      await sleep(450);
+      if (dro.checked) {
+        cells[sel()] = 0;
+        refresh();
+        await sleep(350);
+        cells[sel()] = v;
+        banner = "Rewrite restored " + v;
+        refresh();
+        await sleep(400);
+      }
+      banner = ""; animating = false; refresh();
+    }
+    addr.addEventListener("input", refresh); Lval.addEventListener("input", refresh);
+    document.getElementById("write0").addEventListener("click", () => writeBit(0));
+    document.getElementById("write1").addEventListener("click", () => writeBit(1));
+    document.getElementById("readBtn").addEventListener("click", readCell);
+    window.addEventListener("resize", draw);
+    refresh();
+  </script>
+</body>
+</html>

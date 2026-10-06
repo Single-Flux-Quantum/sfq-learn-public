@@ -55,7 +55,7 @@ Then jump to [Symbol card](fundamentals/sfq-symbol-card.md) → [Notation](funda
 4. [Josephson junction (RCSJ)](fundamentals/josephson-junction-rcsj.md) · [lab](labs/josephson-junction-rcsj.html)  
 5. [Flux quantization](fundamentals/flux-quantization.md) · [lab](labs/flux-quantization-squid-loop.html)  
 6. [Superconducting loop / SQUID](fundamentals/superconducting-loop-squid.md) · [lab](labs/flux-quantization-squid-loop.html)  
-7. [Overdamped vs underdamped JJ](fundamentals/overdamped-vs-underdamped-jj.md)  
+7. [Overdamped vs underdamped JJ](fundamentals/overdamped-vs-underdamped-jj.md) · [lab](labs/overdamped-vs-underdamped-jj.html)  
 
 ## 2. Bridge (close the gap)
 
@@ -80,7 +80,7 @@ SFQ vocabulary cards. Best after the matching bridge pages.
 - [JTL interconnects](concepts/jtl-interconnects.md) · [lab](labs/jtl-interconnects.html)  
 - [Splitter and confluence](concepts/splitter-and-confluence.md) · [lab](labs/splitter-and-confluence.html)  
 - [RSFQ DFF and retiming](concepts/rsfq-dff-and-retiming.md) · [lab](labs/rsfq-dff-and-retiming.html)  
-- [ERSFQ logic](concepts/ersfq-logic.md)  
+- [ERSFQ logic](concepts/ersfq-logic.md) · [lab](labs/ersfq-logic.html)  
 - [AQFP logic](concepts/aqfp-logic.md) · [lab](labs/aqfp-logic.html)  
 - [CMOS vs SFQ](concepts/cmos-vs-sfq.md)  
 
@@ -89,15 +89,15 @@ SFQ vocabulary cards. Best after the matching bridge pages.
 - [Concurrent / counter-flow clocking](concepts/concurrent-and-counter-flow-clocking.md) · [lab](labs/concurrent-and-counter-flow-clocking.html)  
 - [Path balancing overhead](concepts/path-balancing-overhead.md) · [lab](labs/path-balancing-overhead.html)  
 - [SFQ static timing analysis](concepts/sfq-static-timing-analysis.md) · [lab](labs/sfq-static-timing-analysis.html)  
-- [Hybrid JTL–PTL routing](concepts/hybrid-jtl-ptl-routing.md)  
+- [Hybrid JTL–PTL routing](concepts/hybrid-jtl-ptl-routing.md) · [lab](labs/hybrid-jtl-ptl-routing.html)  
 - [Serial biasing / current recycling](concepts/serial-biasing-current-recycling.md) · [lab](labs/serial-biasing-current-recycling.html)  
 
 **I/O & memory**
 
 - [SQUID stack driver](concepts/squid-stack-driver.md) · [lab](labs/squid-stack-and-four-jl-driver.html)  
 - [Four-JL latching driver](concepts/four-jl-latching-driver.md) · [lab](labs/squid-stack-and-four-jl-driver.html)  
-- [Vortex transitional RAM](concepts/vortex-transitional-ram.md)  
-- [Josephson–CMOS hybrid memory](concepts/josephson-cmos-hybrid-memory.md)  
+- [Vortex transitional RAM](concepts/vortex-transitional-ram.md) · [lab](labs/vortex-transitional-ram.html)  
+- [Josephson–CMOS hybrid memory](concepts/josephson-cmos-hybrid-memory.md) · [lab](labs/josephson-cmos-hybrid-memory.html)  
 
 ## 4. Tracks
 

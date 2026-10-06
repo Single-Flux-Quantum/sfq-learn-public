@@ -83,6 +83,20 @@ sequenceDiagram
   R->>B: recovered SFQ pulse
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/hybrid-jtl-ptl-routing.html).
+
+1. **All-JTL:** raise span — stage count and $t_{\mathrm{net}}$ explode; bias feel turns heavy.
+2. **Hybrid:** same span — local JTLs + DRV/PTL/RX; compare $t_{\mathrm{net}}$ and active JJ count. **Send pulse** to watch the hop.
+
+<iframe
+  src="../../labs/hybrid-jtl-ptl-routing.html"
+  title="Hybrid JTL–PTL routing lab"
+  style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Tradeoff table (public)
 
 | | JTL | PTL |
