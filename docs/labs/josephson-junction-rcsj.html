@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RCSJ Washboard Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+      --particle: #c62828;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .field input[type="range"] {
+      width: 140px;
+      accent-color: var(--md-primary);
+    }
+
+    .field .val {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-left: 0.3rem;
+    }
+
+    .seg {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      overflow: hidden;
+    }
+
+    .seg button {
+      border: none;
+      background: var(--code-bg);
+      color: var(--md-primary);
+      padding: 0.45rem 0.7rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .seg button.active {
+      background: #4051b51a;
+      font-weight: 700;
+    }
+
+    button.primary {
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      background: var(--md-primary);
+      color: #fff;
+    }
+
+    button.primary:hover { background: var(--md-primary-light); }
+    button.primary:disabled { opacity: 0.55; cursor: wait; }
+
+    button.ghost {
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      background: transparent;
+      color: var(--md-primary);
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.5rem 0.35rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+    .bad { color: var(--bad); }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.65rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      background: #fff;
+    }
+
+    #washCanvas { height: 160px; }
+    #vCanvas { height: 120px; }
+
+    .hint {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>RCSJ Washboard Lab</h1>
+    <p class="lede">
+      Phase particle on a tilted washboard: bias near <strong>I<sub>c</sub></strong>, trigger → slip ~<strong>2π</strong> →
+      voltage pulse with area <strong>Φ₀</strong>. Damping (<strong>β<sub>C</sub></strong>) decides pulse-and-recover vs latch.
+    </p>
+
+    <div class="controls">
+      <div class="seg">
+        <button type="button" class="active" data-damp="over" id="btnOver">Overdamped (β<sub>C</sub>≲1)</button>
+        <button type="button" data-damp="under" id="btnUnder">Underdamped (β<sub>C</sub>≫1)</button>
+      </div>
+      <div class="field">
+        <label for="biasSlider">Bias I<sub>b</sub> / I<sub>c</sub></label>
+        <input type="range" id="biasSlider" min="50" max="98" step="1" value="85">
+        <span class="val" id="biasLabel">0.85</span>
+      </div>
+      <button type="button" class="primary" id="kickBtn">Trigger kick</button>
+      <button type="button" class="ghost" id="resetBtn">Reset</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Regime</div>
+        <div class="stat-value" id="statReg">overdamped</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">φ advance</div>
+        <div class="stat-value" id="statPhi">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Slips</div>
+        <div class="stat-value" id="statSlips">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">∫V dt</div>
+        <div class="stat-value" id="statArea">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">After event</div>
+        <div class="stat-value" id="statAfter">ready</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">Washboard U(φ) — tilt from bias · particle = phase</div>
+      <canvas id="washCanvas" width="880" height="160"></canvas>
+    </div>
+    <div class="canvas-wrap">
+      <div class="canvas-label">Voltage V(t) — shaded area ≈ n·Φ₀ for completed slips</div>
+      <canvas id="vCanvas" width="880" height="120"></canvas>
+    </div>
+
+    <p class="hint">
+      <strong>RSFQ gates</strong> want overdamped: one click, recover to V≈0.
+      <strong>I/O latching</strong> often uses underdamped: particle keeps running (latched V) until reset.
+      Teaching cartoon — not a full RCSJ ODE solver.
+    </p>
+  </div>
+
+  <script>
+    const PHI0 = 2.07;
+    let damp = "over"; // over | under
+    let bias = 0.85;
+    let phi = 0; // radians, tracked continuously
+    let slips = 0;
+    let animating = false;
+    let latched = false;
+    let vHistory = []; // {t, v} normalized samples for last event
+    let particleX = 0; // position along washboard wells (in well index units)
+
+    const biasSlider = document.getElementById("biasSlider");
+    const kickBtn = document.getElementById("kickBtn");
+    const washCanvas = document.getElementById("washCanvas");
+    const vCanvas = document.getElementById("vCanvas");
+    const washCtx = washCanvas.getContext("2d");
+    const vCtx = vCanvas.getContext("2d");
+
+    function setDamp(d) {
+      damp = d;
+      document.getElementById("btnOver").classList.toggle("active", d === "over");
+      document.getElementById("btnUnder").classList.toggle("active", d === "under");
+      document.getElementById("statReg").textContent = d === "over" ? "overdamped" : "underdamped";
+      resetState(false);
+    }
+
+    function resetState(full) {
+      if (full !== false) {
+        biasSlider.value = "85";
+        bias = 0.85;
+        document.getElementById("biasLabel").textContent = "0.85";
+      }
+      phi = 0;
+      slips = 0;
+      latched = false;
+      particleX = 1.5;
+      vHistory = [];
+      animating = false;
+      kickBtn.disabled = false;
+      updateStats("ready");
+      drawAll();
+    }
+
+    function updateStats(after) {
+      document.getElementById("statPhi").textContent =
+        (phi / (2 * Math.PI)).toFixed(2) + "·2π";
+      document.getElementById("statSlips").textContent = String(slips);
+      document.getElementById("statArea").textContent =
+        slips === 0 ? "0" : (slips * PHI0).toFixed(2) + " (= " + slips + " Φ₀)";
+      const a = document.getElementById("statAfter");
+      if (after === "latched") {
+        a.textContent = "LATCHED V";
+        a.className = "stat-value warn";
+      } else if (after === "running") {
+        a.textContent = "slipping…";
+        a.className = "stat-value";
+      } else {
+        a.textContent = "ready (V≈0)";
+        a.className = "stat-value ok";
+      }
+    }
+
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    function resize(canvas, ctx, hCss) {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = hCss;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    /** Washbord: -cos(φ) - (Ib/Ic)·φ  (teaching) */
+    function pot(phiRad, ib) {
+      return -Math.cos(phiRad) - ib * phiRad;
+    }
+
+    function drawWashboard() {
+      const { w, h } = resize(washCanvas, washCtx, 160);
+      const ctx = washCtx;
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const pad = 24;
+      const phiMin = particleX * 2 * Math.PI - 2 * Math.PI;
+      const phiMax = particleX * 2 * Math.PI + 4 * Math.PI;
+      const n = 200;
+
+      // find pot range for scaling
+      let umin = Infinity, umax = -Infinity;
+      for (let i = 0; i <= n; i++) {
+        const ph = phiMin + (phiMax - phiMin) * (i / n);
+        const u = pot(ph, bias);
+        if (u < umin) umin = u;
+        if (u > umax) umax = u;
+      }
+      const span = umax - umin || 1;
+
+      ctx.strokeStyle = "#4051b5";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      for (let i = 0; i <= n; i++) {
+        const t = i / n;
+        const ph = phiMin + (phiMax - phiMin) * t;
+        const u = pot(ph, bias);
+        const x = pad + t * (w - 2 * pad);
+        const y = pad + (1 - (u - umin) / span) * (h - 2 * pad);
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // particle
+      const phP = particleX * 2 * Math.PI;
+      const uP = pot(phP, bias);
+      const tP = (phP - phiMin) / (phiMax - phiMin);
+      const xP = pad + tP * (w - 2 * pad);
+      const yP = pad + (1 - (uP - umin) / span) * (h - 2 * pad);
+
+      ctx.beginPath();
+      ctx.fillStyle = latched ? "#ef6c00" : "#c62828";
+      ctx.arc(xP, yP, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(0,0,0,0.55)";
+      ctx.font = "11px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("phase particle", xP + 12, yP + 4);
+
+      ctx.fillStyle = "rgba(0,0,0,0.4)";
+      ctx.font = "11px Roboto, sans-serif";
+      ctx.fillText("φ →", w - 40, h - 8);
+      ctx.fillText("tilt ↑ with Ib/Ic=" + bias.toFixed(2), 12, 16);
+    }
+
+    function drawV() {
+      const { w, h } = resize(vCanvas, vCtx, 120);
+      const ctx = vCtx;
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const padL = 36, padR = 12, padT = 12, padB = 24;
+      ctx.strokeStyle = "rgba(0,0,0,0.15)";
+      ctx.beginPath();
+      ctx.moveTo(padL, padT);
+      ctx.lineTo(padL, h - padB);
+      ctx.lineTo(w - padR, h - padB);
+      ctx.stroke();
+      ctx.fillStyle = "rgba(0,0,0,0.45)";
+      ctx.font = "11px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("time", (padL + w - padR) / 2, h - 6);
+      ctx.save();
+      ctx.translate(12, h / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText("V", 0, 0);
+      ctx.restore();
+
+      if (vHistory.length < 2) {
+        ctx.fillStyle = "rgba(0,0,0,0.4)";
+        ctx.font = "12px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Trigger a kick to see V(t)", w / 2, h / 2);
+        if (latched) {
+          // flat latched line
+          const y = padT + 20;
+          ctx.strokeStyle = "#ef6c00";
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(padL, y);
+          ctx.lineTo(w - padR, y);
+          ctx.stroke();
+          ctx.fillStyle = "#ef6c00";
+          ctx.font = "11px Roboto, sans-serif";
+          ctx.textAlign = "left";
+          ctx.fillText("latched voltage (until reset)", padL + 8, y - 6);
+        }
+        return;
+      }
+
+      const maxV = Math.max(...vHistory.map((p) => p.v), 0.01);
+      const maxT = vHistory[vHistory.length - 1].t;
+
+      // fill
+      ctx.beginPath();
+      ctx.moveTo(padL, h - padB);
+      vHistory.forEach((pt) => {
+        const x = padL + (pt.t / maxT) * (w - padL - padR);
+        const y = h - padB - (pt.v / maxV) * (h - padT - padB) * 0.85;
+        ctx.lineTo(x, y);
+      });
+      ctx.lineTo(padL + (w - padL - padR), h - padB);
+      ctx.closePath();
+      ctx.fillStyle = "rgba(64,81,181,0.2)";
+      ctx.fill();
+
+      ctx.strokeStyle = "#c62828";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      vHistory.forEach((pt, i) => {
+        const x = padL + (pt.t / maxT) * (w - padL - padR);
+        const y = h - padB - (pt.v / maxV) * (h - padT - padB) * 0.85;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(0,0,0,0.5)";
+      ctx.font = "11px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("area ≈ " + slips + "·Φ₀", padL + 8, padT + 4);
+    }
+
+    function drawAll() {
+      drawWashboard();
+      drawV();
+    }
+
+    async function kick() {
+      if (animating) return;
+      if (latched && damp === "under") {
+        // already latched — need reset
+        return;
+      }
+      animating = true;
+      kickBtn.disabled = true;
+      updateStats("running");
+      vHistory = [];
+
+      const frames = damp === "over" ? 36 : 48;
+      const startWell = particleX;
+
+      for (let i = 0; i <= frames; i++) {
+        const u = i / frames;
+        if (damp === "over") {
+          // ease through one well
+          const ease = u * u * (3 - 2 * u);
+          particleX = startWell + ease;
+          phi = particleX * 2 * Math.PI;
+          // pulse shape
+          const v = Math.sin(Math.PI * u);
+          vHistory.push({ t: u, v: Math.max(0, v) });
+        } else {
+          // keep running — multiple wells, then stay "latched"
+          particleX = startWell + u * 2.2;
+          phi = particleX * 2 * Math.PI;
+          const v = u < 0.3 ? Math.sin(Math.PI * (u / 0.3)) : 0.85;
+          vHistory.push({ t: u, v });
+        }
+        drawAll();
+        await sleep(22);
+      }
+
+      if (damp === "over") {
+        slips += 1;
+        particleX = Math.round(particleX * 1000) / 1000;
+        // settle in next well minimum
+        particleX = startWell + 1;
+        phi = particleX * 2 * Math.PI;
+        latched = false;
+        updateStats("ready");
+      } else {
+        slips += 2; // cartoon: ran across ~2 wells
+        latched = true;
+        vHistory = []; // show flat latch in drawV
+        updateStats("latched");
+      }
+
+      drawAll();
+      animating = false;
+      kickBtn.disabled = false;
+    }
+
+    document.getElementById("btnOver").addEventListener("click", () => setDamp("over"));
+    document.getElementById("btnUnder").addEventListener("click", () => setDamp("under"));
+    biasSlider.addEventListener("input", () => {
+      bias = Number(biasSlider.value) / 100;
+      document.getElementById("biasLabel").textContent = bias.toFixed(2);
+      drawWashboard();
+    });
+    kickBtn.addEventListener("click", kick);
+    document.getElementById("resetBtn").addEventListener("click", () => resetState(true));
+    window.addEventListener("resize", drawAll);
+
+    updateStats("ready");
+    drawAll();
+  </script>
+</body>
+</html>

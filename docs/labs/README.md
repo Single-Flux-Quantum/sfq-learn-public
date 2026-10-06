@@ -1,7 +1,7 @@
 # Interactive labs
 
 **Prereqs:** none (index for demos)  
-**Next:** [Phase to pulse lab](phase-to-pulse.html) · [Pulse to logic state lab](pulse-to-logic-state.html) · [Gate-level pipelining lab](gate-level-pipelining.html) · [JTL hop lab](jtl-interconnects.html) · [Splitter & confluence lab](splitter-and-confluence.html) · [DFF lab](rsfq-dff-and-retiming.html) · [Clock-flow lab](concurrent-and-counter-flow-clocking.html) · [Path-balancing lab](path-balancing-overhead.html) · [Bias → ERSFQ lab](resistive-bias-to-ersfq.html) · [Pulse → volt lab](sfq-pulse-to-volt-level.html) · [AQFP lab](aqfp-logic.html) · [Bridge hub](../bridge/README.md)
+**Next:** [Phase to pulse lab](phase-to-pulse.html) · [Pulse to logic state lab](pulse-to-logic-state.html) · [Gate-level pipelining lab](gate-level-pipelining.html) · [JTL hop lab](jtl-interconnects.html) · [Splitter & confluence lab](splitter-and-confluence.html) · [DFF lab](rsfq-dff-and-retiming.html) · [Clock-flow lab](concurrent-and-counter-flow-clocking.html) · [Path-balancing lab](path-balancing-overhead.html) · [Bias → ERSFQ lab](resistive-bias-to-ersfq.html) · [Pulse → volt lab](sfq-pulse-to-volt-level.html) · [AQFP lab](aqfp-logic.html) · [RCSJ washboard lab](josephson-junction-rcsj.html) · [Bridge hub](../bridge/README.md)
 
 Self-contained HTML labs that let newcomers **click, watch events, and read stats** — the same teaching pattern as a small in-browser simulator, not SPICE or netlists.
 
@@ -56,6 +56,7 @@ Use height ≥ 700px so controls, stats, and the table fit without clipping.
 | [resistive-bias-to-ersfq.html](resistive-bias-to-ersfq.html) | [Resistive bias to ERSFQ](../bridge/resistive-bias-to-ersfq.md) | Static \(I^2R\) vs amperes vs dynamic; ERSFQ kills resistor drip |
 | [sfq-pulse-to-volt-level.html](sfq-pulse-to-volt-level.html) | [SFQ pulse to volt-level](../bridge/sfq-pulse-to-volt-level.md) | Height/time gaps; stretch fails; amp+latch leaves Φ₀ class |
 | [aqfp-logic.html](aqfp-logic.html) | [AQFP logic](../concepts/aqfp-logic.md) | Multiphase AC settle; majority; phase buffers ≠ RSFQ |
+| [josephson-junction-rcsj.html](josephson-junction-rcsj.html) | [Josephson junction (RCSJ)](../fundamentals/josephson-junction-rcsj.md) | Washboard particle; overdamped pulse vs underdamped latch |
 
 ## Adding a lab
 

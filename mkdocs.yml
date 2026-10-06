@@ -79,6 +79,7 @@ nav:
       - Resistive bias → ERSFQ: labs/resistive-bias-to-ersfq.html
       - Pulse → volt-level: labs/sfq-pulse-to-volt-level.html
       - AQFP logic: labs/aqfp-logic.html
+      - RCSJ washboard: labs/josephson-junction-rcsj.html
   - Concepts:
       - CMOS vs SFQ: concepts/cmos-vs-sfq.md
       - RSFQ Overview: concepts/rsfq-logic.md

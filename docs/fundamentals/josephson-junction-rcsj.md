@@ -69,6 +69,20 @@ flowchart TD
   Area --> Reset[Overdamped: return ready for next event]
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/josephson-junction-rcsj.html).
+
+1. **Overdamped:** bias near $I_c$, **Trigger kick** — particle slips one well; $V(t)$ pulse with area $\Phi_0$; returns ready.
+2. Switch to **Underdamped** and kick again — particle keeps running (latched voltage) until **Reset**.
+
+<iframe
+  src="../../labs/josephson-junction-rcsj.html"
+  title="RCSJ washboard lab"
+  style="width:100%;height:780px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ```text
 φ:  ____/‾‾‾‾‾‾‾‾     advances by ~2π during the slip
          rapid
