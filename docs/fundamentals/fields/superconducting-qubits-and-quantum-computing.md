@@ -161,20 +161,23 @@ You do **not** need Hamiltonian homework to finish orientation. You need:
 2. **“SFQ is quantum because flux is quantized.”**  
    Flux quantization appears in classical SFQ too; “quantum computing” means quantum *information processing* using superposition / entanglement / interference.
 
-2b. **“SFQ is fast because of superposition and entanglement.”**  
+3. **“SFQ is fast because of superposition and entanglement.”**  
    False for classical SFQ. Device-fast pulses ≠ algorithmic quantum speedup. See [How quantum mechanics can accelerate some computations](#how-quantum-mechanics-can-accelerate-some-computations).
 
-3. **“All superconducting electronics is millikelvin.”**  
+4. **“All superconducting electronics is millikelvin.”**  
    Classical Nb SFQ often lives near ~4 K; qubits often need colder stages.
 
-4. **“If I learn SFQ, I have learned quantum computing.”**  
+5. **“If I learn SFQ, I have learned quantum computing.”**  
    You learned a possible classical neighbor skill — not qubit physics or QC algorithms.
 
-5. **“Qubit control must be SFQ.”**  
+6. **“Qubit control must be SFQ.”**  
    Many stacks use room-temp electronics + cryo-CMOS; SFQ is one option among helpers.
 
-6. **“Quantum computing replaced classical SFQ historically.”**  
+7. **“Quantum computing replaced classical SFQ historically.”**  
    Classical SFQ is older as a digital program; QC is a major new demand signal.
+
+8. **“Superposition alone guarantees a faster answer.”**  
+   Without interference (and usually entanglement in multi-qubit algorithms), you do not get a structured speedup — measurement can look like a random guess.
 
 ## CMOS contrast
 
@@ -222,23 +225,35 @@ As a helper for control, readout, serialization, or reducing cable heat — opti
 </details>
 
 <details>
-<summary>5. Name two non-superconducting qubit platforms (awareness only).</summary>
+<summary>5. Name the three properties often cited for algorithmic quantum speedup.</summary>
+
+Superposition, entanglement, and quantum interference.
+</details>
+
+<details>
+<summary>6. Does classical SFQ use those three for its GHz/picosecond story?</summary>
+
+No — SFQ speed is Josephson classical switching and pulse pipelines. The three properties belong to quantum *algorithms* / qubit processors.
+</details>
+
+<details>
+<summary>7. Name two non-superconducting qubit platforms (awareness only).</summary>
 
 Examples: trapped ions, photonic qubits, neutral atoms, quantum dots. Full map: [QC hardware platforms](quantum-computing-hardware-platforms.md).
 </details>
 
 <details>
-<summary>6. What is next in the fields survey?</summary>
+<summary>8. What is next in the fields survey?</summary>
 
 [QC hardware platforms](quantum-computing-hardware-platforms.md), then [SQUID sensing](squid-sensing-magnetometry.md).
 </details>
 
 ## Glossary spot-links
 
-Glossary: qubit, quantum computing, Josephson junction, cryogenic, SFQ, cryo-CMOS.
+Glossary: qubit, quantum computing, superposition, entanglement, interference (quantum), Josephson junction, cryogenic, SFQ, cryo-CMOS.
 
 ## Next steps
 
 - Map other QC hardwares: [Quantum computing hardware platforms](quantum-computing-hardware-platforms.md).  
-- Then continue survey: [SQUID sensing](squid-sensing-magnetometry.md).  
-- Thermal map reminder: [Cryogenics for electronics](../cryogenics-for-electronics.md).
+- Classical SFQ speed motivation: [Why superconducting electronics?](../why-superconducting-electronics.md).  
+- Then continue survey: [SQUID sensing](squid-sensing-magnetometry.md).

@@ -3,9 +3,9 @@
 **Prereqs:** none  
 **Next:** [History of superconducting electronics](history-of-superconducting-electronics.md) · [Coming from CMOS?](../concepts/cmos-vs-sfq.md) (preview)
 
-**In one minute.** Superconducting electronics is a specialty for speed, cryo co-location, and careful energy stories — not a laptop replacement. Cooling is a real tax. Next: history.
+**In one minute.** Superconducting electronics is a specialty for **device** speed (picosecond Josephson switching), cryo co-location, and careful energy stories — not a laptop replacement. That is different from **algorithmic** quantum speedup (superposition / entanglement / interference). Cooling is a real tax. Next: history.
 
-**Learning goals.** After this page you should be able to (1) say what problem superconducting electronics is trying to solve relative to ordinary CMOS computing, (2) separate three motivations — speed, energy, and cryogenic co-location — without treating any one as a magic slogan, (3) name honest costs (cooling, fabrication, maturity) that keep the field specialized, and (4) know where this curriculum is heading before any Josephson-junction math begins.
+**Learning goals.** After this page you should be able to (1) say what problem superconducting electronics is trying to solve relative to ordinary CMOS computing, (2) separate three motivations — speed, energy, and cryogenic co-location — without treating any one as a magic slogan, (3) distinguish **device-fast SFQ** from **algorithmic quantum speedup**, (4) name honest costs (cooling, fabrication, maturity) that keep the field specialized, and (5) know where this curriculum is heading before any Josephson-junction math begins.
 
 ## Why this matters
 
@@ -62,6 +62,15 @@ flowchart TD
 Josephson junctions can switch extremely quickly. Research SFQ logic has long been discussed in the language of **tens of gigahertz** pipeline stages and picosecond pulses. That does **not** mean “every SFQ chip is faster than every CMOS chip you can buy.” It means the **device switching mechanism** and the **pulse-pipeline style** of RSFQ-like logic open a different timing texture than static CMOS gates with held voltage levels.
 
 Teaching takeaway: SFQ is interesting when your problem cares about **very fine-grained timed events**, not only about average transistor FO4 delay at room temperature.
+
+#### Two meanings of “quantum” + speed (do not mix)
+
+| Meaning | What “faster” refers to | Where taught |
+|---------|-------------------------|--------------|
+| **Device-fast classical SFQ** | Josephson junctions switch in picoseconds; dense pulse pipelines | This page (Motivation A) + device fundamentals |
+| **Algorithmic quantum speedup** | Superposition + entanglement + interference for *some* problems | [Qubits & QC — three properties](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations) |
+
+Classical SFQ in this curriculum uses the **first** row. It does **not** claim Grover/Shor-style speedup from superposition.
 
 ### Motivation B — Energy (with the cooling asterisk)
 
@@ -142,6 +151,9 @@ Teaching takeaway: sometimes you choose superconducting electronics because **th
 
 4. **“If it is cold and superconducting, it must be quantum computing.”**  
    False. Classical SFQ logic is classical digital engineering that happens to use superconducting devices.
+
+4b. **“SFQ is fast because of superposition / entanglement / interference.”**  
+   False for the classical SFQ path. Those three power *algorithmic* QC speedups; SFQ’s pitch here is picosecond **device** switching. Details: [qubits page](fields/superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations).
 
 5. **“Motivation is only energy.”**  
    Speed and co-location matter at least as often in real proposals.

@@ -36,7 +36,10 @@ Jump here whenever a word feels fuzzy. Definitions stay public and field-fundame
 | **PTL** | Passive Transmission Line — long superconducting interconnect needing driver/receiver. |
 | **Qubit** | Quantum bit — physical system storing quantum information; superconducting qubits are one QC hardware platform (not classical SFQ). |
 | **Quantum computing** | Field of information processing with quantum states; may use superconducting qubits and classical cryo helpers (SFQ/cryo-CMOS). |
+| **Quantum interference** | Amplitudes add or cancel; QC algorithms boost useful outcomes and suppress others (algorithmic resource — not classical SFQ pulse logic). |
 | **Quantum dot (qubit)** | Semiconductor nanostructure qubit platform; closer to cryo-CMOS/semi story than to RSFQ. |
+| **Entanglement** | Non-classical correlation among qubits used as a resource in multi-qubit algorithms (not how classical SFQ links gates). |
+| **Superposition** | Qubit state combining basis states until measurement; enables rich multi-amplitude states in QC algorithms (not an RSFQ pulse token). |
 | **Neutral-atom qubit** | Qubit platform using arrays of neutral atoms (e.g. optical tweezers); weak overlap with SFQ gates. |
 | **Photonic qubit** | Qubit platform encoding information in light; often needs detectors (e.g. SNSPD) — medium overlap via readout. |
 | **RCSJ** | Resistively and Capacitively Shunted Junction model (JJ + $R$ + $C$). |

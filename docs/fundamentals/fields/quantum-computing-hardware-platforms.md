@@ -3,7 +3,7 @@
 **Prereqs:** [Superconducting qubits & quantum computing](superconducting-qubits-and-quantum-computing.md) · [Field map hub](README.md)  
 **Next:** [SQUID sensing & magnetometry](squid-sensing-magnetometry.md) · [Field map hub](README.md)
 
-**In one minute.** QC field ≠ one hardware. Superconducting overlaps SFQ toolbox; ions/atoms weak; photonics via detectors; dots via cryo-CMOS; topological awareness-only.
+**In one minute.** QC field ≠ one hardware. Algorithmic speedup (when it exists) uses superposition, entanglement, interference — see [qubits page](superconducting-qubits-and-quantum-computing.md#how-quantum-mechanics-can-accelerate-some-computations). Superconducting overlaps SFQ toolbox; ions/atoms weak; photonics via detectors; dots via cryo-CMOS; topological awareness-only.
 
 **Learning goals.** After this page you should be able to (1) name major **qubit hardware platforms** beyond superconducting circuits, (2) separate the **quantum computing field** from any one platform, (3) rank each platform’s relevance to *this* SFQ / superconducting-electronics curriculum, and (4) triage talk titles without assuming “quantum = Josephson qubits = SFQ.”
 
@@ -26,7 +26,7 @@ Hardware platforms are different **vehicles**:
 - photonics → a light-based flyer,
 - …and so on.
 
-Classical SFQ is often a **pit-crew telegraph** that can help some vehicles (especially the superconducting race car) — it is not itself a quantum vehicle.
+Hardware platforms are different **vehicles** for the same sport rules (including superposition / entanglement / interference on the algorithm side). Classical SFQ is often a **pit-crew telegraph** — it does not play the quantum-algorithm sport itself.
 
 ```text
   Quantum computing (field / algorithms / information model)
