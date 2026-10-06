@@ -2,6 +2,12 @@
 
 **Prereqs:** [Resistive Bias to ERSFQ](resistive-bias-to-ersfq.md)  
 **Next:** [Serial Biasing and Current Recycling](../concepts/serial-biasing-current-recycling.md) · [AQFP Logic](../concepts/aqfp-logic.md)  
+
+**TL;DR.**
+- Story so far: bias networks matter for energy and margins.
+- This page: feeding bias currents without wrecking the story.
+- Next: turning SFQ pulses into voltage levels for I/O.
+
 **Tracks:** `clocking-biasing-power`
 
 ## Learning goals

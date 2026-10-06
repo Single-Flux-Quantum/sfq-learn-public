@@ -3,6 +3,12 @@
 **Prereqs:** [Phase to Pulse](phase-to-pulse.md) · [Overdamped vs Underdamped JJ](../fundamentals/overdamped-vs-underdamped-jj.md)  
 **Next:** [SQUID Stack Driver](../concepts/squid-stack-driver.md) · [Four-JL Latching Driver](../concepts/four-jl-latching-driver.md)
 
+**TL;DR.**
+- Story so far: internal bits are pulses; the warm world wants levels.
+- This page: boost/interface intuition toward readable voltages.
+- Next: I/O concepts (SQUID stack, 4JL) on the concept path.
+
+
 **Tracks:** `cryogenic-interfaces-io`
 
 ## Learning goals

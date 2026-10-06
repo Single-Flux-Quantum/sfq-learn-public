@@ -1,7 +1,9 @@
 # Cryogenics for Electronics (Light)
 
-**Prereqs:** [Where SFQ sits among logic families](sfq-among-logic-families.md)  
-**Next:** [How to read SFQ notation](reading-sfq-notation.md)
+**Prereqs:** [SFQ among logic families](sfq-among-logic-families.md)  
+**Next:** [SFQ symbol card](sfq-symbol-card.md) · [How to read SFQ notation](reading-sfq-notation.md)
+
+**In one minute.** ~4 K is a common Nb SFQ neighborhood; many qubits need mK. Fridge wall power and cables dominate systems. Next: symbol card / notation.
 
 **Learning goals.** After this page you should be able to (1) explain why Nb-based SFQ logic commonly targets liquid-helium temperatures around ~4 K, (2) contrast that with millikelvin stacks used for many superconducting qubits, (3) list practical system taxes (coolers, heat leaks, connectors, turnaround time), and (4) carry a “thermal stage” mindset into later I/O and quantum-interface topics without becoming a cryogenics engineer yet.
 

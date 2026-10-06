@@ -3,6 +3,12 @@
 **Prereqs:** [Gate-Level Pipelining](gate-level-pipelining.md)  
 **Next:** [DC Bias Current Delivery](dc-bias-current-delivery.md) · [ERSFQ Logic](../concepts/ersfq-logic.md)
 
+**TL;DR.**
+- Story so far: classic RSFQ needs bias currents.
+- This page: static resistor power problem and ERSFQ-style fix intuition.
+- Next: how DC bias is delivered on chip.
+
+
 ## Learning goals
 
 After this page you should be able to:

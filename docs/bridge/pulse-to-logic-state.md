@@ -3,6 +3,12 @@
 **Prereqs:** [Phase to Pulse](phase-to-pulse.md)  
 **Next:** [RSFQ Logic](../concepts/rsfq-logic.md) · [Gate-Level Pipelining](gate-level-pipelining.md)
 
+**TL;DR.**
+- Story so far: pulses have area ~Φ0.
+- This page: presence/absence in a clock window = the bit.
+- Next: gate-level pipelining (almost every gate is timed).
+
+
 ## Learning goals
 
 After this page you should be able to:

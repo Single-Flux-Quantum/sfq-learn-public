@@ -3,6 +3,12 @@
 **Prereqs:** [Overdamped vs Underdamped JJ](../fundamentals/overdamped-vs-underdamped-jj.md)  
 **Next:** [Pulse to Logic State](pulse-to-logic-state.md)
 
+**TL;DR.**
+- Story so far: JJ can slip by ~2π and make a short voltage event.
+- This page: connect phase slip → SFQ pulse intuition in story form.
+- Next: pulse → logic state (windows and bits).
+
+
 ## Learning goals
 
 After this page you should be able to:

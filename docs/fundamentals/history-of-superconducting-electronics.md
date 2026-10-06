@@ -3,6 +3,8 @@
 **Prereqs:** [Why superconducting electronics?](why-superconducting-electronics.md)  
 **Next:** [Superconducting electronics landscape](superconducting-electronics-landscape.md)
 
+**In one minute.** Latching era → RSFQ pulse tokens → efficiency/systems wave (+ quantum/detector customers). Vocabulary still encodes those eras. Next: landscape.
+
 **Learning goals.** After this page you should be able to (1) place the Josephson effect and early digital Josephson projects on a simple timeline, (2) explain why Rapid Single Flux Quantum (RSFQ) logic became a landmark idea, (3) describe the later “energy-efficient” wave (ERSFQ, AQFP, and kin) without memorizing paper titles, and (4) see today’s activity as a revival with new companions (quantum, detectors, cryo-CMOS) — not as a brand-new invention from nowhere.
 
 ## Why this matters

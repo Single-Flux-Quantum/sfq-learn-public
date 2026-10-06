@@ -3,6 +3,12 @@
 **Prereqs:** [Pulse to Logic State](pulse-to-logic-state.md) · [RSFQ DFF and Retiming](../concepts/rsfq-dff-and-retiming.md)  
 **Next:** [Resistive Bias to ERSFQ](resistive-bias-to-ersfq.md) · [Concurrent-Flow and Counter-Flow Clocking](../concepts/concurrent-and-counter-flow-clocking.md) · [Path Balancing Overhead](../concepts/path-balancing-overhead.md)
 
+**TL;DR.**
+- Story so far: bits are timed pulse events.
+- This page: why RSFQ pipelines are deep by default.
+- Next: resistive bias → ERSFQ energy story.
+
+
 ## Learning goals
 
 After this page you should be able to:

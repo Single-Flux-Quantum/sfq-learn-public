@@ -3,6 +3,10 @@
 **Prereqs:** [Superconductivity Intuition](superconductivity-intuition.md)  
 **Next:** [Flux Quantization](flux-quantization.md)
 
+**In one minute.** JJ = weak link with Ic. Overdamped → short Φ0-area pulse; underdamped → can latch. RCSJ = JJ + R + C damping story.
+
+**Only three ideas (if the equations feel heavy):** (1) weak link + $I_c$, (2) ~$2\pi$ slip ↔ pulse click, (3) area $=\Phi_0$. Full dialect: [Symbol card](sfq-symbol-card.md) · [Notation](reading-sfq-notation.md).
+
 **Learning goals.** By the end of this page you should be able to (1) describe a Josephson junction as a weak link with a critical current $I_c$, (2) use the RCSJ picture (ideal Josephson element plus parallel $R$ and $C$) as a damping story, (3) contrast overdamped pulsing ($\beta_C \lesssim 1$) with underdamped latching ($\beta_C \gg 1$), (4) connect a ~$2\pi$ phase slip to a short voltage pulse whose area is one flux quantum $\Phi_0$, and (5) explain why Rapid Single Flux Quantum (RSFQ) logic prefers overdamped junctions for its pulse tokens.
 
 ## Why this matters

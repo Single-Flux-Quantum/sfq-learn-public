@@ -1,53 +1,64 @@
 # SFQ Learning — Home
 
 **Prereqs:** none (curriculum entry)  
-**Next:** [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md) · [Fundamentals list](#1-fundamentals)
+**Next:** [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md) (express lane)
 
 A guided path from **field orientation** through **device fundamentals**, **bridge** pages, and **concept** cards into curated **tracks**. Written so newcomers can follow with patience — no prior superconductivity course assumed.
 
-**Lookup:** [Glossary (plain English)](glossary.md) — jump here whenever a word feels fuzzy.  
-**Paper map:** [Browse indexed papers](paper-map.md) — titles and publisher links from the lab corpus.  
-**CMOS contrast:** [CMOS vs SFQ cheat-sheet](concepts/cmos-vs-sfq.md) (preview anytime; deepest after pulse/flux bridges).
+**Lookup:** [Glossary](glossary.md) · [Symbol card (5 symbols)](fundamentals/sfq-symbol-card.md) · [Paper map](paper-map.md) · [CMOS vs SFQ](concepts/cmos-vs-sfq.md) (preview anytime)
 
-More pages and more wording are **intentional**. Prefer clarity over compression.
+More pages and more wording are **intentional**. Prefer clarity over compression — but use the **express lane** so you are not forced to read every field guide before symbols.
 
 ## Who this is for
 
 | You are… | Start at |
 |----------|----------|
-| Brand new — want motivation before math | [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md) then orientation + [field guides](fundamentals/fields/README.md) |
-| Confused about qubits vs SFQ | [Qubits & quantum computing](fundamentals/fields/superconducting-qubits-and-quantum-computing.md) then [QC platforms](fundamentals/fields/quantum-computing-hardware-platforms.md) |
-| Coming from CMOS digital design | [Why…](fundamentals/why-superconducting-electronics.md) + preview [CMOS vs SFQ](concepts/cmos-vs-sfq.md), then orientation → notation |
-| Ready for symbols / device physics | [Reading SFQ notation](fundamentals/reading-sfq-notation.md) |
-| Finished fundamentals but cells feel sudden | [Bridge](#2-bridge-close-the-gap) |
-| Comfortable with pulse / flux intuition | [Concepts](#3-concepts) |
+| Brand new (first visit) | **Express lane** below — then device path |
+| Confused about qubits vs SFQ | [Qubits page](fundamentals/fields/superconducting-qubits-and-quantum-computing.md) (canonical contrast) → optional [QC platforms](fundamentals/fields/quantum-computing-hardware-platforms.md) |
+| Coming from CMOS | Express lane + preview [CMOS vs SFQ](concepts/cmos-vs-sfq.md) |
+| Only need symbols | [Symbol card](fundamentals/sfq-symbol-card.md) or [Notation](fundamentals/reading-sfq-notation.md) |
+| Finished fundamentals; cells feel sudden | [Bridge](#2-bridge-close-the-gap) |
 | Ready for a guided path | [Tracks](#4-tracks) |
+
+## Express lane vs full orientation
+
+**Express lane (must before device physics)** — about five pages:
+
+1. [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md)  
+2. [History](fundamentals/history-of-superconducting-electronics.md)  
+3. [Landscape](fundamentals/superconducting-electronics-landscape.md) (airport map; skim field links)  
+4. [Logic families](fundamentals/sfq-among-logic-families.md)  
+5. [Cryogenics (light)](fundamentals/cryogenics-for-electronics.md)  
+
+Then jump to [Symbol card](fundamentals/sfq-symbol-card.md) → [Notation](fundamentals/reading-sfq-notation.md) → device fundamentals.
+
+**Optional field survey** (when titles confuse you — not required on day one):
+
+- Hub: [Field guides](fundamentals/fields/README.md)  
+- Especially: [Qubits ≠ SFQ](fundamentals/fields/superconducting-qubits-and-quantum-computing.md) · [QC platforms](fundamentals/fields/quantum-computing-hardware-platforms.md)  
+- Skim siblings as needed: sensing, metrology, detectors, cryo-CMOS  
 
 ## 1. Fundamentals
 
-Build context first, then device intuition. **No rush.**
+### Orientation
 
-### Orientation (before SFQ symbols)
+**Must (express lane):** why → history → landscape → logic families → cryogenics  
 
-1. [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md) — motivation, costs, niches  
-2. [History of superconducting electronics](fundamentals/history-of-superconducting-electronics.md) — latching → RSFQ → efficiency / systems  
-3. [Superconducting electronics landscape](fundamentals/superconducting-electronics-landscape.md) — airport map of branches  
-4. [Field guides](fundamentals/fields/README.md) — deeper orientation per branch (**qubits ≠ SFQ**, [QC platforms](fundamentals/fields/quantum-computing-hardware-platforms.md), sensing, metrology, detectors, cryo-CMOS)  
-5. [Where SFQ sits among logic families](fundamentals/sfq-among-logic-families.md) — RSFQ / ERSFQ / AQFP / latching  
-6. [Cryogenics for electronics](fundamentals/cryogenics-for-electronics.md) — ~4 K vs mK, system taxes  
+**Optional:** [fields/](fundamentals/fields/README.md) terminal guides  
 
 ### Device path (core walk)
 
-7. [How to read SFQ notation](fundamentals/reading-sfq-notation.md) — symbols and pulse sketches  
-8. [Superconductivity intuition](fundamentals/superconductivity-intuition.md)  
-9. [Josephson junction (RCSJ)](fundamentals/josephson-junction-rcsj.md)  
-10. [Flux quantization](fundamentals/flux-quantization.md)  
-11. [Superconducting loop / SQUID](fundamentals/superconducting-loop-squid.md)  
-12. [Overdamped vs underdamped JJ](fundamentals/overdamped-vs-underdamped-jj.md)  
+1. [Symbol card](fundamentals/sfq-symbol-card.md) — five-symbol cheatsheet  
+2. [How to read SFQ notation](fundamentals/reading-sfq-notation.md)  
+3. [Superconductivity intuition](fundamentals/superconductivity-intuition.md)  
+4. [Josephson junction (RCSJ)](fundamentals/josephson-junction-rcsj.md)  
+5. [Flux quantization](fundamentals/flux-quantization.md)  
+6. [Superconducting loop / SQUID](fundamentals/superconducting-loop-squid.md)  
+7. [Overdamped vs underdamped JJ](fundamentals/overdamped-vs-underdamped-jj.md)  
 
 ## 2. Bridge (close the gap)
 
-Longer, story-first pages between fundamentals and compact SFQ concepts. **Do not skip** if concepts feel sudden.
+Longer, story-first pages between fundamentals and compact SFQ concepts. **Do not skip** if concepts feel sudden. Each bridge starts with a **TL;DR** strip.
 
 Start here: [bridge/README.md](bridge/README.md)
 
@@ -60,7 +71,7 @@ Start here: [bridge/README.md](bridge/README.md)
 
 ## 3. Concepts
 
-SFQ vocabulary cards. Best after the matching bridge pages. Prefer clarity over compression.
+SFQ vocabulary cards. Best after the matching bridge pages.
 
 **Logic & interconnects**
 
@@ -89,7 +100,7 @@ SFQ vocabulary cards. Best after the matching bridge pages. Prefer clarity over 
 
 ## 4. Tracks
 
-- [SFQ logic primitives](tracks/sfq-logic-primitives/ROADMAP.md) — primary curated path (physics → RSFQ cells → ERSFQ/AQFP)  
+- [SFQ logic primitives](tracks/sfq-logic-primitives/ROADMAP.md) — primary curated path  
 - [Clocking, biasing & power](tracks/clocking-biasing-power/ROADMAP.md)  
 - [EDA timing & verification](tracks/eda-timing-verification/ROADMAP.md)  
 - [Cryogenic interfaces & I/O](tracks/cryogenic-interfaces-io/ROADMAP.md)  

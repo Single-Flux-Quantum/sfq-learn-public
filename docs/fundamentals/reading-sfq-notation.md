@@ -1,7 +1,9 @@
 # How to Read SFQ Notation
 
-**Prereqs:** [Cryogenics for electronics](cryogenics-for-electronics.md) (orientation path) · or jump here if you only need symbols  
+**Prereqs:** [Cryogenics for electronics](cryogenics-for-electronics.md) (express lane) · or [Symbol card](sfq-symbol-card.md)  
 **Next:** [Superconductivity Intuition](superconductivity-intuition.md)
+
+**In one minute.** Five symbols (Φ0, Ic, φ, βC, ∫V dt) describe timed events, not held CMOS rails. Shape of the spike is secondary to area. Next: superconductivity; then only three ideas into RCSJ.
 
 **Learning goals.** By the end of this page you should be able to (1) recognize the five symbols that appear on almost every SFQ whiteboard sketch ($\Phi_0$, $I_c$, $\phi$, $\beta_C$, $\int V\,dt$), (2) read ASCII and Mermaid pulse drawings without mistaking shape for meaning, (3) interpret a **clock window** as a timing slot rather than a CMOS voltage rail, and (4) translate a short “pulse present / absent” story into the language you will meet on later fundamentals pages.
 
@@ -282,6 +284,16 @@ SFQ mental model:    .  .  /\  .  .  /\  .     time
 ```
 
 When you catch yourself asking “what is the DC voltage of that SFQ node?”, pause and rephrase: “is there a stored quantum, and did a pulse fire in this epoch?”
+
+## Only three ideas before the next pages
+
+You do **not** need every formula on this page to continue. Carry only:
+
+1. **Weak link + $I_c$** — a Josephson junction switches when pushed past its critical current.  
+2. **~$2\pi$ phase slip ↔ one digital click** — that event launches the SFQ pulse story.  
+3. **Pulse area $=\Phi_0$** — the conserved token size; peak shape is secondary.
+
+Cheatsheet: [Symbol card](sfq-symbol-card.md). Depth: [RCSJ](josephson-junction-rcsj.md) → [Flux quantization](flux-quantization.md).
 
 ## Bridge to SFQ circuits
 

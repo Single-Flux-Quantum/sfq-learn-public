@@ -3,6 +3,8 @@
 **Prereqs:** none  
 **Next:** [History of superconducting electronics](history-of-superconducting-electronics.md) · [Coming from CMOS?](../concepts/cmos-vs-sfq.md) (preview)
 
+**In one minute.** Superconducting electronics is a specialty for speed, cryo co-location, and careful energy stories — not a laptop replacement. Cooling is a real tax. Next: history.
+
 **Learning goals.** After this page you should be able to (1) say what problem superconducting electronics is trying to solve relative to ordinary CMOS computing, (2) separate three motivations — speed, energy, and cryogenic co-location — without treating any one as a magic slogan, (3) name honest costs (cooling, fabrication, maturity) that keep the field specialized, and (4) know where this curriculum is heading before any Josephson-junction math begins.
 
 ## Why this matters

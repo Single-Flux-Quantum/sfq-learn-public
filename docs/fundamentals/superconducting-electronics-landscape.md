@@ -3,6 +3,8 @@
 **Prereqs:** [History of superconducting electronics](history-of-superconducting-electronics.md)  
 **Next:** [Field map — branches in more detail](fields/README.md) · [Logic families](sfq-among-logic-families.md) (after fields)
 
+**In one minute.** Airport map: digital SFQ is one terminal among sensing, metrology, detectors, qubits, cryo-CMOS, EDA. Express lane may skip fields/. Next: logic families or optional fields.
+
 **Learning goals.** After this page you should be able to (1) sketch the field as a tree with several major branches — not only digital SFQ, (2) say in one sentence what each sibling discipline is *for*, (3) spot which papers/talks are “SFQ logic,” “sensing,” “metrology,” “detectors,” or “quantum interfaces,” (4) **separate classical SFQ from superconducting qubits**, and (5) know where to open the deeper [fields](fields/README.md) guides.
 
 ## Why this matters
@@ -20,16 +22,11 @@ Think of superconducting technology as an **airport**:
 
 Passengers (applications) fly to different destinations. Confusing terminals wastes time. Your boarding pass for *this* curriculum is mostly the **digital SFQ terminal**, but you should recognize the signs for the others.
 
-## Classical SFQ vs superconducting qubits (read this twice)
+## Classical SFQ vs superconducting qubits
 
-| | Classical digital SFQ | Superconducting qubits |
-|--|----------------------|------------------------|
-| Information | Classical bits (pulses / flux packets) | Quantum states |
-| Typical teaching temperature | Often ~4 K Nb digital stacks | Often millikelvin device stages |
-| Scoreboard | Timing, BER, energy, libraries | Coherence, gate/readout fidelity |
-| Role of SFQ in a quantum fridge | Optional **classical helper** | Not the qubit itself |
+**Canonical full contrast:** [Superconducting qubits & quantum computing](fields/superconducting-qubits-and-quantum-computing.md).
 
-**Quantum computing** is the broader field with **several hardware platforms** (ions, superconducting, photonics, neutral atoms, quantum dots, topological, …). **Superconducting qubits** are the platform that shares the most toolbox with classical SFQ. Guides: [qubits & QC](fields/superconducting-qubits-and-quantum-computing.md) · [QC hardware platforms](fields/quantum-computing-hardware-platforms.md).
+One line for the map: classical SFQ = **telegraph clicks** (bits); superconducting qubits = **music hall** (fragile quantum states). Same fridge possible; different scoreboards. Other QC hardwares: [platforms map](fields/quantum-computing-hardware-platforms.md).
 
 ```text
                     Superconducting electronics
@@ -40,8 +37,7 @@ Passengers (applications) fly to different destinations. Confusing terminals was
   families      sensing    (voltage)    (SNSPD…)     cryo I/O
 ```
 
-**More detail per branch:** [fields/](fields/README.md) (orientation guides, not a second full curriculum).
-## Picture 1 — Branch map
+**Optional detail:** [fields/](fields/README.md) (express lane may skip).## Picture 1 — Branch map
 
 ```mermaid
 flowchart TD

@@ -3,6 +3,10 @@
 **Prereqs:** [Josephson Junction (RCSJ)](josephson-junction-rcsj.md)  
 **Next:** [Superconducting Loop / SQUID](superconducting-loop-squid.md)
 
+**In one minute.** Loops hold integer multiples of Φ0. One 2π phase slip ↔ pulse area Φ0. That packet is the digital token size.
+
+**Only three ideas (reprise):** weak link + $I_c$; ~$2\pi$ slip ↔ click; area/token $=\Phi_0$. This page explains *why* the token size is forced.
+
 **Learning goals.** After this page you should be able to (1) state what $\Phi_0$ is and why it has the engineering form $2.07\,\text{mV}\cdot\text{ps}$, (2) connect one $2\pi$ Josephson phase slip to a voltage pulse whose area is exactly one flux quantum, (3) explain why a closed superconducting loop cannot stably hold half a quantum, and (4) contrast flux-packet information with CMOS continuous voltage levels.
 
 ## Why this matters

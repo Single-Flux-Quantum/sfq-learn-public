@@ -3,7 +3,9 @@
 **Prereqs:** [Digital SFQ overview](digital-sfq-overview.md) · [Field map hub](README.md)  
 **Next:** [QC hardware platforms](quantum-computing-hardware-platforms.md) · [SQUID sensing](squid-sensing-magnetometry.md)
 
-**Learning goals.** After this page you should be able to (1) say what a **qubit** is for at a teaching level, (2) place **superconducting qubits** as one hardware platform inside **quantum computing**, (3) explain why this is a **different branch** from classical SFQ digital logic, and (4) describe how SFQ or cryo-CMOS may appear as **classical helpers** in the same cryostat without becoming the qubit.
+**Learning goals.** After this page you should be able to (1) say what a **qubit** is for at a teaching level, (2) place **superconducting qubits** as one hardware platform inside **quantum computing**, (3) explain why this is a **different branch** from classical SFQ digital logic (**canonical contrast for the whole curriculum**), and (4) describe how SFQ or cryo-CMOS may appear as **classical helpers** without becoming the qubit.
+
+**In one minute.** Qubit ≠ classical SFQ. Qubits store quantum states (often mK); SFQ sends classical flux pulses (often ~4 K). SFQ may help control a fridge — it is not the qubit. Other hardwares: [platforms](quantum-computing-hardware-platforms.md).
 
 ## Why this field exists
 

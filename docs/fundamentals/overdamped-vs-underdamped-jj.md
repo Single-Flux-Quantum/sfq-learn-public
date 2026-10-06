@@ -3,6 +3,8 @@
 **Prereqs:** [Superconducting Loop / SQUID](superconducting-loop-squid.md)  
 **Next:** [Phase to Pulse](../bridge/phase-to-pulse.md)
 
+**In one minute.** βC small → recover to V≈0 (RSFQ pulses). βC large → latching voltage until reset (some I/O). Same Ic, different personality.
+
 **Learning goals.** After this page you should be able to (1) tell overdamped (pulse) junctions from underdamped (latching) junctions using damping intuition, (2) state what the McCumber parameter $\beta_C$ is summarizing, (3) explain why RSFQ libraries shunt junctions toward $\beta_C\lesssim 1$, and (4) recognize when latching / underdamped behavior is intentional (often I/O and drivers) rather than a bug.
 
 ## Why this matters

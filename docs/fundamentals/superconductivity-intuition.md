@@ -3,6 +3,8 @@
 **Prereqs:** [How to Read SFQ Notation](reading-sfq-notation.md)  
 **Next:** [Josephson Junction (RCSJ)](josephson-junction-rcsj.md)
 
+**In one minute.** Below Tc: supercurrent with ~0 DC resistance; flux is guided into designed loops/weak links. Cold is necessary, not free energy. Next: Josephson RCSJ.
+
 **Learning goals.** After this page you should be able to (1) explain cooling below a critical temperature $T_c$ as the step that opens zero-DC-resistance paths, (2) separate “zero resistance” from “zero energy use,” (3) say why magnetic flux becomes a natural information idea once wires are superconducting, (4) contrast bulk Meissner expulsion with the way SFQ circuits deliberately guide flux through loops and weak links, and (5) walk into the Josephson-junction page without treating superconductivity as magic.
 
 ## Why this matters

@@ -3,6 +3,8 @@
 **Prereqs:** [Flux Quantization](flux-quantization.md)  
 **Next:** [Overdamped vs Underdamped JJ](overdamped-vs-underdamped-jj.md)
 
+**In one minute.** A loop can store a flux quantum as circulating current — the memory picture behind SFQ bits. SQUID = loop + junctions.
+
 **Learning goals.** After this page you should be able to (1) picture a superconducting loop holding a persistent circulating current for about one $\Phi_0$, (2) estimate $I_{\mathrm{circ}} \approx \Phi_0/L$ for a storage loop, (3) describe a DC SQUID as two Josephson junctions on a loop, and (4) contrast SFQ loop storage with CMOS capacitor / SRAM voltage storage.
 
 ## Why this matters
