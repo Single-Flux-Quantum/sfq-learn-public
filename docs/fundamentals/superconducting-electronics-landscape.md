@@ -1,9 +1,9 @@
 # Superconducting Electronics Landscape
 
 **Prereqs:** [History of superconducting electronics](history-of-superconducting-electronics.md)  
-**Next:** [Where SFQ sits among logic families](sfq-among-logic-families.md)
+**Next:** [Field map — branches in more detail](fields/README.md) · [Logic families](sfq-among-logic-families.md) (after fields)
 
-**Learning goals.** After this page you should be able to (1) sketch the field as a tree with several major branches — not only digital SFQ, (2) say in one sentence what each sibling discipline is *for*, (3) spot which papers/talks are “SFQ logic,” “sensing,” “metrology,” “detectors,” or “quantum interfaces,” and (4) know which branch this curriculum will deepen next.
+**Learning goals.** After this page you should be able to (1) sketch the field as a tree with several major branches — not only digital SFQ, (2) say in one sentence what each sibling discipline is *for*, (3) spot which papers/talks are “SFQ logic,” “sensing,” “metrology,” “detectors,” or “quantum interfaces,” (4) **separate classical SFQ from superconducting qubits**, and (5) know where to open the deeper [fields](fields/README.md) guides.
 
 ## Why this matters
 
@@ -20,6 +20,17 @@ Think of superconducting technology as an **airport**:
 
 Passengers (applications) fly to different destinations. Confusing terminals wastes time. Your boarding pass for *this* curriculum is mostly the **digital SFQ terminal**, but you should recognize the signs for the others.
 
+## Classical SFQ vs superconducting qubits (read this twice)
+
+| | Classical digital SFQ | Superconducting qubits |
+|--|----------------------|------------------------|
+| Information | Classical bits (pulses / flux packets) | Quantum states |
+| Typical teaching temperature | Often ~4 K Nb digital stacks | Often millikelvin device stages |
+| Scoreboard | Timing, BER, energy, libraries | Coherence, gate/readout fidelity |
+| Role of SFQ in a quantum fridge | Optional **classical helper** | Not the qubit itself |
+
+**Quantum computing** is the broader field. **Superconducting qubits** are one hardware platform inside it. Detailed guide: [Superconducting qubits & quantum computing](fields/superconducting-qubits-and-quantum-computing.md).
+
 ```text
                     Superconducting electronics
                                |
@@ -29,6 +40,7 @@ Passengers (applications) fly to different destinations. Confusing terminals was
   families      sensing    (voltage)    (SNSPD…)     cryo I/O
 ```
 
+**More detail per branch:** [fields/](fields/README.md) (orientation guides, not a second full curriculum).
 ## Picture 1 — Branch map
 
 ```mermaid
@@ -50,6 +62,7 @@ flowchart TD
 
 **Success metrics:** clock rate, energy per operation (carefully defined), bit error rate, scalability, cell-library completeness.
 
+**Deeper orientation:** [Digital SFQ overview](fields/digital-sfq-overview.md)  
 **You are here later:** RSFQ cells, timing, bias, memory, I/O concepts.
 
 ### Branch B — SQUID sensing and magnetometry
@@ -58,7 +71,7 @@ flowchart TD
 
 **Success metrics:** noise floor, bandwidth, slew rate, cryogenic practicality — **not** ALU throughput.
 
-**Overlap with digital SFQ:** shared SQUID vocabulary; different optimization target.
+**Deeper orientation:** [SQUID sensing & magnetometry](fields/squid-sensing-magnetometry.md)
 
 ### Branch C — Metrology and voltage standards
 
@@ -66,7 +79,7 @@ flowchart TD
 
 **Success metrics:** accuracy, stability, spectral purity — national-lab energy.
 
-**Teaching note:** the same $\Phi_0$ that makes an SFQ pulse area also appears in voltage–frequency relations used by standards labs.
+**Deeper orientation:** [Josephson metrology & voltage standards](fields/josephson-metrology-voltage-standards.md)
 
 ### Branch D — Superconducting detectors (e.g. SNSPD)
 
@@ -74,29 +87,33 @@ flowchart TD
 
 **Success metrics:** efficiency, dark counts, jitter, array scalability.
 
-**Overlap:** detector events often need **cryogenic digitization and serialization** — an SFQ or cryo-CMOS opportunity.
+**Deeper orientation:** [Superconducting photon detectors](fields/superconducting-photon-detectors.md)
 
-### Branch E — Quantum computing interfaces
+### Branch E — Quantum computing interfaces (and superconducting qubits)
 
-**Job:** control and read superconducting (or other) qubits; move information between mK stages and warmer electronics.
+**Job:** build **superconducting qubits** (quantum hardware) and/or the **classical control/readout stack** that talks to them across thermal stages.
 
-**Success metrics:** fidelity, heat load, latency, multiplexing — system-level.
+**Success metrics:** for qubits — coherence and fidelities; for interfaces — heat load, latency, multiplexing.
 
-**Overlap:** SFQ and cryo-CMOS compete/cooperate as **proximal classical helpers**, not as replacements for the qubit itself.
+**Critical distinction:** the qubit chip is quantum information hardware; an SFQ serializer beside it is still classical digital SFQ.
+
+**Deeper orientation:** [Superconducting qubits & quantum computing](fields/superconducting-qubits-and-quantum-computing.md)
 
 ### Branch F — Cryo-CMOS and hybrid systems
 
-**Job:** run semiconductor electronics cold (or across the thermal gradient) for control, memory, and I/O.
+**Job:** run semiconductor electronics cold (or across the thermal gradient) for control, memory, and I/O; combine with SFQ when useful.
 
 **Success metrics:** power at temperature, noise, integration with superconducting chips.
 
-**Teaching note:** hybrids are normal. Pure “all-SFQ everything” is not the only architecture.
+**Deeper orientation:** [Cryo-CMOS & hybrids](fields/cryo-cmos-and-hybrids.md)
 
 ### Branch G — EDA, packaging, and test
 
 **Job:** make anything above manufacturable: timing analysis, place-and-route, inductance extraction, cryopackages, connectors.
 
 **Success metrics:** turnaround time, correlation to measurement, yield thinking.
+
+**Deepened later** in EDA timing concepts and tracks (not a separate fields page yet).
 
 ## Picture 2 — How to classify a talk title in 20 seconds
 
@@ -135,20 +152,20 @@ flowchart TD
 
 ## Comparison table — branches vs what this curriculum deepens
 
-| Branch | Deepened here? | Where you will meet it |
-|--------|----------------|------------------------|
-| Digital SFQ | **Yes (core)** | Fundamentals → bridge → concepts → tracks |
-| SQUID sensing | Lightly | Loop/SQUID fundamentals; not a MEG course |
-| Metrology | Pointers | Landscape + later quantum/metrology track notes |
-| Detectors | Pointers | Quantum/detector track (public cards growing) |
-| Quantum I/O | Pointers | Cryogenic I/O concepts + track |
-| Cryo-CMOS hybrids | Selective | Memory/I/O concepts; CMOS contrast |
-| EDA | Yes (selected) | STA, routing, path balancing concepts |
+| Branch | Orientation detail | Deep curriculum path |
+|--------|--------------------|----------------------|
+| Digital SFQ | [fields/digital-sfq-overview](fields/digital-sfq-overview.md) | Core walk → bridges → concepts → tracks |
+| SQUID sensing | [fields/squid-sensing…](fields/squid-sensing-magnetometry.md) | Loop/SQUID fundamentals only (not MEG course) |
+| Metrology | [fields/josephson-metrology…](fields/josephson-metrology-voltage-standards.md) | $\Phi_0$ reuse in fundamentals |
+| Detectors | [fields/…photon-detectors](fields/superconducting-photon-detectors.md) | I/O / detector track pointers later |
+| Qubits / QC interfaces | [fields/…qubits…](fields/superconducting-qubits-and-quantum-computing.md) | Cryo I/O concepts + track |
+| Cryo-CMOS hybrids | [fields/cryo-cmos…](fields/cryo-cmos-and-hybrids.md) | Memory/I/O concepts; CMOS contrast |
+| EDA | Landscape Branch G | STA, routing, path balancing concepts |
 
 ## Common misconceptions
 
 1. **“Superconducting electronics = quantum computing.”**  
-   Quantum is one terminal; classical SFQ and sensors are others.
+   Quantum is one terminal; classical SFQ and sensors are others. Qubits ≠ RSFQ gates.
 
 2. **“If it uses a SQUID, it is an SFQ microprocessor.”**  
    SQUIDs are building blocks for many jobs.
@@ -175,7 +192,10 @@ flowchart TD
 
 ## Bridge to SFQ circuits
 
-You now know **SFQ digital is a branch**, not the whole tree. Next we zoom into that branch’s internal family names ([logic families](sfq-among-logic-families.md)), then cryogenic practicality, then device intuition.
+You now know **SFQ digital is a branch**, not the whole tree. Next:
+
+1. Open the [fields hub](fields/README.md) and skim each terminal guide (especially [qubits](fields/superconducting-qubits-and-quantum-computing.md)).  
+2. Then [logic families](sfq-among-logic-families.md) → [cryogenics](cryogenics-for-electronics.md) → [notation](reading-sfq-notation.md).
 
 When you later open a paper from the [paper map](../paper-map.md), classify its terminal before drowning in equations.
 
@@ -214,13 +234,14 @@ Classify the terminal from title/keywords in ~20 seconds before investing in det
 <details>
 <summary>6. What is next?</summary>
 
-[Where SFQ sits among logic families](sfq-among-logic-families.md).
+[Field map — branches in more detail](fields/README.md), especially the qubits page if that was your confusion.
 </details>
 
 ## Glossary spot-links
 
-Glossary: SFQ, RSFQ, SQUID, SNSPD (concept name), cryo-CMOS (name), $\Phi_0$, Josephson junction.
+Glossary: SFQ, RSFQ, SQUID, SNSPD (concept name), cryo-CMOS (name), qubit, $\Phi_0$, Josephson junction.
 
 ## Next steps
 
-- Zoom into digital family names: [SFQ among logic families](sfq-among-logic-families.md).
+- Survey terminals: [fields/](fields/README.md).  
+- Then dialects: [SFQ among logic families](sfq-among-logic-families.md).

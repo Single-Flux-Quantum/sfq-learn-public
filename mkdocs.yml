@@ -36,6 +36,14 @@ nav:
       - Why superconducting electronics: fundamentals/why-superconducting-electronics.md
       - History of the field: fundamentals/history-of-superconducting-electronics.md
       - Field landscape: fundamentals/superconducting-electronics-landscape.md
+      - Field guides:
+          - Hub: fundamentals/fields/README.md
+          - Digital SFQ overview: fundamentals/fields/digital-sfq-overview.md
+          - Qubits & quantum computing: fundamentals/fields/superconducting-qubits-and-quantum-computing.md
+          - SQUID sensing: fundamentals/fields/squid-sensing-magnetometry.md
+          - Josephson metrology: fundamentals/fields/josephson-metrology-voltage-standards.md
+          - Photon detectors: fundamentals/fields/superconducting-photon-detectors.md
+          - Cryo-CMOS & hybrids: fundamentals/fields/cryo-cmos-and-hybrids.md
       - SFQ among logic families: fundamentals/sfq-among-logic-families.md
       - Cryogenics for electronics: fundamentals/cryogenics-for-electronics.md
       - Reading SFQ notation: fundamentals/reading-sfq-notation.md

@@ -34,6 +34,8 @@ Jump here whenever a word feels fuzzy. Definitions stay public and field-fundame
 | **Path balancing** | Equalizing stage counts on reconvergent paths so pulses share an epoch. |
 | **Phase $\phi$** | Superconducting phase difference across a junction; a $2\pi$ slip ↔ one $\Phi_0$. |
 | **PTL** | Passive Transmission Line — long superconducting interconnect needing driver/receiver. |
+| **Qubit** | Quantum bit — physical system storing quantum information; superconducting qubits are one QC hardware platform (not classical SFQ). |
+| **Quantum computing** | Field of information processing with quantum states; may use superconducting qubits and classical cryo helpers (SFQ/cryo-CMOS). |
 | **RCSJ** | Resistively and Capacitively Shunted Junction model (JJ + $R$ + $C$). |
 | **RSFQ** | Rapid Single Flux Quantum — pulse-based superconducting digital logic family. |
 | **Serial biasing / current recycling** | Reusing one bias current through series-stacked ground islands. |

@@ -11,7 +11,8 @@ Device physics → RSFQ cells → ERSFQ / AQFP family cards. Sibling tracks cove
 graph TD
     O1[Why SE] --> O2[History]
     O2 --> O3[Landscape]
-    O3 --> O4[Logic families]
+    O3 --> Fields[Field guides]
+    Fields --> O4[Logic families]
     O4 --> O5[Cryogenics]
     O5 --> N0[Notation]
     N0 --> F0[Superconductivity]
@@ -37,26 +38,27 @@ graph TD
 1. [Why superconducting electronics?](../../fundamentals/why-superconducting-electronics.md)
 2. [History of superconducting electronics](../../fundamentals/history-of-superconducting-electronics.md)
 3. [Superconducting electronics landscape](../../fundamentals/superconducting-electronics-landscape.md)
-4. [Where SFQ sits among logic families](../../fundamentals/sfq-among-logic-families.md)
-5. [Cryogenics for electronics](../../fundamentals/cryogenics-for-electronics.md)
+4. [Field guides hub](../../fundamentals/fields/README.md) (survey branches; especially [qubits](../../fundamentals/fields/superconducting-qubits-and-quantum-computing.md))
+5. [Where SFQ sits among logic families](../../fundamentals/sfq-among-logic-families.md)
+6. [Cryogenics for electronics](../../fundamentals/cryogenics-for-electronics.md)
 
 ### Device → cells
 
-6. [How to read SFQ notation](../../fundamentals/reading-sfq-notation.md)
-7. [Superconductivity Intuition](../../fundamentals/superconductivity-intuition.md)
-8. [Josephson Junction (RCSJ)](../../fundamentals/josephson-junction-rcsj.md)
-9. [Flux Quantization](../../fundamentals/flux-quantization.md)
-10. [Superconducting Loop / SQUID](../../fundamentals/superconducting-loop-squid.md)
-11. [Overdamped vs Underdamped JJ](../../fundamentals/overdamped-vs-underdamped-jj.md)
-12. [Phase to Pulse](../../bridge/phase-to-pulse.md)
-13. [Pulse to Logic State](../../bridge/pulse-to-logic-state.md)
-14. [RSFQ Logic Overview](../../concepts/rsfq-logic.md)
-15. [JTL Interconnects](../../concepts/jtl-interconnects.md)
-16. [Splitter and Confluence](../../concepts/splitter-and-confluence.md)
-17. [RSFQ DFF and Retiming](../../concepts/rsfq-dff-and-retiming.md)
-18. [Resistive Bias to ERSFQ](../../bridge/resistive-bias-to-ersfq.md)
-19. [ERSFQ Logic](../../concepts/ersfq-logic.md)
-20. [AQFP Logic](../../concepts/aqfp-logic.md)
+7. [How to read SFQ notation](../../fundamentals/reading-sfq-notation.md)
+8. [Superconductivity Intuition](../../fundamentals/superconductivity-intuition.md)
+9. [Josephson Junction (RCSJ)](../../fundamentals/josephson-junction-rcsj.md)
+10. [Flux Quantization](../../fundamentals/flux-quantization.md)
+11. [Superconducting Loop / SQUID](../../fundamentals/superconducting-loop-squid.md)
+12. [Overdamped vs Underdamped JJ](../../fundamentals/overdamped-vs-underdamped-jj.md)
+13. [Phase to Pulse](../../bridge/phase-to-pulse.md)
+14. [Pulse to Logic State](../../bridge/pulse-to-logic-state.md)
+15. [RSFQ Logic Overview](../../concepts/rsfq-logic.md)
+16. [JTL Interconnects](../../concepts/jtl-interconnects.md)
+17. [Splitter and Confluence](../../concepts/splitter-and-confluence.md)
+18. [RSFQ DFF and Retiming](../../concepts/rsfq-dff-and-retiming.md)
+19. [Resistive Bias to ERSFQ](../../bridge/resistive-bias-to-ersfq.md)
+20. [ERSFQ Logic](../../concepts/ersfq-logic.md)
+21. [AQFP Logic](../../concepts/aqfp-logic.md)
 
 ## Continue on sibling tracks
 

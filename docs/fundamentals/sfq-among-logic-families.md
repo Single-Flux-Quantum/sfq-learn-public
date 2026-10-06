@@ -1,6 +1,6 @@
 # Where SFQ Sits Among Logic Families
 
-**Prereqs:** [Superconducting electronics landscape](superconducting-electronics-landscape.md)  
+**Prereqs:** [Field map hub](fields/README.md) · [Cryo-CMOS & hybrids](fields/cryo-cmos-and-hybrids.md) (end of fields survey)  
 **Next:** [Cryogenics for electronics](cryogenics-for-electronics.md)
 
 **Learning goals.** After this page you should be able to (1) explain that “SFQ” is both a broad brand and a cluster of digital families, (2) contrast latching, RSFQ/ERSFQ pulse logic, and AQFP-style adiabatic logic at a teaching level, (3) know which family this curriculum treats as the default vocabulary, and (4) avoid mixing AC-excitation AQFP intuition with DC-biased RSFQ pulse intuition too early.
