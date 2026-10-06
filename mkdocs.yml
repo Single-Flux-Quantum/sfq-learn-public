@@ -12,20 +12,60 @@ markdown_extensions:
   - pymdownx.arithmatex:
       generic: true
   - pymdownx.highlight
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.details
   - admonition
+  - toc:
+      permalink: true
 extra_javascript:
   - javascripts/mathjax.js
   - https://polyfill.io/v3/polyfill.min.js?features=es6
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 nav:
   - Home: index.md
+  - Glossary: glossary.md
+  - Paper map: paper-map.md
   - Fundamentals:
+      - Reading SFQ notation: fundamentals/reading-sfq-notation.md
+      - Superconductivity Intuition: fundamentals/superconductivity-intuition.md
+      - Josephson Junction (RCSJ): fundamentals/josephson-junction-rcsj.md
       - Flux Quantization: fundamentals/flux-quantization.md
+      - Loop / SQUID: fundamentals/superconducting-loop-squid.md
+      - Overdamped vs Underdamped: fundamentals/overdamped-vs-underdamped-jj.md
   - Bridge:
+      - Close the gap (hub): bridge/README.md
       - Phase to Pulse: bridge/phase-to-pulse.md
+      - Pulse to Logic State: bridge/pulse-to-logic-state.md
+      - Gate-Level Pipelining: bridge/gate-level-pipelining.md
+      - Resistive Bias to ERSFQ: bridge/resistive-bias-to-ersfq.md
+      - DC Bias Current Delivery: bridge/dc-bias-current-delivery.md
+      - SFQ Pulse to Voltage Levels: bridge/sfq-pulse-to-volt-level.md
   - Concepts:
-      - RSFQ Logic: concepts/rsfq-logic.md
+      - CMOS vs SFQ: concepts/cmos-vs-sfq.md
+      - RSFQ Overview: concepts/rsfq-logic.md
+      - JTL Interconnects: concepts/jtl-interconnects.md
+      - Splitter and Confluence: concepts/splitter-and-confluence.md
+      - RSFQ DFF and Retiming: concepts/rsfq-dff-and-retiming.md
+      - Concurrent / Counter-Flow Clocking: concepts/concurrent-and-counter-flow-clocking.md
+      - Path Balancing Overhead: concepts/path-balancing-overhead.md
+      - SFQ Static Timing Analysis: concepts/sfq-static-timing-analysis.md
+      - Hybrid JTL–PTL Routing: concepts/hybrid-jtl-ptl-routing.md
+      - ERSFQ Logic: concepts/ersfq-logic.md
+      - Serial Biasing / Current Recycling: concepts/serial-biasing-current-recycling.md
+      - AQFP Logic: concepts/aqfp-logic.md
+      - SQUID Stack Driver: concepts/squid-stack-driver.md
+      - Four-JL Latching Driver: concepts/four-jl-latching-driver.md
+      - Vortex Transitional RAM: concepts/vortex-transitional-ram.md
+      - Josephson–CMOS Hybrid Memory: concepts/josephson-cmos-hybrid-memory.md
   - Tracks:
       - SFQ Logic Primitives: tracks/sfq-logic-primitives/ROADMAP.md
+      - Clocking, Biasing & Power: tracks/clocking-biasing-power/ROADMAP.md
+      - EDA Timing & Verification: tracks/eda-timing-verification/ROADMAP.md
+      - Cryogenic Interfaces & I/O: tracks/cryogenic-interfaces-io/ROADMAP.md
+      - Cryogenic Memory: tracks/cryogenic-memory/ROADMAP.md
+      - Compute & Neuromorphic: tracks/compute-neuromorphic/ROADMAP.md
+      - Quantum & Detector Interfaces: tracks/quantum-detector-interfaces/ROADMAP.md
