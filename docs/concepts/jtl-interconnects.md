@@ -98,6 +98,20 @@ flowchart LR
 
 There is no free “zero-JJ wire” that magically preserves SFQ pulses over arbitrary distance inside the active-logic mindset. Long distance is a different tool: **PTL** with drivers/receivers.
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/jtl-interconnects.html).
+
+1. Leave **active JTL** (myth mode off), set a few stages, and **Launch pulse**. Watch each JJ remake ≈ Φ₀ until OUT.
+2. Enable **Myth mode: passive wire** and launch again. Without regeneration the token dies — interconnect is not free metal.
+
+<iframe
+  src="../../labs/jtl-interconnects.html"
+  title="JTL hop lab"
+  style="width:100%;height:780px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Qualitative delay model (field-fundamental)
 
 If each JTL stage contributes a characteristic delay $\tau_{\mathrm{JTL}}$ (library- and bias-dependent — do not memorize a universal number), then $n$ stages contribute roughly
