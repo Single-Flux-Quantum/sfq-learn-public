@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JTL Hop Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 1rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .field input[type="number"] {
+      width: 4.5rem;
+      padding: 0.4rem 0.45rem;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.9rem;
+    }
+
+    button {
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    #runBtn {
+      background: var(--md-primary);
+      color: #fff;
+      box-shadow: 0 1px 2px #00000024;
+    }
+
+    #runBtn:hover { background: var(--md-primary-light); }
+    #runBtn:disabled { opacity: 0.55; cursor: wait; }
+
+    #clearBtn {
+      background: transparent;
+      color: var(--md-primary);
+      border: 1px solid var(--border);
+    }
+
+    #clearBtn:hover { background: var(--code-bg); }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.88rem;
+      cursor: pointer;
+      user-select: none;
+      padding-bottom: 0.35rem;
+    }
+
+    .toggle input { accent-color: var(--md-primary); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.55rem;
+      margin-bottom: 1rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.65rem 0.5rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .stat-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 1rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.45rem 0.7rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 200px;
+      background: #fff;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.82rem;
+      text-align: center;
+    }
+
+    th {
+      padding: 0.55rem 0.4rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--code-bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.55rem 0.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .ok { color: var(--ok); font-weight: 700; }
+    .bad { color: var(--bad); font-weight: 700; }
+    .muted { color: var(--muted); }
+    .warn { color: var(--warn); font-weight: 600; }
+
+    .hint {
+      margin-top: 0.85rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>JTL Hop Lab</h1>
+    <p class="lede">
+      A Josephson Transmission Line <strong>regenerates</strong> the SFQ token at each stage
+      (fresh area ≈ Φ₀) — it is not a passive CMOS wire. More stages ⇒ more delay, junctions, and bias.
+      Fine JTL delay ≠ missing-epoch DFF pads.
+    </p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="nStages">JTL stages</label>
+        <input type="number" id="nStages" min="1" max="8" value="4">
+      </div>
+      <div class="field">
+        <label for="tauPs">τ per stage (ps, illustrative)</label>
+        <input type="number" id="tauPs" min="2" max="20" value="5">
+      </div>
+      <button type="button" id="runBtn">Launch pulse</button>
+      <button type="button" id="clearBtn">Reset</button>
+      <label class="toggle">
+        <input type="checkbox" id="passiveToggle">
+        <span>Myth mode: passive “wire” (no regeneration)</span>
+      </label>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Stages</div>
+        <div class="stat-value" id="statN">4</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Delay ≈ n·τ</div>
+        <div class="stat-value" id="statDelay">20 ps</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Regenerations</div>
+        <div class="stat-value" id="statRegen">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Arrived?</div>
+        <div class="stat-value" id="statArrive">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Last area</div>
+        <div class="stat-value" id="statArea">—</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">Bucket brigade — each JJ stage remakes Φ₀ (or dies in myth mode)</div>
+      <canvas id="jtlCanvas" width="880" height="200" aria-label="JTL stages"></canvas>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Hop</th>
+            <th>Stage</th>
+            <th>Action</th>
+            <th>Area ≈</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="resultsTable">
+          <tr>
+            <td colspan="5" class="muted" style="padding: 20px;">
+              Click “Launch pulse”. Compare active JTL vs myth mode (passive wire).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="hint">
+      <strong>Active JTL:</strong> every stage switches → new Φ₀ token → pulse reaches the end.
+      <strong>Myth mode:</strong> without regeneration the token fades — SFQ interconnect is not free metal.
+      For whole <em>missing epochs</em>, use DFF pads (pipeline lab), not only JTL trim.
+    </p>
+  </div>
+
+  <script>
+    const PHI0 = 2.07;
+    const nEl = document.getElementById("nStages");
+    const tauEl = document.getElementById("tauPs");
+    const runBtn = document.getElementById("runBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const passiveToggle = document.getElementById("passiveToggle");
+    const resultsTable = document.getElementById("resultsTable");
+    const canvas = document.getElementById("jtlCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let hop = 0; // 0 = at input, 1..n = at stage, n+1 = out
+    let regenerations = 0;
+    let animating = false;
+    let lastArea = null;
+    let arrived = null; // true/false/null
+    let log = [];
+
+    function clamp(el) {
+      let v = parseInt(el.value, 10);
+      if (Number.isNaN(v)) v = parseInt(el.min, 10);
+      v = Math.max(parseInt(el.min, 10), Math.min(parseInt(el.max, 10), v));
+      el.value = String(v);
+      return v;
+    }
+
+    function config() {
+      return { n: clamp(nEl), tau: clamp(tauEl), passive: passiveToggle.checked };
+    }
+
+    function updateStats() {
+      const c = config();
+      document.getElementById("statN").textContent = String(c.n);
+      document.getElementById("statDelay").textContent = c.n * c.tau + " ps";
+      document.getElementById("statRegen").textContent = String(regenerations);
+      const arr = document.getElementById("statArrive");
+      if (arrived === null) {
+        arr.textContent = "—";
+        arr.className = "stat-value";
+      } else if (arrived) {
+        arr.textContent = "YES";
+        arr.className = "stat-value ok";
+      } else {
+        arr.textContent = "DIED";
+        arr.className = "stat-value bad";
+      }
+      document.getElementById("statArea").textContent =
+        lastArea == null ? "—" : lastArea.toFixed(2) + " mV·ps";
+    }
+
+    function resetLab() {
+      hop = 0;
+      regenerations = 0;
+      lastArea = null;
+      arrived = null;
+      log = [];
+      animating = false;
+      runBtn.disabled = false;
+      resultsTable.innerHTML =
+        '<tr><td colspan="5" class="muted" style="padding: 20px;">Click “Launch pulse”.</td></tr>';
+      updateStats();
+      draw();
+    }
+
+    function appendRow(row) {
+      if (log.length === 1) resultsTable.innerHTML = "";
+      const tr = document.createElement("tr");
+      const stClass = row.status === "OK" ? "ok" : row.status === "DIED" ? "bad" : "muted";
+      tr.innerHTML =
+        "<td>" + row.hop + "</td>" +
+        "<td>" + row.stage + "</td>" +
+        "<td>" + row.action + "</td>" +
+        "<td>" + row.area + "</td>" +
+        "<td class=\"" + stClass + "\">" + row.status + "</td>";
+      resultsTable.appendChild(tr);
+    }
+
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    async function launch() {
+      if (animating) return;
+      const c = config();
+      animating = true;
+      runBtn.disabled = true;
+      hop = 0;
+      regenerations = 0;
+      lastArea = null;
+      arrived = null;
+      log = [];
+      resultsTable.innerHTML = "";
+      updateStats();
+      draw();
+
+      // Enter input
+      hop = 0;
+      lastArea = PHI0;
+      log.push({
+        hop: 0,
+        stage: "IN",
+        action: "inject SFQ pulse",
+        area: PHI0.toFixed(2),
+        status: "OK"
+      });
+      appendRow(log[log.length - 1]);
+      updateStats();
+      draw();
+      await sleep(320);
+
+      for (let s = 1; s <= c.n; s++) {
+        hop = s;
+        if (c.passive) {
+          // Myth: survives only first stage weakly, dies by stage 2
+          if (s >= 2) {
+            lastArea = Math.max(0, PHI0 * Math.pow(0.25, s - 1));
+            arrived = false;
+            log.push({
+              hop: s,
+              stage: "JJ" + s,
+              action: "no regeneration (passive myth)",
+              area: lastArea < 0.05 ? "~0" : lastArea.toFixed(2),
+              status: "DIED"
+            });
+            appendRow(log[log.length - 1]);
+            updateStats();
+            draw();
+            break;
+          }
+          lastArea = PHI0 * 0.45;
+          log.push({
+            hop: s,
+            stage: "JJ" + s,
+            action: "attenuating (not a JTL)",
+            area: lastArea.toFixed(2),
+            status: "WARN"
+          });
+          appendRow(log[log.length - 1]);
+        } else {
+          regenerations += 1;
+          lastArea = PHI0;
+          log.push({
+            hop: s,
+            stage: "JJ" + s,
+            action: "2π slip → remake Φ₀",
+            area: PHI0.toFixed(2),
+            status: "OK"
+          });
+          appendRow(log[log.length - 1]);
+        }
+        updateStats();
+        draw();
+        await sleep(340);
+        if (arrived === false) break;
+      }
+
+      if (arrived !== false) {
+        hop = c.n + 1;
+        arrived = true;
+        lastArea = PHI0;
+        log.push({
+          hop: c.n + 1,
+          stage: "OUT",
+          action: "deliver to next cell",
+          area: PHI0.toFixed(2),
+          status: "OK"
+        });
+        appendRow(log[log.length - 1]);
+        updateStats();
+        draw();
+      }
+
+      animating = false;
+      runBtn.disabled = false;
+    }
+
+    function resizeCanvas() {
+      const dpr = window.devicePixelRatio || 1;
+      const cssW = canvas.clientWidth || 880;
+      const cssH = 200;
+      canvas.width = Math.floor(cssW * dpr);
+      canvas.height = Math.floor(cssH * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w: cssW, h: cssH };
+    }
+
+    function draw() {
+      const { w, h } = resizeCanvas();
+      const c = config();
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const padL = 48;
+      const padR = 48;
+      const usable = w - padL - padR;
+      const nodes = c.n + 2; // IN + stages + OUT
+      const gap = usable / (nodes - 1);
+      const y = h * 0.55;
+
+      function xAt(i) {
+        return padL + i * gap;
+      }
+
+      // Wire / chain
+      ctx.strokeStyle = c.passive ? "rgba(198,40,40,0.35)" : "rgba(64,81,181,0.35)";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(xAt(0), y);
+      ctx.lineTo(xAt(nodes - 1), y);
+      ctx.stroke();
+
+      // Nodes
+      for (let i = 0; i < nodes; i++) {
+        const x = xAt(i);
+        let label, fill, stroke;
+        if (i === 0) {
+          label = "IN";
+          fill = "#fff";
+          stroke = "#4051b5";
+        } else if (i === nodes - 1) {
+          label = "OUT";
+          fill = arrived ? "#e8f5e9" : "#fff";
+          stroke = arrived === false ? "#c62828" : "#4051b5";
+        } else {
+          label = "JJ" + i;
+          fill = "#4051b514";
+          stroke = "#4051b5";
+          if (c.passive) {
+            fill = "#c6282814";
+            stroke = "#c62828";
+          }
+        }
+
+        // Box for JJ stages
+        if (i > 0 && i < nodes - 1) {
+          ctx.fillStyle = fill;
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 1.75;
+          const bw = Math.min(52, gap * 0.55);
+          roundRect(x - bw / 2, y - 22, bw, 44, 5);
+          ctx.fillStyle = stroke;
+          ctx.font = "600 11px Roboto, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(label, x, y + 4);
+          // bias tap hint
+          ctx.strokeStyle = "rgba(0,0,0,0.25)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(x, y - 22);
+          ctx.lineTo(x, y - 38);
+          ctx.stroke();
+          ctx.fillStyle = "rgba(0,0,0,0.45)";
+          ctx.font = "9px Roboto, sans-serif";
+          ctx.fillText("Ib", x, y - 42);
+        } else {
+          ctx.beginPath();
+          ctx.fillStyle = fill;
+          ctx.strokeStyle = stroke;
+          ctx.lineWidth = 2;
+          ctx.arc(x, y, 16, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = "rgba(0,0,0,0.7)";
+          ctx.font = "600 11px Roboto, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText(label, x, y + 32);
+        }
+      }
+
+      // Pulse position
+      if (lastArea != null || hop >= 0) {
+        const idx = Math.min(hop, nodes - 1);
+        const x = xAt(idx);
+        const alive = !(arrived === false && hop >= 2 && c.passive);
+        const strength = c.passive && hop >= 1 ? Math.max(0.2, 1 - hop * 0.35) : 1;
+        if (arrived === false && hop >= 2) {
+          // faded X
+          ctx.strokeStyle = "#c62828";
+          ctx.lineWidth = 3;
+          ctx.beginPath();
+          ctx.moveTo(x - 10, y - 10);
+          ctx.lineTo(x + 10, y + 10);
+          ctx.moveTo(x + 10, y - 10);
+          ctx.lineTo(x - 10, y + 10);
+          ctx.stroke();
+        } else {
+          ctx.beginPath();
+          ctx.fillStyle = alive ? "#4051b5" : "#c62828";
+          ctx.globalAlpha = strength;
+          ctx.arc(x, y, 8, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+          ctx.strokeStyle = ctx.fillStyle;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(x, y - 20);
+          ctx.lineTo(x, y + 5);
+          ctx.stroke();
+        }
+      }
+
+      // Mode badge
+      ctx.font = "12px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillStyle = c.passive ? "#c62828" : "#2e7d32";
+      ctx.fillText(c.passive ? "Myth: passive wire" : "Active JTL (regenerating)", 12, 18);
+    }
+
+    function roundRect(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    [nEl, tauEl].forEach((el) => {
+      el.addEventListener("change", () => {
+        if (!animating) resetLab();
+        else updateStats();
+      });
+      el.addEventListener("input", updateStats);
+    });
+    passiveToggle.addEventListener("change", () => {
+      if (!animating) resetLab();
+    });
+
+    runBtn.addEventListener("click", launch);
+    clearBtn.addEventListener("click", resetLab);
+    window.addEventListener("resize", draw);
+
+    updateStats();
+    draw();
+  </script>
+</body>
+</html>

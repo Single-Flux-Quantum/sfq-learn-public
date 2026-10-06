@@ -30,7 +30,8 @@ extra_css:
   - stylesheets/math.css
 extra_javascript:
   - javascripts/mathjax.js
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js
+  # Self-hosted (same-origin fonts) — avoids blank equations when jsDelivr is blocked/slow
+  - javascripts/vendor/mathjax/tex-chtml.js
 nav:
   - Home: index.md
   - Glossary: glossary.md
