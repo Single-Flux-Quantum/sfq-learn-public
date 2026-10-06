@@ -129,6 +129,20 @@ So: superconductivity is not itself “the logic family.” It is the **physical
 
 The honest slogan is: **superconducting paths remove DC resistive drop; SFQ circuits still engineer thresholds, damping, and timing carefully.**
 
+## Worked example 4 — Only three ideas (reprise before RCSJ)
+
+Before the washboard math, lock this triad (same spirit as the [symbol card](sfq-symbol-card.md)):
+
+| Idea | Symbol | Job |
+|------|--------|-----|
+| Weak link with a current limit | $I_c$ | Push harder than $I_c$ → junction switches |
+| One full turn of the junction’s angle | $2\pi$ slip in $\phi$ | One digital switching event |
+| Conserved pulse size | $\int V\,dt = \Phi_0$ | Area is the token; peak height is secondary |
+
+**Prompt:** A friend remembers only “Josephson junctions are nonlinear inductors.” What do you add?
+
+**Answer:** For digital SFQ entry, add the triad above — then visit [RCSJ](josephson-junction-rcsj.md) (and its [washboard lab](../labs/josephson-junction-rcsj.html)) to see *how* damping decides pulse vs latch.
+
 ## Comparison table — superconductivity myths vs teaching truths
 
 | Catchy myth | Better teaching truth |
@@ -228,6 +242,12 @@ Logic needs controlled switching elements — Josephson junctions (weak links) �
 <summary>7. Room temperature is ~$300\,\text{K}$ and bulk Nb $T_c$ is ~$9\,\text{K}$. What does that gap mean for intuition?</summary>
 
 The same Nb film that superconducts in a helium bath would be an ordinary resistive metal at room temperature; cooling is enabling, not optional decoration.
+</details>
+
+<details>
+<summary>8. State the “only three ideas” triad heading into the Josephson page.</summary>
+
+$I_c$ (switch threshold), $2\pi$ phase slip (one event), $\int V\,dt=\Phi_0$ (token size / pulse area).
 </details>
 
 ## Glossary spot-links

@@ -157,6 +157,9 @@ You will see additional acronyms in papers (reciprocal quantum logic styles, var
 6. **“Family names are marketing only.”**  
    They encode real circuit constraints.
 
+7. **“ERSFQ removes amperes the way serial biasing does.”**  
+   Different axes: resistor static heat vs supply-current stacking. See worked example 3.
+
 ## CMOS contrast
 
 | CMOS “family” talk | Josephson “family” talk |

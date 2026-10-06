@@ -191,16 +191,18 @@ flowchart TD
 | Voltage PDN only | Current bias networks |
 | Room-temp assumption | Cryogenic constraints |
 | All JJ alike | Overdamped vs underdamped roles |
+| “Quantum” because cold / Josephson | Classical SFQ ≠ qubits — [qubits ≠ SFQ](../fundamentals/fields/superconducting-qubits-and-quantum-computing.md) |
 
 ## Bridge to the rest of the curriculum
 
 Use this page as a **bookmarkable decoder ring** while you read:
 
-1. [RSFQ Logic Overview](rsfq-logic.md) — cell map for pulse logic  
+1. [RSFQ Logic Overview](rsfq-logic.md) — cell map for pulse logic · [lab](../labs/rsfq-logic.html)  
 2. [JTL Interconnects](jtl-interconnects.md) — moving pulses  
 3. [Gate-level pipelining](../bridge/gate-level-pipelining.md) — why clocks are everywhere  
 4. [Resistive bias → ERSFQ](../bridge/resistive-bias-to-ersfq.md) — power delivery evolution  
-5. Tracks under [`../tracks/`](../tracks/sfq-logic-primitives/ROADMAP.md) for structured pathways  
+5. [Qubits ≠ SFQ](../fundamentals/fields/superconducting-qubits-and-quantum-computing.md) — when Josephson words mean quantum information instead  
+6. Tracks under [`../tracks/`](../tracks/sfq-logic-primitives/ROADMAP.md) for structured pathways  
 
 Hybrid Josephson–CMOS memory and I/O tracks exist for later; they assume you can already keep the two worlds’ encodings straight.
 

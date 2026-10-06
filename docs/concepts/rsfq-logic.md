@@ -249,6 +249,7 @@ Before calling a block “done” in your head:
 - **“If I memorize cell names I can skip bridges.”** Encoding and pipelining bridges prevent permanent confusion.
 - **“$\Phi_0$ area means Boolean magnitude.”** Area fixes the token size; Boolean meaning is presence/absence in a window.
 - **“Path balancing is optional EDA fluff.”** Epoch match is part of correctness ([path balancing](path-balancing-overhead.md)).
+- **“RSFQ is quantum computing because flux is quantized / Josephson.”** Classical pulse logic. For the QC contrast see [qubits ≠ SFQ](../fundamentals/fields/superconducting-qubits-and-quantum-computing.md).
 
 ## Bridge to SFQ circuits
 
@@ -260,8 +261,7 @@ After this overview, the core walk visits plumbing first (move, copy, merge, sto
 4. [Gate-Level Pipelining](../bridge/gate-level-pipelining.md) (bridge)  
 5. [Resistive Bias to ERSFQ](../bridge/resistive-bias-to-ersfq.md) → [ERSFQ](ersfq-logic.md) → [AQFP](aqfp-logic.md)
 
-Track map: [SFQ Logic Primitives Roadmap](../tracks/sfq-logic-primitives/ROADMAP.md).
-
+Track map: [SFQ Logic Primitives Roadmap](../tracks/sfq-logic-primitives/ROADMAP.md). Neighbor contrast (optional): [qubits ≠ SFQ](../fundamentals/fields/superconducting-qubits-and-quantum-computing.md).
 ## What stays private
 
 Measured clock frequencies, process-specific cell margins, full library schematics tied to one PDK, and paper bake-offs of RSFQ vs ERSFQ vs AQFP **numbers** belong in private paper explainers — not on this public overview.

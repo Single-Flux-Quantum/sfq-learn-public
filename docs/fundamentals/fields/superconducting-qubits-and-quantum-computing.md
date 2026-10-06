@@ -196,6 +196,15 @@ This curriculum will **not** turn into a full quantum computing course. It will:
 - keep teaching classical SFQ deeply, and  
 - treat qubit systems as an important **customer/neighbor** in I/O and systems tracks.
 
+**Keep the contrast handy while learning classical SFQ:**
+
+| If you are reading… | Re-check this page when… |
+|---------------------|--------------------------|
+| [CMOS vs SFQ](../../concepts/cmos-vs-sfq.md) · [lab](../../labs/cmos-vs-sfq.html) | Someone equates “quantum” with “cold Josephson” |
+| [RSFQ overview](../../concepts/rsfq-logic.md) · [lab](../../labs/rsfq-logic.html) | A talk mixes ALU GHz with Grover/Shor vocabulary |
+| [Cryogenics](../cryogenics-for-electronics.md) | ~4 K Nb demos are confused with mK qubit stages |
+| [Pulse → volt I/O](../../bridge/sfq-pulse-to-volt-level.md) | Control/readout wiring is mistaken for “the quantum algorithm” |
+
 If your goal is qubit device physics, use this page as orientation, then seek a dedicated QC curriculum. If your goal is SFQ, continue the field survey and return to [logic families](../sfq-among-logic-families.md).
 
 ## Check yourself
