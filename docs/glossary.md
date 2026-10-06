@@ -1,7 +1,7 @@
 # Glossary (plain English)
 
 **Prereqs:** none  
-**Next:** [How to read SFQ notation](fundamentals/reading-sfq-notation.md) · [Home](index.md)
+**Next:** [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md) · [Home](index.md)
 
 Jump here whenever a word feels fuzzy. Definitions stay public and field-fundamental — not paper-specific results.
 
@@ -9,6 +9,8 @@ Jump here whenever a word feels fuzzy. Definitions stay public and field-fundame
 |------|----------------|
 | **AQFP** | Adiabatic Quantum Flux Parametron — logic family using multiphase AC excitation and adiabatic switching. |
 | **Bias current** | Steady current that holds a Josephson junction near its switching threshold so a small trigger can launch an SFQ pulse. |
+| **Cryogenic** | Cold enough for the device (often ~4 K for Nb SFQ; millikelvin for many qubits) — not automatically “liquid nitrogen cold.” |
+| **Cryo-CMOS** | CMOS electronics operated cold; sibling/hybrid path beside Josephson logic. |
 | **β_C (McCumber)** | Damping parameter. Small → overdamped (pulse); large → underdamped (can latch). |
 | **Clock window / epoch** | Time slot in which the presence or absence of an SFQ pulse means logic 1 or 0. |
 | **Confluence** | Cell that merges pulses from two lines onto one (with timing rules). |
@@ -25,7 +27,9 @@ Jump here whenever a word feels fuzzy. Definitions stay public and field-fundame
 | **Ground island** | Circuit block with its own local ground potential (needed in serial biasing). |
 | **JTL** | Josephson Transmission Line — active chain that regenerates SFQ pulses. |
 | **Josephson junction (JJ)** | Weak link between superconductors; heart of SFQ switching. |
+| **JAWS / Josephson voltage standard** | Metrology uses of Josephson physics for accurate voltages (sibling branch to digital SFQ). |
 | **Latching** | Junction stays at a large voltage until reset (often underdamped I/O). |
+| **Landscape (field)** | Map of sibling disciplines: digital SFQ, SQUID sensing, metrology, detectors, quantum I/O, cryo-CMOS, EDA. |
 | **Overdamped** | Junction emits a short pulse and returns to $V\approx 0$ (RSFQ gates). |
 | **Path balancing** | Equalizing stage counts on reconvergent paths so pulses share an epoch. |
 | **Phase $\phi$** | Superconducting phase difference across a junction; a $2\pi$ slip ↔ one $\Phi_0$. |
@@ -34,6 +38,7 @@ Jump here whenever a word feels fuzzy. Definitions stay public and field-fundame
 | **RSFQ** | Rapid Single Flux Quantum — pulse-based superconducting digital logic family. |
 | **Serial biasing / current recycling** | Reusing one bias current through series-stacked ground islands. |
 | **SFQ pulse** | Picosecond voltage spike with area $\int V\,dt = \Phi_0$. |
+| **SNSPD / SSPD** | Superconducting nanowire (single-photon) detector — sibling branch often needing cryogenic readout. |
 | **Splitter** | Cell that copies one SFQ pulse onto two outputs (fanout). |
 | **SQUID** | Superconducting Quantum Interference Device — loop with junctions; flux sensor / building block. |
 | **SQUID stack** | Series SQUID stages that add voltage for interface drive. |

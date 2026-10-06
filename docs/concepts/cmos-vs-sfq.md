@@ -1,6 +1,6 @@
 # CMOS vs SFQ Cheat Sheet
 
-**Prereqs:** [Pulse to Logic State](../bridge/pulse-to-logic-state.md)  
+**Prereqs:** Full depth — [Pulse to Logic State](../bridge/pulse-to-logic-state.md). Preview anytime from [Why superconducting electronics?](../fundamentals/why-superconducting-electronics.md).  
 **Next:** [RSFQ Logic Overview](rsfq-logic.md) · [Curriculum Index](../index.md)
 
 **Learning goals.** After this page you should be able to (1) translate common CMOS digital intuitions into SFQ pulse/loop language, (2) use the comparison tables as a quick reference while reading later concept cards, (3) spot false analogies that cause design mistakes, and (4) know which follow-on pages deepen each row of the cheat sheet.

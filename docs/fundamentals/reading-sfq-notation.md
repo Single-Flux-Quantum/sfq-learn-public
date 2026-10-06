@@ -1,6 +1,6 @@
 # How to Read SFQ Notation
 
-**Prereqs:** none  
+**Prereqs:** [Cryogenics for electronics](cryogenics-for-electronics.md) (orientation path) · or jump here if you only need symbols  
 **Next:** [Superconductivity Intuition](superconductivity-intuition.md)
 
 **Learning goals.** By the end of this page you should be able to (1) recognize the five symbols that appear on almost every SFQ whiteboard sketch ($\Phi_0$, $I_c$, $\phi$, $\beta_C$, $\int V\,dt$), (2) read ASCII and Mermaid pulse drawings without mistaking shape for meaning, (3) interpret a **clock window** as a timing slot rather than a CMOS voltage rail, and (4) translate a short “pulse present / absent” story into the language you will meet on later fundamentals pages.

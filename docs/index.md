@@ -1,13 +1,13 @@
 # SFQ Learning — Home
 
 **Prereqs:** none (curriculum entry)  
-**Next:** [How to read SFQ notation](fundamentals/reading-sfq-notation.md) · [Fundamentals list](#1-fundamentals)
+**Next:** [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md) · [Fundamentals list](#1-fundamentals)
 
-A guided path from **fundamentals** through **bridge** pages and **concept** cards into curated **tracks**. Written so newcomers can follow with patience — no prior superconductivity course assumed.
+A guided path from **field orientation** through **device fundamentals**, **bridge** pages, and **concept** cards into curated **tracks**. Written so newcomers can follow with patience — no prior superconductivity course assumed.
 
 **Lookup:** [Glossary (plain English)](glossary.md) — jump here whenever a word feels fuzzy.  
 **Paper map:** [Browse indexed papers](paper-map.md) — titles and publisher links from the lab corpus.  
-**CMOS contrast:** [CMOS vs SFQ cheat-sheet](concepts/cmos-vs-sfq.md).
+**CMOS contrast:** [CMOS vs SFQ cheat-sheet](concepts/cmos-vs-sfq.md) (preview anytime; deepest after pulse/flux bridges).
 
 More pages and more wording are **intentional**. Prefer clarity over compression.
 
@@ -15,22 +15,33 @@ More pages and more wording are **intentional**. Prefer clarity over compression
 
 | You are… | Start at |
 |----------|----------|
-| New to superconductivity or the symbols | [Fundamentals](#1-fundamentals) (start with [reading SFQ notation](fundamentals/reading-sfq-notation.md) if $\Phi_0$ / $I_c$ feel scary) |
+| Brand new — want motivation before math | [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md) then the orientation block below |
+| Coming from CMOS digital design | [Why…](fundamentals/why-superconducting-electronics.md) + preview [CMOS vs SFQ](concepts/cmos-vs-sfq.md), then orientation → notation |
+| Ready for symbols / device physics | [Reading SFQ notation](fundamentals/reading-sfq-notation.md) |
 | Finished fundamentals but cells feel sudden | [Bridge](#2-bridge-close-the-gap) |
 | Comfortable with pulse / flux intuition | [Concepts](#3-concepts) |
 | Ready for a guided path | [Tracks](#4-tracks) |
-| Coming from CMOS digital design | [CMOS vs SFQ](concepts/cmos-vs-sfq.md) then [Bridge](#2-bridge-close-the-gap) |
 
 ## 1. Fundamentals
 
-Build device intuition slowly. **No rush.**
+Build context first, then device intuition. **No rush.**
 
-1. [How to read SFQ notation](fundamentals/reading-sfq-notation.md) — start here if symbols or pulse sketches feel scary  
-2. [Superconductivity intuition](fundamentals/superconductivity-intuition.md)  
-3. [Josephson junction (RCSJ)](fundamentals/josephson-junction-rcsj.md)  
-4. [Flux quantization](fundamentals/flux-quantization.md)  
-5. [Superconducting loop / SQUID](fundamentals/superconducting-loop-squid.md)  
-6. [Overdamped vs underdamped JJ](fundamentals/overdamped-vs-underdamped-jj.md)  
+### Orientation (before SFQ symbols)
+
+1. [Why superconducting electronics?](fundamentals/why-superconducting-electronics.md) — motivation, costs, niches  
+2. [History of superconducting electronics](fundamentals/history-of-superconducting-electronics.md) — latching → RSFQ → efficiency / systems  
+3. [Superconducting electronics landscape](fundamentals/superconducting-electronics-landscape.md) — SFQ plus sensors, metrology, detectors, quantum I/O, cryo-CMOS  
+4. [Where SFQ sits among logic families](fundamentals/sfq-among-logic-families.md) — RSFQ / ERSFQ / AQFP / latching  
+5. [Cryogenics for electronics](fundamentals/cryogenics-for-electronics.md) — ~4 K vs mK, system taxes  
+
+### Device path (core walk)
+
+6. [How to read SFQ notation](fundamentals/reading-sfq-notation.md) — symbols and pulse sketches  
+7. [Superconductivity intuition](fundamentals/superconductivity-intuition.md)  
+8. [Josephson junction (RCSJ)](fundamentals/josephson-junction-rcsj.md)  
+9. [Flux quantization](fundamentals/flux-quantization.md)  
+10. [Superconducting loop / SQUID](fundamentals/superconducting-loop-squid.md)  
+11. [Overdamped vs underdamped JJ](fundamentals/overdamped-vs-underdamped-jj.md)  
 
 ## 2. Bridge (close the gap)
 
