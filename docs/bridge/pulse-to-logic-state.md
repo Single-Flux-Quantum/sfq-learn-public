@@ -59,8 +59,8 @@ RSFQ data lines do not park at a millivolt “high.” After a pulse passes, vol
 
 ```text
 Clock windows:     |   T1   |   T2   |   T3   |   T4   |
-Data pulses:           ★               ★
-Encoding:              1        0      1        0
+Data pulses:           ★                 ★
+Encoding:              1        0        1        0
 
 Same physical pulse shape each time — meaning is "present in window?"
 ```
