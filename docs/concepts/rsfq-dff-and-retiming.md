@@ -86,6 +86,20 @@ sequenceDiagram
   end
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/rsfq-dff-and-retiming.html).
+
+1. **Inject data** → loop goes FULL (circulating Φ₀). Notice OUT stays quiet while holding.
+2. **Fire clock** → OUT pulse + loop clears (destructive readout). Clock an empty loop → no OUT.
+
+<iframe
+  src="../../labs/rsfq-dff-and-retiming.html"
+  title="RSFQ DFF lab"
+  style="width:100%;height:780px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Retiming and path balancing — why DFFs dominate layouts
 
 Because meaning is tied to **epochs**, two inputs to a gate must present related pulses in the **same** window. If one path is shorter in clocked-stage count, insert **padding DFFs** on the short path:

@@ -77,8 +77,8 @@ SFQ vocabulary cards. Best after the matching bridge pages.
 
 - [RSFQ overview](concepts/rsfq-logic.md)  
 - [JTL interconnects](concepts/jtl-interconnects.md) · [lab](labs/jtl-interconnects.html)  
-- [Splitter and confluence](concepts/splitter-and-confluence.md)  
-- [RSFQ DFF and retiming](concepts/rsfq-dff-and-retiming.md)  
+- [Splitter and confluence](concepts/splitter-and-confluence.md) · [lab](labs/splitter-and-confluence.html)  
+- [RSFQ DFF and retiming](concepts/rsfq-dff-and-retiming.md) · [lab](labs/rsfq-dff-and-retiming.html)  
 - [ERSFQ logic](concepts/ersfq-logic.md)  
 - [AQFP logic](concepts/aqfp-logic.md)  
 - [CMOS vs SFQ](concepts/cmos-vs-sfq.md)  

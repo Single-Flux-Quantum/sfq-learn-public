@@ -78,6 +78,20 @@ sequenceDiagram
   Note over A,B: delays may differ → skew
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/splitter-and-confluence.html).
+
+1. **Splitter tab:** fire a pulse; raise **extra delay on branch B** and watch leaf skew grow. Check how $N$ leaves set tree depth $\lceil\log_2 N\rceil$ and $N-1$ splitters.
+2. **Confluence tab:** set arrival offset, then launch. Large stagger → merge OK; nearly simultaneous → hazard (pedagogical window, not a PDK number).
+
+<iframe
+  src="../../labs/splitter-and-confluence.html"
+  title="Splitter and confluence lab"
+  style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Splitter trees — depth, delay, skew
 
 For fanout-2 splitters, reaching $N$ leaves needs tree depth at least

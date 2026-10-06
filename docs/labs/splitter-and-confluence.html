@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Splitter & Confluence Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+      --a: #4051b5;
+      --b: #ef6c00;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .tabs {
+      display: flex;
+      gap: 0.35rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .tabs button {
+      flex: 1;
+      border: 1px solid var(--border);
+      background: var(--code-bg);
+      color: var(--md-primary);
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .tabs button.active {
+      background: #4051b51a;
+      border-color: var(--md-primary);
+      font-weight: 700;
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .field input[type="range"] {
+      width: 160px;
+      accent-color: var(--md-primary);
+    }
+
+    .field .val {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-left: 0.35rem;
+    }
+
+    button.primary {
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      background: var(--md-primary);
+      color: #fff;
+      box-shadow: 0 1px 2px #00000024;
+    }
+
+    button.primary:hover { background: var(--md-primary-light); }
+    button.primary:disabled { opacity: 0.55; cursor: wait; }
+
+    button.ghost {
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      background: transparent;
+      color: var(--md-primary);
+    }
+
+    button.ghost:hover { background: var(--code-bg); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.55rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.6rem 0.45rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .stat-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.85rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.4rem 0.7rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 210px;
+      background: #fff;
+    }
+
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+
+    .hint {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+
+    .tree-note {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin: 0 0 0.75rem;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Splitter &amp; Confluence Lab</h1>
+    <p class="lede">
+      <strong>Splitter:</strong> one SFQ pulse → two clean copies (fanout is not free).
+      <strong>Confluence:</strong> two on-ramps → one lane; staggered arrivals OK, nearly simultaneous → hazard.
+    </p>
+
+    <div class="tabs">
+      <button type="button" class="active" data-tab="split">1 · Splitter + skew</button>
+      <button type="button" data-tab="merge">2 · Confluence hazard</button>
+    </div>
+
+    <!-- SPLITTER PANEL -->
+    <div class="panel active" id="panel-split">
+      <div class="controls">
+        <div class="field">
+          <label for="skewSlider">Extra delay on branch B (skew)</label>
+          <input type="range" id="skewSlider" min="0" max="8" step="1" value="0">
+          <span class="val" id="skewLabel">0·τ</span>
+        </div>
+        <div class="field">
+          <label for="leavesN">Target leaves N (tree depth)</label>
+          <input type="range" id="leavesN" min="2" max="16" step="1" value="8">
+          <span class="val" id="leavesLabel">8</span>
+        </div>
+        <button type="button" class="primary" id="splitBtn">Fire into splitter</button>
+        <button type="button" class="ghost" id="splitReset">Reset</button>
+      </div>
+      <p class="tree-note" id="treeNote">d ≥ ⌈log₂ 8⌉ = 3 · full binary tree uses N−1 = 7 splitters</p>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Copies out</div>
+          <div class="stat-value" id="statCopies">0</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Skew |tA−tB|</div>
+          <div class="stat-value" id="statSkew">0·τ</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Tree depth</div>
+          <div class="stat-value" id="statDepth">3</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Splitters (N−1)</div>
+          <div class="stat-value" id="statSplitters">7</div>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <div class="canvas-label">One in → two out; unmatched B delay = leaf skew</div>
+        <canvas id="splitCanvas" width="880" height="210"></canvas>
+      </div>
+      <p class="hint">
+        <strong>Match branches</strong> (skew → 0) for clocks. Depth formula counts splitter levels; JTL stubs are extra.
+      </p>
+    </div>
+
+    <!-- CONFLUENCE PANEL -->
+    <div class="panel" id="panel-merge">
+      <div class="controls">
+        <div class="field">
+          <label for="offsetSlider">Arrival offset B − A (·τ)</label>
+          <input type="range" id="offsetSlider" min="-6" max="6" step="1" value="3">
+          <span class="val" id="offsetLabel">+3·τ</span>
+        </div>
+        <button type="button" class="primary" id="mergeBtn">Launch A &amp; B</button>
+        <button type="button" class="ghost" id="mergeReset">Reset</button>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">|offset|</div>
+          <div class="stat-value" id="statOffset">3·τ</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Safe window</div>
+          <div class="stat-value">≥ 2·τ</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Merge result</div>
+          <div class="stat-value" id="statMerge">—</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Rule</div>
+          <div class="stat-value" id="statRule">stagger</div>
+        </div>
+      </div>
+      <div class="canvas-wrap">
+        <div class="canvas-label">Two on-ramps → one highway — cartoon hazard window (illustrative)</div>
+        <canvas id="mergeCanvas" width="880" height="210"></canvas>
+      </div>
+      <p class="hint">
+        <strong>Public rule:</strong> exclusivity or separation first; confluence second — not a CMOS wired-OR.
+        Hazard window here is pedagogical (±1·τ), not a PDK number.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const HAZARD = 1; // |offset| <= HAZARD → collision cartoon
+
+    // Tabs
+    document.querySelectorAll(".tabs button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("panel-" + btn.dataset.tab).classList.add("active");
+        if (btn.dataset.tab === "split") drawSplit(1);
+        else drawMerge(1);
+      });
+    });
+
+    // ——— Splitter ———
+    const skewSlider = document.getElementById("skewSlider");
+    const leavesN = document.getElementById("leavesN");
+    const skewLabel = document.getElementById("skewLabel");
+    const leavesLabel = document.getElementById("leavesLabel");
+    const splitBtn = document.getElementById("splitBtn");
+    const splitCanvas = document.getElementById("splitCanvas");
+    const splitCtx = splitCanvas.getContext("2d");
+
+    let splitProg = 1;
+    let splitCopies = 0;
+    let splitting = false;
+
+    function treeStats() {
+      const N = Number(leavesN.value);
+      const d = Math.ceil(Math.log2(N));
+      document.getElementById("treeNote").textContent =
+        "d ≥ ⌈log₂ " + N + "⌉ = " + d + " · full binary tree uses N−1 = " + (N - 1) + " splitters";
+      document.getElementById("statDepth").textContent = String(d);
+      document.getElementById("statSplitters").textContent = String(N - 1);
+      leavesLabel.textContent = String(N);
+      const sk = Number(skewSlider.value);
+      skewLabel.textContent = sk + "·τ";
+      document.getElementById("statSkew").textContent = sk + "·τ";
+    }
+
+    function resize(canvas, ctx, hCss) {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = hCss || 210;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function drawSplit(p) {
+      const { w, h } = resize(splitCanvas, splitCtx);
+      const ctx = splitCtx;
+      const skew = Number(skewSlider.value);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const xIn = 70;
+      const xSp = 220;
+      const xOut = w - 80;
+      const ySp = h / 2;
+      const yA = h * 0.28;
+      const yB = h * 0.72;
+
+      // wires
+      ctx.strokeStyle = "rgba(64,81,181,0.35)";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(xIn, ySp);
+      ctx.lineTo(xSp, ySp);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(xSp, ySp);
+      ctx.lineTo(xOut, yA);
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(239,108,0,0.45)";
+      ctx.beginPath();
+      ctx.moveTo(xSp, ySp);
+      ctx.lineTo(xOut, yB);
+      ctx.stroke();
+
+      // nodes
+      node(ctx, xIn, ySp, "IN", "#4051b5");
+      box(ctx, xSp - 36, ySp - 22, 72, 44, "SPLIT", "#4051b5");
+      node(ctx, xOut, yA, "outA", "#4051b5");
+      node(ctx, xOut, yB, "outB", "#ef6c00");
+
+      // pulse progress 0..1 along paths
+      if (p < 1 || splitCopies > 0) {
+        const t = Math.min(1, p);
+        // into splitter
+        if (t < 0.35) {
+          const u = t / 0.35;
+          pulse(ctx, lerp(xIn, xSp, u), ySp, "#4051b5");
+        } else {
+          const u = (t - 0.35) / 0.65;
+          // A arrives at u=1
+          pulse(ctx, lerp(xSp, xOut, Math.min(1, u)), lerp(ySp, yA, Math.min(1, u)), "#4051b5");
+          // B delayed by skew fraction
+          const delayFrac = skew / 12; // visual
+          const uB = Math.max(0, (u - delayFrac) / Math.max(0.01, 1 - delayFrac));
+          if (u > delayFrac) {
+            pulse(ctx, lerp(xSp, xOut, Math.min(1, uB)), lerp(ySp, yB, Math.min(1, uB)), "#ef6c00");
+          }
+        }
+      }
+
+      ctx.fillStyle = "rgba(0,0,0,0.5)";
+      ctx.font = "12px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Branch A", xSp + 50, yA - 8);
+      ctx.fillText("Branch B (+" + skew + "·τ)", xSp + 50, yB + 20);
+    }
+
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    async function fireSplit() {
+      if (splitting) return;
+      splitting = true;
+      splitBtn.disabled = true;
+      splitCopies = 0;
+      document.getElementById("statCopies").textContent = "0";
+      const frames = 36;
+      for (let i = 0; i <= frames; i++) {
+        splitProg = i / frames;
+        drawSplit(splitProg);
+        await sleep(28);
+      }
+      splitCopies = 2;
+      document.getElementById("statCopies").textContent = "2";
+      splitting = false;
+      splitBtn.disabled = false;
+    }
+
+    skewSlider.addEventListener("input", () => {
+      treeStats();
+      drawSplit(splitProg);
+    });
+    leavesN.addEventListener("input", treeStats);
+    splitBtn.addEventListener("click", fireSplit);
+    document.getElementById("splitReset").addEventListener("click", () => {
+      splitProg = 1;
+      splitCopies = 0;
+      document.getElementById("statCopies").textContent = "0";
+      skewSlider.value = "0";
+      treeStats();
+      drawSplit(1);
+    });
+
+    // ——— Confluence ———
+    const offsetSlider = document.getElementById("offsetSlider");
+    const offsetLabel = document.getElementById("offsetLabel");
+    const mergeBtn = document.getElementById("mergeBtn");
+    const mergeCanvas = document.getElementById("mergeCanvas");
+    const mergeCtx = mergeCanvas.getContext("2d");
+
+    let mergeProg = 1;
+    let merging = false;
+    let mergeResult = null;
+
+    function syncOffset() {
+      const o = Number(offsetSlider.value);
+      offsetLabel.textContent = (o >= 0 ? "+" : "") + o + "·τ";
+      document.getElementById("statOffset").textContent = Math.abs(o) + "·τ";
+      const safe = Math.abs(o) > HAZARD;
+      document.getElementById("statRule").textContent = safe ? "stagger OK" : "too close";
+      document.getElementById("statRule").className = "stat-value " + (safe ? "ok" : "bad");
+    }
+
+    function drawMerge(p) {
+      const { w, h } = resize(mergeCanvas, mergeCtx);
+      const ctx = mergeCtx;
+      const offset = Number(offsetSlider.value);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const xA = 70;
+      const xB = 70;
+      const xC = w * 0.45;
+      const xOut = w - 70;
+      const yA = h * 0.3;
+      const yB = h * 0.7;
+      const yC = h / 2;
+
+      ctx.strokeStyle = "rgba(64,81,181,0.35)";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(xA, yA);
+      ctx.lineTo(xC, yC);
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(239,108,0,0.45)";
+      ctx.beginPath();
+      ctx.moveTo(xB, yB);
+      ctx.lineTo(xC, yC);
+      ctx.stroke();
+      ctx.strokeStyle = mergeResult === "HAZARD" ? "rgba(198,40,40,0.5)" : "rgba(46,125,50,0.4)";
+      ctx.beginPath();
+      ctx.moveTo(xC, yC);
+      ctx.lineTo(xOut, yC);
+      ctx.stroke();
+
+      // hazard band visual near confluence
+      if (Math.abs(offset) <= HAZARD) {
+        ctx.fillStyle = "rgba(198,40,40,0.08)";
+        ctx.fillRect(xC - 40, yC - 40, 80, 80);
+      }
+
+      node(ctx, xA, yA, "inA", "#4051b5");
+      node(ctx, xB, yB, "inB", "#ef6c00");
+      box(ctx, xC - 40, yC - 22, 80, 44, "CONF", mergeResult === "HAZARD" ? "#c62828" : "#4051b5");
+      node(ctx, xOut, yC, "out", mergeResult === "OK" ? "#2e7d32" : mergeResult === "HAZARD" ? "#c62828" : "#4051b5");
+
+      const t = Math.min(1, p);
+      // A path progress
+      const delayA = offset > 0 ? 0 : Math.abs(offset) / 10;
+      const delayB = offset < 0 ? 0 : Math.abs(offset) / 10;
+      const uA = Math.max(0, (t - delayA) / Math.max(0.01, 1 - delayA));
+      const uB = Math.max(0, (t - delayB) / Math.max(0.01, 1 - delayB));
+
+      if (uA > 0 && uA < 1) {
+        pulse(ctx, lerp(xA, xC, uA), lerp(yA, yC, uA), "#4051b5");
+      } else if (uA >= 1 && mergeResult !== "HAZARD") {
+        pulse(ctx, lerp(xC, xOut, Math.min(1, (uA - 1) * 2 + 0.15)), yC, "#4051b5");
+      }
+
+      if (uB > 0 && uB < 1) {
+        pulse(ctx, lerp(xB, xC, uB), lerp(yB, yC, uB), "#ef6c00");
+      }
+
+      if (mergeResult === "HAZARD" && t > 0.55) {
+        ctx.strokeStyle = "#c62828";
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(xC - 12, yC - 12);
+        ctx.lineTo(xC + 12, yC + 12);
+        ctx.moveTo(xC + 12, yC - 12);
+        ctx.lineTo(xC - 12, yC + 12);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = "rgba(0,0,0,0.5)";
+      ctx.font = "12px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("offset = " + (offset >= 0 ? "+" : "") + offset + "·τ", 12, 20);
+    }
+
+    async function fireMerge() {
+      if (merging) return;
+      merging = true;
+      mergeBtn.disabled = true;
+      const offset = Number(offsetSlider.value);
+      mergeResult = Math.abs(offset) <= HAZARD ? "HAZARD" : "OK";
+      const el = document.getElementById("statMerge");
+      el.textContent = mergeResult === "OK" ? "OK" : "HAZARD";
+      el.className = "stat-value " + (mergeResult === "OK" ? "ok" : "bad");
+      syncOffset();
+
+      const frames = 40;
+      for (let i = 0; i <= frames; i++) {
+        mergeProg = i / frames;
+        drawMerge(mergeProg);
+        await sleep(30);
+      }
+      merging = false;
+      mergeBtn.disabled = false;
+    }
+
+    offsetSlider.addEventListener("input", () => {
+      syncOffset();
+      mergeResult = null;
+      document.getElementById("statMerge").textContent = "—";
+      document.getElementById("statMerge").className = "stat-value";
+      drawMerge(1);
+    });
+    mergeBtn.addEventListener("click", fireMerge);
+    document.getElementById("mergeReset").addEventListener("click", () => {
+      offsetSlider.value = "3";
+      mergeResult = null;
+      mergeProg = 1;
+      document.getElementById("statMerge").textContent = "—";
+      document.getElementById("statMerge").className = "stat-value";
+      syncOffset();
+      drawMerge(1);
+    });
+
+    // draw helpers
+    function lerp(a, b, t) {
+      return a + (b - a) * t;
+    }
+
+    function node(ctx, x, y, label, color) {
+      ctx.beginPath();
+      ctx.fillStyle = "#fff";
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.arc(x, y, 14, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "rgba(0,0,0,0.7)";
+      ctx.font = "600 11px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(label, x, y + 28);
+    }
+
+    function box(ctx, x, y, w, h, label, color) {
+      ctx.fillStyle = color + "14";
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.75;
+      ctx.beginPath();
+      ctx.roundRect(x, y, w, h, 5);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = color;
+      ctx.font = "700 11px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(label, x + w / 2, y + h / 2 + 4);
+    }
+
+    function pulse(ctx, x, y, color) {
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.arc(x, y, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x, y - 16);
+      ctx.lineTo(x, y + 4);
+      ctx.stroke();
+    }
+
+    // polyfill roundRect if needed
+    if (!CanvasRenderingContext2D.prototype.roundRect) {
+      CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+        const rr = typeof r === "number" ? r : 4;
+        this.moveTo(x + rr, y);
+        this.arcTo(x + w, y, x + w, y + h, rr);
+        this.arcTo(x + w, y + h, x, y + h, rr);
+        this.arcTo(x, y + h, x, y, rr);
+        this.arcTo(x, y, x + w, y, rr);
+        this.closePath();
+      };
+    }
+
+    window.addEventListener("resize", () => {
+      drawSplit(splitProg);
+      drawMerge(mergeProg);
+    });
+
+    treeStats();
+    syncOffset();
+    drawSplit(1);
+    drawMerge(1);
+  </script>
+</body>
+</html>

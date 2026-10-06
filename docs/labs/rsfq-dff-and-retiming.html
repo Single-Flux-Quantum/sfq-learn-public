@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSFQ DFF Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+      --data: #4051b5;
+      --clk: #7b1fa2;
+      --out: #2e7d32;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 1rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: center;
+      margin-bottom: 0.85rem;
+    }
+
+    button {
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    #dataBtn { background: var(--data); color: #fff; }
+    #dataBtn:hover { filter: brightness(1.08); }
+    #clkBtn { background: var(--clk); color: #fff; }
+    #clkBtn:hover { filter: brightness(1.08); }
+    #clearBtn {
+      background: transparent;
+      color: var(--md-primary);
+      border: 1px solid var(--border);
+    }
+    #clearBtn:hover { background: var(--code-bg); }
+    button:disabled { opacity: 0.5; cursor: wait; }
+
+    .state-pill {
+      margin-left: auto;
+      font-weight: 700;
+      font-size: 0.9rem;
+      padding: 0.4rem 0.85rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--border);
+      background: var(--code-bg);
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .state-pill.full { color: var(--ok); background: #e8f5e9; border-color: #a5d6a7; }
+    .state-pill.empty { color: var(--muted); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.55rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.55rem 0.4rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.85rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.4rem 0.7rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 200px;
+      background: #fff;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      padding: 0.5rem 0.35rem;
+      font-weight: 500;
+      color: var(--muted);
+      background: var(--code-bg);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 0.45rem 0.35rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ok { color: var(--ok); font-weight: 700; }
+    .bad { color: var(--bad); font-weight: 700; }
+    .muted { color: var(--muted); }
+    .warn { color: var(--warn); font-weight: 600; }
+
+    .hint {
+      margin-top: 0.85rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>RSFQ DFF Lab</h1>
+    <p class="lede">
+      <strong>Capture</strong> a data pulse into the storage loop (circulating Φ₀ = “1”).
+      <strong>Hold</strong> — the output pin is <em>not</em> a CMOS high; the bit lives in the loop.
+      <strong>Clock</strong> reads: full → output pulse + clear (destructive); empty → silence.
+    </p>
+
+    <div class="controls">
+      <button type="button" id="dataBtn">Inject data pulse</button>
+      <button type="button" id="clkBtn">Fire clock</button>
+      <button type="button" id="clearBtn">Reset</button>
+      <div class="state-pill empty" id="statePill">EMPTY (0)</div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Loop</div>
+        <div class="stat-value" id="statLoop">empty</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Data in</div>
+        <div class="stat-value" id="statData">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Clocks</div>
+        <div class="stat-value" id="statClk">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Out pulses</div>
+        <div class="stat-value" id="statOut">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Last event</div>
+        <div class="stat-value" id="statLast" style="font-size:0.85rem;">—</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">DATA → storage loop ← CLOCK · OUT speaks only at readout</div>
+      <canvas id="dffCanvas" width="880" height="200"></canvas>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Action</th>
+            <th>Before</th>
+            <th>After</th>
+            <th>OUT pulse?</th>
+            <th>Note</th>
+          </tr>
+        </thead>
+        <tbody id="resultsTable">
+          <tr>
+            <td colspan="6" class="muted" style="padding: 18px;">
+              Inject data (fill), then fire clock (emit + clear). Or clock an empty loop (no OUT).
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="hint">
+      <strong>Destructive readout</strong> is the default teaching model (NDRO exists later as vocabulary).
+      A second data pulse into an already-full loop is a library-dependent hazard — flagged here as WARN.
+      DFF pads for path balancing still need clock-tree leaves.
+    </p>
+  </div>
+
+  <script>
+    const dataBtn = document.getElementById("dataBtn");
+    const clkBtn = document.getElementById("clkBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const statePill = document.getElementById("statePill");
+    const resultsTable = document.getElementById("resultsTable");
+    const canvas = document.getElementById("dffCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let full = false;
+    let dataCount = 0;
+    let clkCount = 0;
+    let outCount = 0;
+    let step = 0;
+    let log = [];
+    let animating = false;
+    let animKind = null; // 'data' | 'clk-out' | 'clk-empty' | null
+    let animT = 1;
+    let spin = 0;
+
+    function setBusy(b) {
+      animating = b;
+      dataBtn.disabled = b;
+      clkBtn.disabled = b;
+    }
+
+    function updateUI(last) {
+      statePill.textContent = full ? "FULL (1)" : "EMPTY (0)";
+      statePill.className = "state-pill " + (full ? "full" : "empty");
+      document.getElementById("statLoop").textContent = full ? "Φ₀ stored" : "empty";
+      document.getElementById("statData").textContent = String(dataCount);
+      document.getElementById("statClk").textContent = String(clkCount);
+      document.getElementById("statOut").textContent = String(outCount);
+      document.getElementById("statLast").textContent = last || "—";
+    }
+
+    function appendRow(row) {
+      if (log.length === 1) resultsTable.innerHTML = "";
+      const tr = document.createElement("tr");
+      const outClass = row.out === "YES" ? "ok" : row.out === "—" ? "muted" : "muted";
+      const noteClass = row.note.includes("WARN") ? "warn" : row.note.includes("hazard") ? "warn" : "";
+      tr.innerHTML =
+        "<td>" + row.id + "</td>" +
+        "<td>" + row.action + "</td>" +
+        "<td>" + row.before + "</td>" +
+        "<td>" + row.after + "</td>" +
+        "<td class=\"" + outClass + "\">" + row.out + "</td>" +
+        "<td class=\"" + noteClass + "\">" + row.note + "</td>";
+      resultsTable.prepend(tr);
+    }
+
+    function record(action, before, after, out, note) {
+      step += 1;
+      const row = { id: step, action, before, after, out, note };
+      log.push(row);
+      appendRow(row);
+      updateUI(action);
+    }
+
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    async function injectData() {
+      if (animating) return;
+      setBusy(true);
+      const before = full ? "full" : "empty";
+      animKind = "data";
+      for (let i = 0; i <= 20; i++) {
+        animT = i / 20;
+        draw();
+        await sleep(22);
+      }
+      dataCount += 1;
+      if (full) {
+        record("DATA", before, "full", "—", "WARN: already full (hazard)");
+      } else {
+        full = true;
+        record("DATA", before, "full", "—", "capture Φ₀");
+      }
+      animKind = null;
+      animT = 1;
+      setBusy(false);
+      draw();
+    }
+
+    async function fireClock() {
+      if (animating) return;
+      setBusy(true);
+      const before = full ? "full" : "empty";
+      clkCount += 1;
+      if (full) {
+        animKind = "clk-out";
+        for (let i = 0; i <= 24; i++) {
+          animT = i / 24;
+          draw();
+          await sleep(22);
+        }
+        full = false;
+        outCount += 1;
+        record("CLOCK", before, "empty", "YES", "destructive readout");
+      } else {
+        animKind = "clk-empty";
+        for (let i = 0; i <= 18; i++) {
+          animT = i / 18;
+          draw();
+          await sleep(20);
+        }
+        record("CLOCK", before, "empty", "NO", "empty → silence");
+      }
+      animKind = null;
+      animT = 1;
+      setBusy(false);
+      draw();
+    }
+
+    function resetLab() {
+      full = false;
+      dataCount = 0;
+      clkCount = 0;
+      outCount = 0;
+      step = 0;
+      log = [];
+      animKind = null;
+      animT = 1;
+      resultsTable.innerHTML =
+        '<tr><td colspan="6" class="muted" style="padding: 18px;">Inject data, then fire clock.</td></tr>';
+      updateUI("—");
+      draw();
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = 200;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function draw() {
+      const { w, h } = resize();
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const xData = 70;
+      const xLoop = w * 0.42;
+      const xOut = w - 70;
+      const xClk = xLoop;
+      const yMain = h * 0.48;
+      const yClk = h * 0.88;
+
+      // wires
+      ctx.strokeStyle = "rgba(64,81,181,0.35)";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(xData, yMain);
+      ctx.lineTo(xLoop - 55, yMain);
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(46,125,50,0.4)";
+      ctx.beginPath();
+      ctx.moveTo(xLoop + 55, yMain);
+      ctx.lineTo(xOut, yMain);
+      ctx.stroke();
+      ctx.strokeStyle = "rgba(123,31,162,0.4)";
+      ctx.beginPath();
+      ctx.moveTo(xClk, yClk);
+      ctx.lineTo(xClk, yMain + 55);
+      ctx.stroke();
+
+      // storage loop
+      const R = 48;
+      ctx.beginPath();
+      ctx.strokeStyle = full ? "#2e7d32" : "rgba(0,0,0,0.25)";
+      ctx.lineWidth = full ? 3.5 : 2.5;
+      ctx.arc(xLoop, yMain, R, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = full ? "#e8f5e9" : "#f5f5f5";
+      ctx.beginPath();
+      ctx.arc(xLoop, yMain, R - 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "rgba(0,0,0,0.65)";
+      ctx.font = "700 12px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("storage loop", xLoop, yMain - R - 10);
+      ctx.font = "600 13px Roboto Mono, monospace";
+      ctx.fillStyle = full ? "#2e7d32" : "rgba(0,0,0,0.45)";
+      ctx.fillText(full ? "Φ₀" : "∅", xLoop, yMain + 5);
+
+      // circulating marker when full
+      if (full) {
+        spin += 0.08;
+        const a = spin;
+        const px = xLoop + Math.cos(a) * (R - 14);
+        const py = yMain + Math.sin(a) * (R - 14);
+        ctx.beginPath();
+        ctx.fillStyle = "#4051b5";
+        ctx.arc(px, py, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // pins
+      pin(xData, yMain, "DATA", "#4051b5");
+      pin(xOut, yMain, "OUT", "#2e7d32");
+      pin(xClk, yClk, "CLK", "#7b1fa2");
+
+      // animations
+      if (animKind === "data") {
+        const t = animT;
+        const x = xData + (xLoop - 55 - xData) * t;
+        pulse(x, yMain, "#4051b5");
+      }
+      if (animKind === "clk-out" || animKind === "clk-empty") {
+        const t = Math.min(1, animT * 1.4);
+        if (t < 0.45) {
+          const u = t / 0.45;
+          pulse(xClk, yClk + (yMain + 55 - yClk) * u, "#7b1fa2");
+        } else if (animKind === "clk-out") {
+          const u = (t - 0.45) / 0.55;
+          pulse(xLoop + 55 + (xOut - xLoop - 55) * u, yMain, "#2e7d32");
+          // clearing: dim loop mid-animation
+          if (u > 0.3) {
+            ctx.fillStyle = "rgba(255,255,255,0.35)";
+            ctx.beginPath();
+            ctx.arc(xLoop, yMain, R - 2, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      ctx.fillStyle = "rgba(0,0,0,0.45)";
+      ctx.font = "11px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Hold = loop flux, not a steady OUT voltage", 12, 18);
+    }
+
+    function pin(x, y, label, color) {
+      ctx.beginPath();
+      ctx.fillStyle = "#fff";
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.arc(x, y, 13, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "rgba(0,0,0,0.7)";
+      ctx.font = "600 11px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      const dy = label === "CLK" ? 28 : 28;
+      ctx.fillText(label, x, y + dy);
+    }
+
+    function pulse(x, y, color) {
+      ctx.beginPath();
+      ctx.fillStyle = color;
+      ctx.arc(x, y, 7, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(x, y - 15);
+      ctx.lineTo(x, y + 4);
+      ctx.stroke();
+    }
+
+    dataBtn.addEventListener("click", injectData);
+    clkBtn.addEventListener("click", fireClock);
+    clearBtn.addEventListener("click", resetLab);
+    window.addEventListener("resize", draw);
+
+    // idle spin when full
+    function tick() {
+      if (full && !animating) draw();
+      requestAnimationFrame(tick);
+    }
+
+    updateUI("—");
+    draw();
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>

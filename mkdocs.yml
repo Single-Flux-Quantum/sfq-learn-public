@@ -72,6 +72,8 @@ nav:
       - Windowed encoding: labs/pulse-to-logic-state.html
       - Gate-level pipelining: labs/gate-level-pipelining.html
       - JTL hop: labs/jtl-interconnects.html
+      - Splitter & confluence: labs/splitter-and-confluence.html
+      - RSFQ DFF: labs/rsfq-dff-and-retiming.html
   - Concepts:
       - CMOS vs SFQ: concepts/cmos-vs-sfq.md
       - RSFQ Overview: concepts/rsfq-logic.md
