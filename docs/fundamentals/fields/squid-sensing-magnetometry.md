@@ -1,9 +1,9 @@
-# Field: SQUID Sensing & Magnetometry
+﻿# Field: SQUID Sensing & Magnetometry
 
-**Prereqs:** [QC hardware platforms](quantum-computing-hardware-platforms.md) · [Field map hub](README.md)  
+**Prereqs:** [QC hardware platforms](quantum-computing-hardware-platforms.md) Â· [Field map hub](README.md)  
 **Next:** [Josephson metrology](josephson-metrology-voltage-standards.md)
 
-**In one minute.** SQUID sensing **measures** tiny magnetic signals. Digital SFQ **uses** flux as bits. Same SQUID word ≠ same job. Metrics: noise floor, bandwidth — not ALU GHz.
+**In one minute.** SQUID sensing **measures** tiny magnetic signals. Digital SFQ **uses** flux as bits. Same SQUID word â‰  same job. Metrics: noise floor, bandwidth â€” not ALU GHz.
 
 ## Job
 
@@ -13,11 +13,11 @@ A **SQUID** loop with junctions responds strongly to magnetic **flux**. Sensing/
 
 | | Sensing SQUID | Digital SFQ loop/SQUID |
 |--|---------------|-------------------------|
-| Flux is… | The **measurand** | An **information token** |
+| Flux isâ€¦ | The **measurand** | An **information token** |
 | Hero plot | Noise vs frequency | Timing / cell diagram |
 
 ```text
-  B-field → pickup → SQUID → readout (often warmer) → digitize
+  B-field â†’ pickup â†’ SQUID â†’ readout (often warmer) â†’ digitize
 ```
 
 ## Relevance to this curriculum
@@ -26,24 +26,24 @@ Orientation only. Device path still teaches loops/SQUIDs for **bits** in [loop /
 
 ## Check yourself
 
-<details>
-<summary>1. What is SQUID sensing for?</summary>
+<details markdown="1">
+<summary markdown="span">1. What is SQUID sensing for?</summary>
 
 Measuring tiny magnetic flux/field with low noise.
 </details>
 
-<details>
-<summary>2. Does “SQUID” in a title prove SFQ logic or quantum computing?</summary>
+<details markdown="1">
+<summary markdown="span">2. Does â€œSQUIDâ€ in a title prove SFQ logic or quantum computing?</summary>
 
-No — ask whether flux is measured or used as a bit.
+No â€” ask whether flux is measured or used as a bit.
 </details>
 
-<details>
-<summary>3. Name one sensing metric rare in RSFQ ALU papers.</summary>
+<details markdown="1">
+<summary markdown="span">3. Name one sensing metric rare in RSFQ ALU papers.</summary>
 
 Examples: field noise density, MEG shielding performance.
 </details>
 
 ## Next steps
 
-[Josephson metrology](josephson-metrology-voltage-standards.md) · [Hub](README.md)
+[Josephson metrology](josephson-metrology-voltage-standards.md) Â· [Hub](README.md)

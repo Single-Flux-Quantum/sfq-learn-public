@@ -1,6 +1,6 @@
-# Field: Superconducting Photon Detectors (SNSPD / SSPD)
+﻿# Field: Superconducting Photon Detectors (SNSPD / SSPD)
 
-**Prereqs:** [Josephson metrology](josephson-metrology-voltage-standards.md) · [Field map hub](README.md)  
+**Prereqs:** [Josephson metrology](josephson-metrology-voltage-standards.md) Â· [Field map hub](README.md)  
 **Next:** [Cryo-CMOS & hybrids](cryo-cmos-and-hybrids.md)
 
 **In one minute.** SNSPDs detect **single photons** (efficiency, dark counts, jitter). That click is not an RSFQ logic token. SFQ/cryo-CMOS may appear later as **readout helpers**.
@@ -16,10 +16,10 @@ A biased superconducting nanowire can fire an electrical pulse when a photon is 
 | PDE / efficiency | Photons caught |
 | Dark counts | False clicks |
 | Jitter | Timing uncertainty |
-| Array scale | Many pixels → cable/readout problem |
+| Array scale | Many pixels â†’ cable/readout problem |
 
 ```text
-  Photon → SNSPD click → amp → (optional SFQ time-tag) → warm FPGA
+  Photon â†’ SNSPD click â†’ amp â†’ (optional SFQ time-tag) â†’ warm FPGA
 ```
 
 ## Relevance to this curriculum
@@ -28,24 +28,24 @@ Sibling that creates demand for cryogenic classical electronics. Deep SFQ path s
 
 ## Check yourself
 
-<details>
-<summary>1. What are SNSPDs for?</summary>
+<details markdown="1">
+<summary markdown="span">1. What are SNSPDs for?</summary>
 
 Detecting single photons with high timing resolution.
 </details>
 
-<details>
-<summary>2. Is an SNSPD an SFQ gate?</summary>
+<details markdown="1">
+<summary markdown="span">2. Is an SNSPD an SFQ gate?</summary>
 
 No.
 </details>
 
-<details>
-<summary>3. How might SFQ still appear?</summary>
+<details markdown="1">
+<summary markdown="span">3. How might SFQ still appear?</summary>
 
 As classical cryogenic readout / time-encoding helpers.
 </details>
 
 ## Next steps
 
-[Cryo-CMOS & hybrids](cryo-cmos-and-hybrids.md) · [Hub](README.md)
+[Cryo-CMOS & hybrids](cryo-cmos-and-hybrids.md) Â· [Hub](README.md)

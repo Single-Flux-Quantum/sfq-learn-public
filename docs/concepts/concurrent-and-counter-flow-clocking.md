@@ -1,8 +1,8 @@
-# Concurrent-Flow and Counter-Flow Clocking
+﻿# Concurrent-Flow and Counter-Flow Clocking
 
-**Prereqs:** [RSFQ DFF and Retiming](rsfq-dff-and-retiming.md) · [Gate-Level Pipelining](../bridge/gate-level-pipelining.md)  
-**Next:** [Path Balancing Overhead](path-balancing-overhead.md) · [SFQ Static Timing Analysis](sfq-static-timing-analysis.md)  
-**Tracks:** `clocking-biasing-power` · `eda-timing-verification`
+**Prereqs:** [RSFQ DFF and Retiming](rsfq-dff-and-retiming.md) Â· [Gate-Level Pipelining](../bridge/gate-level-pipelining.md)  
+**Next:** [Path Balancing Overhead](path-balancing-overhead.md) Â· [SFQ Static Timing Analysis](sfq-static-timing-analysis.md)  
+**Tracks:** `clocking-biasing-power` Â· `eda-timing-verification`
 
 **Learning goals.** After this page you should be able to (1) tell apart **concurrent-flow** and **counter-flow** clocking, (2) see how clock vs data direction shifts hold vs setup pressure, (3) connect both styles to splitter-tree skew and [path balancing](path-balancing-overhead.md), and (4) avoid thinking that clock style removes reconvergent padding.
 
@@ -10,42 +10,42 @@
 
 In gate-level-pipelined RSFQ, almost every cell needs a **clock pulse** as well as data pulses. How that clock is routed **relative to data** defines two classic styles. Papers and CAD flows assume you know the cartoons; timing intuition changes with the choice.
 
-Exact library pin names and proprietary “clock-follow-data” CAD strategies vary. This page is the **field-fundamental** cartoon — enough to read architecture figures and to talk to [STA](sfq-static-timing-analysis.md) without drowning in tool jargon.
+Exact library pin names and proprietary â€œclock-follow-dataâ€ CAD strategies vary. This page is the **field-fundamental** cartoon â€” enough to read architecture figures and to talk to [STA](sfq-static-timing-analysis.md) without drowning in tool jargon.
 
 Glossary: [Concurrent-flow clocking](../glossary.md), [Counter-flow clocking](../glossary.md), [Gate-level pipelining](../glossary.md), [Clock window](../glossary.md).
 
 ## Intuition
 
 - **Concurrent-flow (clock-follow-data direction):** clock pulses travel in roughly the **same** direction as data along a pipeline.
-- **Counter-flow:** clock pulses travel roughly **against** the data direction (clock upstream while data goes downstream — or the reverse drawing of the same idea).
+- **Counter-flow:** clock pulses travel roughly **against** the data direction (clock upstream while data goes downstream â€” or the reverse drawing of the same idea).
 
 Both can work. They shift where timing is tight (hold vs long-path setup) and how you build the clock tree. Neither deletes the need to balance reconvergent logic.
 
 Public slogan: **style relocates pain; it does not erase physics.**
 
-## Analogy — hallway of timed doors
+## Analogy â€” hallway of timed doors
 
 Data packets march down a hallway of timed doors (pipeline stages).
 
-- **Concurrent-flow:** a starter-pistol wave (clock) runs **with** the runners — each door opens as the wave catches up from behind.
-- **Counter-flow:** the pistol wave runs the **other** way — doors are armed by a wave coming from the finish line toward the start.
+- **Concurrent-flow:** a starter-pistol wave (clock) runs **with** the runners â€” each door opens as the wave catches up from behind.
+- **Counter-flow:** the pistol wave runs the **other** way â€” doors are armed by a wave coming from the finish line toward the start.
 
-Same sport, different race-official choreography — and different ways to trip over early vs late arrivals.
+Same sport, different race-official choreography â€” and different ways to trip over early vs late arrivals.
 
-Bad analogy: “One global CMOS edge updates everything.” RSFQ distributes **pulses** to many cells via [splitter](splitter-and-confluence.md) trees.
+Bad analogy: â€œOne global CMOS edge updates everything.â€ RSFQ distributes **pulses** to many cells via [splitter](splitter-and-confluence.md) trees.
 
 ## Picture
 
 ```text
 Concurrent-flow (cartoon):
 
-  DATA →  [G1] → [G2] → [G3] →
-  CLK  →    ↑      ↑      ↑
+  DATA â†’  [G1] â†’ [G2] â†’ [G3] â†’
+  CLK  â†’    â†‘      â†‘      â†‘
 
 Counter-flow (cartoon):
 
-  DATA →  [G1] → [G2] → [G3] →
-  CLK  ←    ↑      ↑      ↑
+  DATA â†’  [G1] â†’ [G2] â†’ [G3] â†’
+  CLK  â†    â†‘      â†‘      â†‘
 ```
 
 ```mermaid
@@ -73,8 +73,8 @@ flowchart LR
 ```text
 Skew reminder (both styles):
 
-  clock source ──► splitter tree ──► leaves with Δt skew
-  data paths    ──► their own delays
+  clock source â”€â”€â–º splitter tree â”€â”€â–º leaves with Î”t skew
+  data paths    â”€â”€â–º their own delays
   STA checks windows at each cell vs its local clock leaf
 ```
 
@@ -96,7 +96,7 @@ flowchart TD
 
 Try this in place. Prefer full-screen? Open the [lab page](../labs/concurrent-and-counter-flow-clocking.html).
 
-1. **Concurrent-flow** + data path **too fast** → launch wave → hold-race warning.
+1. **Concurrent-flow** + data path **too fast** â†’ launch wave â†’ hold-race warning.
 2. Switch to **Counter-flow** and compare where pressure moves. Note: **pads still needed** at reconvergence either way.
 
 <iframe
@@ -106,11 +106,11 @@ Try this in place. Prefer full-screen? Open the [lab page](../labs/concurrent-an
   loading="lazy"
 ></iframe>
 
-## Timing pressure — qualitative comparison
+## Timing pressure â€” qualitative comparison
 
 | Concern | Concurrent-flow tendency (cartoon) | Counter-flow tendency (cartoon) |
 |---------|--------------------------------------|-----------------------------------|
-| Hold / race on short paths | Often watched carefully — data may rush with the clock wave | Pressure moves; still present if paths are reckless |
+| Hold / race on short paths | Often watched carefully â€” data may rush with the clock wave | Pressure moves; still present if paths are reckless |
 | Setup / long paths | Deep logic still must meet the next window | Also present; wave direction changes choreography |
 | Clock tree shape | Often follows datapath geography | May be built from the other end |
 | Path balancing | Still required at reconvergence | Still required |
@@ -118,7 +118,7 @@ Try this in place. Prefer full-screen? Open the [lab page](../labs/concurrent-an
 
 ## Why hold shows up so often in concurrent-flow teaching
 
-When clock and data travel together, a **very short** data path can deliver a pulse into the next stage before that stage’s clocked machinery is ready — a race / hold-like hazard. Designers then:
+When clock and data travel together, a **very short** data path can deliver a pulse into the next stage before that stageâ€™s clocked machinery is ready â€” a race / hold-like hazard. Designers then:
 
 1. add [JTL](jtl-interconnects.md) delay on the short data path,
 2. insert a [DFF](rsfq-dff-and-retiming.md) to force an epoch boundary,
@@ -133,18 +133,18 @@ Counter-flow relocates the choreography; it does not grant immunity to bad delay
 | Clock | Global/regional grid to FFs | Pulse tree into **most cells** |
 | Combinational cloud | Common between FFs | Rare as CMOS-like cloud; stages everywhere |
 | Hold fix | Delay on short data paths | JTL/DFF pads; tree tweaks |
-| “Follow data” language | Sometimes in wave pipelines | Concurrent-flow RSFQ teaching staple |
+| â€œFollow dataâ€ language | Sometimes in wave pipelines | Concurrent-flow RSFQ teaching staple |
 | Clock = one edge | Often mental model | Many local SFQ clock pulses |
 
-## Worked example 1 — Three-stage shift register
+## Worked example 1 â€” Three-stage shift register
 
-Bits move left → right through stages $1,2,3$.
+Bits move left â†’ right through stages $1,2,3$.
 
 **Concurrent-flow:** clock splitter tree feeds stage 1, then 2, then 3 roughly along the data path. A too-fast data path may violate **hold** (data races past a stage before that stage is ready). Designers add delay (JTLs/DFFs) on short paths.
 
 **Counter-flow:** clock arrives first at the last stage and propagates backward. Hold/setup pressure moves; some datapaths prefer it. You still balance reconvergent XOR/majority inputs elsewhere on the chip.
 
-## Worked example 2 — Skew eats the margin
+## Worked example 2 â€” Skew eats the margin
 
 Suppose concurrent-flow ideal arrival difference between data and clock at a cell is comfortable, but one clock leaf is $10\,\text{ps}$ late from an unmatched splitter branch (illustrative).
 
@@ -156,26 +156,26 @@ Effects:
 
 STA exists to catch this without simulating every pattern ([SFQ STA](sfq-static-timing-analysis.md)).
 
-## Worked example 3 — Reconvergence still needs pads
+## Worked example 3 â€” Reconvergence still needs pads
 
-Two paths meet at a gate: 2 stages vs 5 stages. Clock style may be concurrent or counter-flow on the chip’s highways, but the **stage-count mismatch** still needs about **3** padding stages on the short path ([path balancing](path-balancing-overhead.md)).
+Two paths meet at a gate: 2 stages vs 5 stages. Clock style may be concurrent or counter-flow on the chipâ€™s highways, but the **stage-count mismatch** still needs about **3** padding stages on the short path ([path balancing](path-balancing-overhead.md)).
 
 Clock style is about **direction of the pistol wave**; balancing is about **equalizing epoch depth** at merges.
 
-## Worked example 4 — Mixed regions on one chip
+## Worked example 4 â€” Mixed regions on one chip
 
-Large designs sometimes use concurrent-flow on one datapath highway and different strategies on another block (or different CAD “follow” heuristics). Public discipline:
+Large designs sometimes use concurrent-flow on one datapath highway and different strategies on another block (or different CAD â€œfollowâ€ heuristics). Public discipline:
 
 1. Know the **local** clock-vs-data direction in the block you are timing.
 2. Do not assume the whole chip shares one cartoon.
 3. At block boundaries, treat clock and data handoff as first-class (skew + epoch).
 4. Still balance reconvergences inside each block.
 
-## Worked example 5 — Choosing a mental default as a newcomer
+## Worked example 5 â€” Choosing a mental default as a newcomer
 
-| If you are learning… | Start with |
+| If you are learningâ€¦ | Start with |
 |----------------------|------------|
-| Hold races, JTL pads, “clock follows data” language | Concurrent-flow cartoon |
+| Hold races, JTL pads, â€œclock follows dataâ€ language | Concurrent-flow cartoon |
 | Why papers mention opposite clock wiring | Counter-flow cartoon |
 | Reconvergent XOR depth mismatch | [Path balancing](path-balancing-overhead.md) (style-agnostic) |
 | Tool reports of slack | [STA](sfq-static-timing-analysis.md) |
@@ -184,14 +184,14 @@ You need **both** styles in vocabulary; pick one highway cartoon to visualize fi
 
 ## Common misconceptions
 
-- **“Concurrent-flow means no hold problems.”** Often the opposite worry appears on short paths.
-- **“Counter-flow removes path balancing.”** No — reconvergence still needs matched epochs.
-- **“One global CMOS-like edge is enough.”** RSFQ distributes **pulses** to many cells.
-- **“Clock tree skew is second-order.”** Skew is first-class in pulse logic.
-- **“Papers using different names contradict the cartoons.”** Pin-level CAD names vary; map them back to same-direction vs opposite-direction intuition.
-- **“Async SFQ means I can skip this page.”** Learn the synchronous cartoons first; async is an advanced branch.
-- **“Picking counter-flow makes STA unnecessary.”** Windows and skew remain.
-- **“Clock style fixes bias current.”** Bias/ampere problems are a different track ([serial biasing](serial-biasing-current-recycling.md), [ERSFQ](ersfq-logic.md)).
+- **â€œConcurrent-flow means no hold problems.â€** Often the opposite worry appears on short paths.
+- **â€œCounter-flow removes path balancing.â€** No â€” reconvergence still needs matched epochs.
+- **â€œOne global CMOS-like edge is enough.â€** RSFQ distributes **pulses** to many cells.
+- **â€œClock tree skew is second-order.â€** Skew is first-class in pulse logic.
+- **â€œPapers using different names contradict the cartoons.â€** Pin-level CAD names vary; map them back to same-direction vs opposite-direction intuition.
+- **â€œAsync SFQ means I can skip this page.â€** Learn the synchronous cartoons first; async is an advanced branch.
+- **â€œPicking counter-flow makes STA unnecessary.â€** Windows and skew remain.
+- **â€œClock style fixes bias current.â€** Bias/ampere problems are a different track ([serial biasing](serial-biasing-current-recycling.md), [ERSFQ](ersfq-logic.md)).
 
 ## Bridge to SFQ circuits
 
@@ -203,60 +203,60 @@ You need **both** styles in vocabulary; pick one highway cartoon to visualize fi
 | Tooling view of clocks vs data | [SFQ Static Timing Analysis](sfq-static-timing-analysis.md) |
 | Storage until clocked | [RSFQ DFF](rsfq-dff-and-retiming.md) |
 | Ampere / island themes | [Serial Biasing](serial-biasing-current-recycling.md) |
-| Track maps | [Clocking, Biasing & Power](../tracks/clocking-biasing-power/ROADMAP.md) · [EDA Timing](../tracks/eda-timing-verification/ROADMAP.md) |
+| Track maps | [Clocking, Biasing & Power](../tracks/clocking-biasing-power/ROADMAP.md) Â· [EDA Timing](../tracks/eda-timing-verification/ROADMAP.md) |
 
 ## What stays private
 
-Named CAD “clock-follow-data” algorithms, measured skew histograms, and paper bake-offs of concurrent vs counter-flow on a specific ALU → private explainers.
+Named CAD â€œclock-follow-dataâ€ algorithms, measured skew histograms, and paper bake-offs of concurrent vs counter-flow on a specific ALU â†’ private explainers.
 
 ## Check yourself
 
-<details>
-<summary>1. Concurrent-flow means what?</summary>
+<details markdown="1">
+<summary markdown="span">1. Concurrent-flow means what?</summary>
 
 Clock pulses propagate in roughly the **same** direction as data along the pipeline.
 </details>
 
-<details>
-<summary>2. Counter-flow means what?</summary>
+<details markdown="1">
+<summary markdown="span">2. Counter-flow means what?</summary>
 
 Clock pulses propagate roughly **opposite** to the data direction.
 </details>
 
-<details>
-<summary>3. Does picking a clock style remove path balancing?</summary>
+<details markdown="1">
+<summary markdown="span">3. Does picking a clock style remove path balancing?</summary>
 
-No — reconvergent paths still need matched stage counts / delays; clock style only changes where timing is hardest.
+No â€” reconvergent paths still need matched stage counts / delays; clock style only changes where timing is hardest.
 </details>
 
-<details>
-<summary>4. Why can concurrent-flow raise hold concerns?</summary>
+<details markdown="1">
+<summary markdown="span">4. Why can concurrent-flow raise hold concerns?</summary>
 
 Data and clock travel together; a too-fast data path may race into the next stage before it is ready.
 </details>
 
-<details>
-<summary>5. How do splitter trees interact with either style?</summary>
+<details markdown="1">
+<summary markdown="span">5. How do splitter trees interact with either style?</summary>
 
 They create the leaf clocks; branch mismatch becomes skew that shifts setup/hold windows at cells.
 </details>
 
-<details>
-<summary>6. Name two fixes for a short-path race.</summary>
+<details markdown="1">
+<summary markdown="span">6. Name two fixes for a short-path race.</summary>
 
 Insert JTL delay and/or extra DFF retiming stages; also rematch clock branches if skew is the culprit.
 </details>
 
-<details>
-<summary>7. Depths 2 and 6 meet at a gate under counter-flow. About how many pads on the short path?</summary>
+<details markdown="1">
+<summary markdown="span">7. Depths 2 and 6 meet at a gate under counter-flow. About how many pads on the short path?</summary>
 
-About $4$ — clock style does not cancel stage-count imbalance.
+About $4$ â€” clock style does not cancel stage-count imbalance.
 </details>
 
-<details>
-<summary>8. Is “one global CMOS edge” a good mental model for RSFQ clocking?</summary>
+<details markdown="1">
+<summary markdown="span">8. Is â€œone global CMOS edgeâ€ a good mental model for RSFQ clocking?</summary>
 
-No — many cells each receive local SFQ clock pulses from a distribution tree.
+No â€” many cells each receive local SFQ clock pulses from a distribution tree.
 </details>
 
 ## Next steps
