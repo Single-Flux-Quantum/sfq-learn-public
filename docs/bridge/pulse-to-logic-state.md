@@ -108,7 +108,7 @@ Try this in place (same idea as the text above). Prefer full-screen? Open the [l
 <iframe
   src="../../labs/pulse-to-logic-state.html"
   title="RSFQ windowed encoding lab"
-  style="width:100%;height:720px;border:1px solid #2a3548;border-radius:8px;background:#0c1222;"
+  style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
   loading="lazy"
 ></iframe>
 

@@ -30,12 +30,14 @@ Short how-to (2 steps). Prefer full-screen? Open the [lab page](../labs/<topic-i
 <iframe
   src="../../labs/<topic-id>.html"
   title="…"
-  style="width:100%;height:720px;border:1px solid #2a3548;border-radius:8px;"
+  style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
   loading="lazy"
 ></iframe>
 ```
 
 **Path rule:** MkDocs serves each page as `/section/page/` (trailing slash). Markdown links like `../labs/…` are rewritten correctly, but **raw `<iframe src>` is not**. From a bridge/concept/fundamental page, use `../../labs/<file>.html` (two levels up). From a nested page (e.g. `fundamentals/fields/…`), use three levels (`../../../labs/…`). Wrong depth → iframe 404 under `/bridge/labs/…`.
+
+**Colors:** Match Material default light + indigo (`#4051b5` primary, white page, `#f5f5f5` code/panel surfaces) so the iframe blends with the chapter.
 
 Use height ≥ 700px so controls, stats, and the table fit without clipping.
 
