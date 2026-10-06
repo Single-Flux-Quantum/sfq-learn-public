@@ -106,7 +106,9 @@ Array cartoon (not a layout):
 
 For a storage loop of inductance $L$ holding about one flux quantum,
 
-$$I_{\mathrm{circ}} \approx \frac{\Phi_0}{L}.$$
+\[
+I_{\mathrm{circ}} \approx \frac{\Phi_0}{L}.
+\]
 
 With $\Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}$, loop inductances of order $5$–$20\,\text{pH}$ give circulating currents of order $0.1$–$0.4\,\text{mA}$ — the same ballpark as many junction $I_c$ values. That matching is intentional: junctions must be able to **insert or remove** the circulating quantum when writing or reading.
 
@@ -174,11 +176,15 @@ Public curriculum does not crown a winner. It insists you **ask** the question e
 
 Suppose $L = 10\,\text{pH}$ and the cell is designed around one $\Phi_0$:
 
-$$I_{\mathrm{circ}} \approx \frac{\Phi_0}{L} \sim 0.21\,\text{mA}.$$
+\[
+I_{\mathrm{circ}} \approx \frac{\Phi_0}{L} \sim 0.21\,\text{mA}.
+\]
 
 If the write/escape junction has $I_c \approx 0.1\,\text{mA}$, it can be switched by control currents of similar scale — the numbers “talk to each other.” If someone proposed $L = 1\,\mu\text{H}$ for the same one-$\Phi_0$ storage, then
 
-$$I_{\mathrm{circ}} \approx \frac{\Phi_0}{10^{-6}} \sim 2\,\mu\text{A},$$
+\[
+I_{\mathrm{circ}} \approx \frac{\Phi_0}{10^{-6}} \sim 2\,\mu\text{A},
+\]
 
 which is an awkward match to typical SFQ junction currents and a poor fit for dense cryogenic digital cells. Public lesson: **loop size and $I_c$ are co-designed**; VT-RAM is not “any inductor with a label.”
 

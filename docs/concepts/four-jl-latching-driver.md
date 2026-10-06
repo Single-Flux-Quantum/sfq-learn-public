@@ -22,7 +22,9 @@ Glossary anchors: [Glossary](../glossary.md) — **4JL / Suzuki stack**, **under
 
 Recall the McCumber picture from [overdamped vs underdamped](../fundamentals/overdamped-vs-underdamped-jj.md):
 
-$$\beta_C = \frac{2\pi I_c R^2 C}{\Phi_0}.$$
+\[
+\beta_C = \frac{2\pi I_c R^2 C}{\Phi_0}.
+\]
 
 - $\beta_C \lesssim 1$: overdamped — one $2\pi$ slip → short pulse → $V\approx 0$.
 - $\beta_C \gg 1$: underdamped — can run to a **finite-voltage latching state** until reset.
@@ -33,7 +35,9 @@ A latching I/O driver **wants** that second behavior. An SFQ trigger kicks under
 
 **Suzuki stack:** a series stack of underdamped junctions used as a voltage multiplier / latching amplifier in Josephson–CMOS and similar interfaces. Stack height is again a **voltage budget** knob:
 
-$$V_{\mathrm{latched}} \sim N_{\mathrm{JJ}} \cdot V_{\mathrm{one}}$$
+\[
+V_{\mathrm{latched}} \sim N_{\mathrm{JJ}} \cdot V_{\mathrm{one}}
+\]
 
 in the cartoon where each junction contributes a comparable latched voltage $V_{\mathrm{one}}$.
 
@@ -134,7 +138,9 @@ Cartoon only: suppose one underdamped junction latches near $V_1 \approx 2\,\tex
 
 Naïve stack count:
 
-$$N_{\mathrm{JJ}} \gtrsim \frac{V_{\mathrm{need}}}{V_1} \approx 20.$$
+\[
+N_{\mathrm{JJ}} \gtrsim \frac{V_{\mathrm{need}}}{V_1} \approx 20.
+\]
 
 That is the same budget language as SQUID stacks, with a different physical mechanism (latching underdamped junctions vs series SQUID stages). Neither cartoon produces a full $1.8\,\text{V}$ digital rail by itself; both buy **headroom** into the next amplifier or pad circuit.
 
@@ -180,7 +186,9 @@ Sketch one SFQ→CMOS write-strobe transaction:
 
 Timing intuition (qualitative only):
 
-$$t_{\mathrm{iface}} \gtrsim t_{\mathrm{trigger}} + t_{\mathrm{hold,useful}} + t_{\mathrm{reset}} + t_{\mathrm{margin}}.$$
+\[
+t_{\mathrm{iface}} \gtrsim t_{\mathrm{trigger}} + t_{\mathrm{hold,useful}} + t_{\mathrm{reset}} + t_{\mathrm{margin}}.
+\]
 
 The semiconductor memory array’s own access time sits beside this interface budget. Hybrid memory papers care about both; this concept card only insists that **reset is on the critical path of the interface story**, not an afterthought footnote.
 

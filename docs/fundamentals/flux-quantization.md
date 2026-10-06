@@ -11,11 +11,15 @@ CMOS stores and moves information as **voltage levels** on wires and capacitors.
 
 The size of one packet is the **magnetic flux quantum**
 
-$$\Phi_0 = \frac{h}{2e} \approx 2.067833848\times 10^{-15}\,\text{Wb}.$$
+\[
+\Phi_0 = \frac{h}{2e} \approx 2.067833848\times 10^{-15}\,\text{Wb}.
+\]
 
 In circuit units that engineers actually use day-to-day,
 
-$$\Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}.$$
+\[
+\Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}.
+\]
 
 Every RSFQ pulse you will meet later — every JTL hop, every DFF write, every clocked gate event — is one of these packets being created, moved, or annihilated. If $\Phi_0$ is fuzzy, the rest of SFQ will feel like magic. This page makes the packet size inevitable and concrete.
 
@@ -31,7 +35,9 @@ The analogy is about **discreteness and counting**, not about mechanical gears i
 
 Magnetic flux through a surface $S$ bounded by a loop is
 
-$$\Phi = \int_S \mathbf{B}\cdot d\mathbf{A}.$$
+\[
+\Phi = \int_S \mathbf{B}\cdot d\mathbf{A}.
+\]
 
 In SI units, flux is measured in webers (Wb). One weber is one volt-second: if a voltage $V$ appears across an inductive path while flux changes, Faraday’s law ties them together. That is why $\Phi_0$ can be written as a **voltage–time product**. A pulse that lasts a few picoseconds with millivolt-scale height can still enclose one whole flux quantum under its curve.
 
@@ -41,11 +47,15 @@ In superconductors the relevant carriers are **Cooper pairs** with charge $2e$, 
 
 A superconducting condensate is described by a complex order parameter (a macroscopic wave function) with a **phase** $\theta$. Around any closed superconducting path, that phase must return to the same physical state after one full trip. Phase is defined only modulo $2\pi$, so the total phase winding around the loop must be an integer multiple of $2\pi$:
 
-$$\oint \nabla\theta\cdot d\mathbf{l} = 2\pi n,\qquad n\in\mathbb{Z}.$$
+\[
+\oint \nabla\theta\cdot d\mathbf{l} = 2\pi n,\qquad n\in\mathbb{Z}.
+\]
 
 In a thick superconducting wire with negligible interior magnetic field (Meissner screening), that winding condition becomes a condition on the enclosed flux: the flux through the loop is forced to
 
-$$\Phi = n\,\Phi_0,\qquad n = 0,\pm 1,\pm 2,\ldots$$
+\[
+\Phi = n\,\Phi_0,\qquad n = 0,\pm 1,\pm 2,\ldots
+\]
 
 This is **flux quantization** in a superconducting ring. The integer $n$ is sometimes called the fluxoid quantum number. Idealized perfect loops sit in these discrete states; real SFQ loops are interrupted by Josephson junctions so that $n$ can change when a junction switches — that is how you write and erase a bit.
 
@@ -58,11 +68,15 @@ When the loop contains Josephson junctions, the precise statement is **fluxoid q
 
 The AC Josephson relation connects voltage across a junction to the rate of change of the Josephson phase $\phi$:
 
-$$V(t) = \frac{\Phi_0}{2\pi}\frac{d\phi}{dt}.$$
+\[
+V(t) = \frac{\Phi_0}{2\pi}\frac{d\phi}{dt}.
+\]
 
 Integrate both sides over the duration of one switching event in which $\phi$ advances by exactly $2\pi$:
 
-$$\int V(t)\,dt = \frac{\Phi_0}{2\pi}\int_{0}^{2\pi} d\phi = \Phi_0.$$
+\[
+\int V(t)\,dt = \frac{\Phi_0}{2\pi}\int_{0}^{2\pi} d\phi = \Phi_0.
+\]
 
 That identity is the heart of SFQ pulse logic:
 
@@ -93,7 +107,9 @@ flowchart LR
 
 Writing $\Phi_0 \approx 2.07\times 10^{-15}\,\text{Wb}$ is correct but hard to visualize on a picosecond scope. Because $1\,\text{Wb} = 1\,\text{V}\cdot\text{s}$,
 
-$$\Phi_0 \approx 2.07\times 10^{-15}\,\text{V}\cdot\text{s} = 2.07\,\text{mV}\cdot\text{ps}.$$
+\[
+\Phi_0 \approx 2.07\times 10^{-15}\,\text{V}\cdot\text{s} = 2.07\,\text{mV}\cdot\text{ps}.
+\]
 
 That tells you, roughly, what an SFQ pulse “looks like” on a plot:
 
@@ -121,7 +137,9 @@ CMOS can use any convenient supply voltage; SFQ cannot invent a different flux q
 
 Suppose a nearly triangular SFQ-like pulse lasts about $\Delta t = 4\,\text{ps}$ and peaks near $V_p = 1.0\,\text{mV}$. A triangle’s area is
 
-$$A \approx \tfrac{1}{2}\,V_p\,\Delta t = \tfrac{1}{2}\times 1.0\,\text{mV}\times 4\,\text{ps} = 2.0\,\text{mV}\cdot\text{ps}.$$
+\[
+A \approx \tfrac{1}{2}\,V_p\,\Delta t = \tfrac{1}{2}\times 1.0\,\text{mV}\times 4\,\text{ps} = 2.0\,\text{mV}\cdot\text{ps}.
+\]
 
 Compare to $\Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}$. The sketch is already within a few percent of one flux quantum. That is not a coincidence: overdamped junctions used in RSFQ are designed so each switching event dumps approximately one $\Phi_0$ of voltage–time area.
 
@@ -131,11 +149,15 @@ Compare to $\Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}$. The sketch is already
 
 A superconducting storage loop with inductance $L$ carrying circulating current $I_{\mathrm{circ}}$ stores flux
 
-$$\Phi_{\mathrm{ind}} = L\,I_{\mathrm{circ}}$$
+\[
+\Phi_{\mathrm{ind}} = L\,I_{\mathrm{circ}}
+\]
 
 (ignoring junction phase contributions for a first estimate). Suppose $L = 8\,\text{pH}$ and $I_{\mathrm{circ}} = 250\,\mu\text{A} = 0.25\,\text{mA}$. Then
 
-$$\Phi_{\mathrm{ind}} = (8\times 10^{-12}\,\text{H})(0.25\times 10^{-3}\,\text{A}) = 2.0\times 10^{-15}\,\text{Wb} \approx 0.97\,\Phi_0.$$
+\[
+\Phi_{\mathrm{ind}} = (8\times 10^{-12}\,\text{H})(0.25\times 10^{-3}\,\text{A}) = 2.0\times 10^{-15}\,\text{Wb} \approx 0.97\,\Phi_0.
+\]
 
 So this circulating current is about **one** flux quantum — the usual ballpark for a stored RSFQ “1”. If someone claimed the same loop stably held $0.5\,\Phi_0$ as a long-term digital state, that would contradict flux quantization (idealized closed superconducting path). Transient dynamics during switching can pass through non-integer flux briefly; **stable** storage states sit near integer quanta.
 
@@ -145,11 +167,15 @@ So this circulating current is about **one** flux quantum — the usual ballpark
 
 Faraday’s law says an average voltage $\langle V\rangle$ lasting time $\Delta t$ changes flux by about $\langle V\rangle\Delta t$. Setting that product equal to one quantum,
 
-$$\langle V\rangle \approx \frac{\Phi_0}{\Delta t}.$$
+\[
+\langle V\rangle \approx \frac{\Phi_0}{\Delta t}.
+\]
 
 For $\Delta t = 5\,\text{ps}$,
 
-$$\langle V\rangle \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{5\,\text{ps}} \approx 0.41\,\text{mV}.$$
+\[
+\langle V\rangle \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{5\,\text{ps}} \approx 0.41\,\text{mV}.
+\]
 
 Again: millivolts and picoseconds, not volts and nanoseconds. SFQ pulses are tiny in amplitude and extremely short — yet each carries a **complete** digital token because the token is flux, not a CMOS $V_{DD}$ level.
 

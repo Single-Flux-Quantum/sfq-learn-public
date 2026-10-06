@@ -23,9 +23,11 @@ markdown_extensions:
   - admonition
   - toc:
       permalink: true
+extra_css:
+  - stylesheets/math.css
 extra_javascript:
   - javascripts/mathjax.js
-  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js
 nav:
   - Home: index.md
   - Glossary: glossary.md

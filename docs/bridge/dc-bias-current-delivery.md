@@ -103,7 +103,9 @@ That is why “$I_{\mathrm{total}} = N I_b$” is treated as an **architecture**
 
 If $N$ similar taps each draw about $I_b$ from a common rail in **parallel**,
 
-$$I_{\mathrm{total}} \approx N \times I_b.$$
+\[
+I_{\mathrm{total}} \approx N \times I_b.
+\]
 
 That linear growth is the crisis in one equation. Classical RSFQ and ERSFQ-style chips still live under this sum **whenever** the feed topology is parallel. Changing resistor heat does not rewrite the sum.
 
@@ -113,7 +115,9 @@ Keep the cartoon honest: real libraries have many junctions per “cell,” marg
 
 Take $N = 10{,}000$ junctions/taps and $I_b = 0.1\,\text{mA}$ (illustrative):
 
-$$I_{\mathrm{total}} \approx 10{,}000 \times 0.1\,\text{mA} = 1\,\text{A}.$$
+\[
+I_{\mathrm{total}} \approx 10{,}000 \times 0.1\,\text{mA} = 1\,\text{A}.
+\]
 
 Already an ampere — nontrivial once you add connectors, filtering, and magnetics. Device-scale currents can be microamperes to milliamperes; **chip-scale parallel products** can be amperes.
 
@@ -121,7 +125,9 @@ Already an ampere — nontrivial once you add connectors, filtering, and magneti
 
 Same $I_b$, now $N = 1{,}000{,}000$:
 
-$$I_{\mathrm{total}} \approx 100\,\text{A}.$$
+\[
+I_{\mathrm{total}} \approx 100\,\text{A}.
+\]
 
 That is the “this cannot be naive parallel feed” moment. Exact library currents differ; the **shape** $N\times I_b$ does not. This is why serial biasing and recycling exist as first-class architecture topics — not as optional CAD polish.
 
@@ -141,7 +147,9 @@ Suppose ERSFQ removes resistor heat so static **power** in $R_b$ collapses. If t
 
 From [gate-level pipelining](gate-level-pipelining.md), path balancing inserts padding DFFs. Those pads are more taps in the parallel-feed cartoon. If functional taps are $N_{\mathrm{logic}}$ and pads are $N_{\mathrm{pad}}$,
 
-$$I_{\mathrm{total}} \sim (N_{\mathrm{logic}} + N_{\mathrm{pad}})\, I_b.$$
+\[
+I_{\mathrm{total}} \sim (N_{\mathrm{logic}} + N_{\mathrm{pad}})\, I_b.
+\]
 
 Architecture choices that look like “just timing” become ampere choices. That is why balancing overhead papers and bias-delivery papers belong in the same mental folder: every pad you insert for epoch correctness can also be another branch in the sum.
 
@@ -173,7 +181,9 @@ flowchart LR
 
 You only need the cartoon now. Public slogan for later:
 
-$$I_{\mathrm{supply,\,parallel}} \sim \sum_i I_i \qquad\text{vs}\qquad I_{\mathrm{supply,\,serial}} \sim \max_i I_i$$
+\[
+I_{\mathrm{supply,\,parallel}} \sim \sum_i I_i \qquad\text{vs}\qquad I_{\mathrm{supply,\,serial}} \sim \max_i I_i
+\]
 
 (in the ideal cartoon where each island needs comparable current $I_i$ and recycling is perfect). Voltage compliance and margins get harder — that is the other side of the trade. Topologies, transformer cells, and EDA island assignment live on [serial biasing / current recycling](../concepts/serial-biasing-current-recycling.md).
 

@@ -100,9 +100,9 @@ Balancing is not optional polish. It is how you keep the encoding from [pulse to
 
 Public stage-count cartoon (same idea you will see again under overhead):
 
-$$
+\[
 k = n_{\mathrm{long}} - n_{\mathrm{short}}
-$$
+\]
 
 Here $k$ is the number of padding stages to place on the short path into a shared sink, when both counts are measured from a common reference epoch. Real libraries add setup/hold and interconnect delay nuance; the cartoon is enough to feel why pads appear.
 
@@ -178,9 +178,9 @@ Now both sides present 3 stages. The join sees one epoch.
 
 Suppose a datapath needs $P = 2{,}000$ padding DFFs across many reconvergences, and each pad is a bias tap of order $I_b \sim 0.1\,\text{mA}$ (illustrative arithmetic, **not** a PDK claim or a paper chip total). A crude parallel-feed addition is
 
-$$
+\[
 \Delta I \sim P \times I_b = 2{,}000 \times 0.1\,\text{mA} = 0.2\,\text{A}.
-$$
+\]
 
 That is only the **pad tax**, before functional gates. Junctions and area grow similarly: every pad is another cell footprint and more Josephson junctions that do not compute new Boolean function — they only wait. Balancing is therefore not only a timing correctness tool — it feeds the power and delivery story on the next bridges ([resistive bias to ERSFQ](resistive-bias-to-ersfq.md), [DC bias delivery](dc-bias-current-delivery.md)).
 

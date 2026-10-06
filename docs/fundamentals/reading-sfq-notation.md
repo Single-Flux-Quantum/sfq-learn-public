@@ -43,7 +43,9 @@ they are not claiming a precise triangle formula. They are saying: “a short vo
 
 **Useful engineering form:**
 
-$$\Phi_0 = \frac{h}{2e} \approx 2.07 \times 10^{-15}\,\text{Wb} = 2.07\,\text{mV}\cdot\text{ps}$$
+\[
+\Phi_0 = \frac{h}{2e} \approx 2.07 \times 10^{-15}\,\text{Wb} = 2.07\,\text{mV}\cdot\text{ps}
+\]
 
 You will see both units. Weber (Wb) is the SI magnetic-flux unit. Millivolt·picosecond is the **circuit designer’s** form: it reminds you that a voltage pulse with that time-area carries one quantum.
 
@@ -121,7 +123,9 @@ RSFQ-style gates lean on overdamped behavior. Some drivers and older latching fa
 
 **Idea:** for one ideal SFQ switching event,
 
-$$\int_{-\infty}^{\infty} V(t)\,dt = \Phi_0$$
+\[
+\int_{-\infty}^{\infty} V(t)\,dt = \Phi_0
+\]
 
 The **shape** of $V(t)$ can change with bias, load, and junction parameters. The **area** is the invariant that matches one flux quantum. That is why sketches often look sloppy on purpose: the triangle or Gaussian blob is a reminder of an **event with area $\Phi_0$**, not a claim about exact millivolt peaks.
 

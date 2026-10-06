@@ -26,13 +26,13 @@ That is the concrete cell behind the story in [Pulse to Logic State](../bridge/p
 
 Public state cartoon:
 
-$$
+\[
 \begin{align}
 \text{empty} &\xrightarrow{\text{data pulse}} \text{full},\\
 \text{full} &\xrightarrow{\text{clock}} \text{empty + output pulse},\\
 \text{empty} &\xrightarrow{\text{clock}} \text{empty (no data out)}.
 \end{align}
-$$
+\]
 
 While holding a “1”, the **output pin is not a CMOS-like steady high**. The “1” lives as **loop flux**; the pin speaks when the clocked escape happens.
 
@@ -104,7 +104,9 @@ Those padding DFFs may compute **no new Boolean function**. They only wait. That
 
 Public pad count:
 
-$$k \approx n_{\mathrm{long}} - n_{\mathrm{short}}.$$
+\[
+k \approx n_{\mathrm{long}} - n_{\mathrm{short}}.
+\]
 
 ### DFF pads vs JTL fine delay
 
@@ -174,7 +176,9 @@ STA asks whether the data pulse falls in a legal window relative to the clock pu
 
 Public window cartoon:
 
-$$t_{\mathrm{data}} \;\text{vs}\; t_{\mathrm{clk}} \pm \text{(setup-/hold-like margins)}.$$
+\[
+t_{\mathrm{data}} \;\text{vs}\; t_{\mathrm{clk}} \pm \text{(setup-/hold-like margins)}.
+\]
 
 ## Worked example 6 — Cascaded overhead
 

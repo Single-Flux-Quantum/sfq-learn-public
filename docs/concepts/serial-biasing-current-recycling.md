@@ -31,7 +31,9 @@ For SFQ:
 
 Public slogan:
 
-$$I_{\mathrm{supply,\,parallel}} \sim \sum_i I_i \qquad\text{vs}\qquad I_{\mathrm{supply,\,serial}} \sim \max_i I_i$$
+\[
+I_{\mathrm{supply,\,parallel}} \sim \sum_i I_i \qquad\text{vs}\qquad I_{\mathrm{supply,\,serial}} \sim \max_i I_i
+\]
 
 (in the ideal cartoon where each island needs comparable current $I_i$ and recycling is perfect). Voltage compliance and margins get harder — that is the other side of the trade.
 
@@ -141,7 +143,9 @@ A CMOS designer who hears “series” may picture stacked FETs for voltage tole
 
 Suppose three identical islands each need $0.5\,\text{A}$ of bias if fed in parallel:
 
-$$I_{\mathrm{total,\,parallel}} \approx 1.5\,\text{A}.$$
+\[
+I_{\mathrm{total,\,parallel}} \approx 1.5\,\text{A}.
+\]
 
 Stacked in series with ideal recycling, the supply may provide about **$0.5\,\text{A}$** once, reused through all three. The supply must also provide enough **voltage compliance** for the series string and keep each island inside its bias margins.
 

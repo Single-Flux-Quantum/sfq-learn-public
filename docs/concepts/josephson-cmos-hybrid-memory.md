@@ -187,7 +187,9 @@ Suppose (teaching numbers only, not measurements):
 
 Then
 
-$$t_{\mathrm{total}} \approx 0.2+0.3+2.0+0.4+0.2 = 3.1\,\text{ns}.$$
+\[
+t_{\mathrm{total}} \approx 0.2+0.3+2.0+0.4+0.2 = 3.1\,\text{ns}.
+\]
 
 Here CMOS access dominates. In another system the interface + SFQ sequencing might dominate. Public habit: **budget both worlds**; never assume “CMOS access is everything” or “interface is free.”
 

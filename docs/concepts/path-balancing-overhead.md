@@ -26,7 +26,9 @@ Clock style ([concurrent / counter-flow](concurrent-and-counter-flow-clocking.md
 
 Public pad rule (stage-count cartoon):
 
-$$k = n_{\mathrm{long}} - n_{\mathrm{short}}$$
+\[
+k = n_{\mathrm{long}} - n_{\mathrm{short}}
+\]
 
 padding stages on the short path into a shared sink, when both counts are measured from a common reference epoch.
 
@@ -78,7 +80,9 @@ flowchart LR
 
 If path $B$ has $n_B$ clocked stages and path $A$ has $n_A$ stages into the same sink, with $n_B > n_A$, then the short path needs about
 
-$$k = n_B - n_A$$
+\[
+k = n_B - n_A
+\]
 
 padding stages (DFFs or equivalent epoch delays). Per reconvergent sink, sum pads over short paths. Exact cell choice (DFF vs JTL-only delay) is library- and timing-context-dependent.
 
@@ -153,7 +157,9 @@ Separately, a reconvergent merge is short by **two epochs** — insert **2** DFF
 
 Suppose a block has $N_{\mathrm{logic}}$ junctions in “useful” Boolean/pipeline cells and adds $N_{\mathrm{pad}}$ junctions in padding DFFs/JTLs/clock taps for those pads. Public overhead fraction sketch:
 
-$$f_{\mathrm{pad}} \approx \frac{N_{\mathrm{pad}}}{N_{\mathrm{logic}} + N_{\mathrm{pad}}}$$
+\[
+f_{\mathrm{pad}} \approx \frac{N_{\mathrm{pad}}}{N_{\mathrm{logic}} + N_{\mathrm{pad}}}
+\]
 
 Papers quote dramatic $f_{\mathrm{pad}}$ on large designs — those numbers are **private/paper-specific**. Your job as a newcomer is to expect $N_{\mathrm{pad}}$ to be large enough to matter in area, bias, and latency, and to treat balancing as a first-class design loop.
 

@@ -27,7 +27,9 @@ Public cartoon of one stage:
 
 Ideal stage conservation slogan:
 
-$$\int V_{\mathrm{out}}(t)\,dt \approx \Phi_0 \quad\text{(successful regeneration)}.$$
+\[
+\int V_{\mathrm{out}}(t)\,dt \approx \Phi_0 \quad\text{(successful regeneration)}.
+\]
 
 Three jobs one JTL chain can play:
 
@@ -100,7 +102,9 @@ There is no free “zero-JJ wire” that magically preserves SFQ pulses over arb
 
 If each JTL stage contributes a characteristic delay $\tau_{\mathrm{JTL}}$ (library- and bias-dependent — do not memorize a universal number), then $n$ stages contribute roughly
 
-$$t_{\mathrm{delay}} \approx n\,\tau_{\mathrm{JTL}}$$
+\[
+t_{\mathrm{delay}} \approx n\,\tau_{\mathrm{JTL}}
+\]
 
 plus any packaging of the pulse into adjacent cells. Designers reason in **integer stage counts** first, then refine with characterized tables in STA ([SFQ STA](sfq-static-timing-analysis.md)).
 

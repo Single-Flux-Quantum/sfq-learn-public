@@ -23,7 +23,9 @@ Together with [JTLs](jtl-interconnects.md) and [DFFs](rsfq-dff-and-retiming.md),
 
 Public tree-depth cartoon for fanout-2:
 
-$$d \ge \lceil \log_2 N \rceil$$
+\[
+d \ge \lceil \log_2 N \rceil
+\]
 
 to reach $N$ leaves in a balanced binary tree (plus matching delay cells on branches). Ideal full binary tree of $N$ leaves uses $N-1$ fanout-2 splitters.
 
@@ -80,7 +82,9 @@ sequenceDiagram
 
 For fanout-2 splitters, reaching $N$ leaves needs tree depth at least
 
-$$d \ge \lceil \log_2 N \rceil.$$
+\[
+d \ge \lceil \log_2 N \rceil.
+\]
 
 Each level adds:
 
@@ -103,7 +107,9 @@ Public discipline: **draw the tree**, do not assume a star net from one pin to $
 
 If branch A after the last common splitter has delay $t_A$ and branch B has $t_B$, the leaf skew is roughly
 
-$$\Delta t_{\mathrm{skew}} \approx |t_A - t_B|.$$
+\[
+\Delta t_{\mathrm{skew}} \approx |t_A - t_B|.
+\]
 
 Those times include splitter internals **plus** [JTL](jtl-interconnects.md) stubs. [STA](sfq-static-timing-analysis.md) treats $\Delta t_{\mathrm{skew}}$ as part of every setup-/hold-like check at the leaves.
 

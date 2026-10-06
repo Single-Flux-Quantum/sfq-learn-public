@@ -77,17 +77,29 @@ V:       /\
 
 You do not need to solve differential equations to continue the curriculum. You do need to recognize what each statement is *for*:
 
-1. **Current–phase (DC Josephson idea):**  
-   $$I = I_c \sin\phi$$  
-   Teaching read: phase controls how much supercurrent the weak link can carry; $I_c$ is the amplitude ceiling.
+1. **Current–phase (DC Josephson idea):**
 
-2. **Voltage–phase (AC Josephson idea):**  
-   $$V = \frac{\Phi_0}{2\pi}\frac{d\phi}{dt}$$  
-   Teaching read: voltage is proportional to how fast the phase is changing. A fast $2\pi$ slip makes a short pulse.
+\[
+I = I_c \sin\phi
+\]
 
-3. **Area rule for one slip:** integrating (2) over a $2\pi$ advance gives  
-   $$\int V\,dt = \Phi_0$$  
-   Teaching read: **one digital click ↔ one flux quantum of pulse area**, independent of the exact pulse shape in the idealization.
+Teaching read: phase controls how much supercurrent the weak link can carry; $I_c$ is the amplitude ceiling.
+
+2. **Voltage–phase (AC Josephson idea):**
+
+\[
+V = \frac{\Phi_0}{2\pi}\frac{d\phi}{dt}
+\]
+
+Teaching read: voltage is proportional to how fast the phase is changing. A fast $2\pi$ slip makes a short pulse.
+
+3. **Area rule for one slip:** integrating (2) over a $2\pi$ advance gives
+
+\[
+\int V\,dt = \Phi_0
+\]
+
+Teaching read: **one digital click ↔ one flux quantum of pulse area**, independent of the exact pulse shape in the idealization.
 
 The RCSJ *dynamics* add capacitor and resistor currents so that $I_{\mathrm{bias}} = I_c\sin\phi + V/R + C\,dV/dt$ (schematic form). Damping lives in that balance. Remember the **story**, not a demand that you integrate it by hand on this page.
 

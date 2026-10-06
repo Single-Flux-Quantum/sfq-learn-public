@@ -22,7 +22,9 @@ A DC SQUID’s effective critical current is modulated by the flux through its l
 
 If you put $N$ similar stages in **series** along the signal path (with appropriate bias and matching), the output voltage can scale roughly as
 
-$$V_{\mathrm{out}} \sim N \cdot V_{\mathrm{stage}}$$
+\[
+V_{\mathrm{out}} \sim N \cdot V_{\mathrm{stage}}
+\]
 
 in the cartoon where each stage contributes a comparable swing $V_{\mathrm{stage}}$. Reality includes loading, mismatch, and readout bandwidth — but the **public design idea** is simply: **stack height trades junctions and bias for amplitude**.
 
@@ -134,7 +136,9 @@ Suppose (cartoon numbers only) one well-biased stage can deliver about $V_1 \app
 
 A naïve series count is
 
-$$N \gtrsim \frac{V_{\mathrm{need}}}{V_1} \approx 10.$$
+\[
+N \gtrsim \frac{V_{\mathrm{need}}}{V_1} \approx 10.
+\]
 
 Ten stages do **not** magically produce a $1.8\,\text{V}$ CMOS rail. They may move you from “invisible to the next stage” to “usable by a semiconductor sense path or a second Josephson megaphone.” The remaining gap to room-temperature digital levels is often closed by **semiconductor amplifiers**, cable receivers, or [latching stacks](four-jl-latching-driver.md) — see the bridge checklist on [pulse → volt-level](../bridge/sfq-pulse-to-volt-level.md).
 
@@ -149,7 +153,9 @@ Use the table as **budget intuition**, not a PDK recipe. Loading and bandwidth c
 
 **Follow-on question inside the example.** Suppose loading cuts each stage’s useful swing to half of the open-circuit cartoon ($V_1^{\mathrm{eff}} = 0.5\,\text{mV}$) while the need stays $10\,\text{mV}$. Then
 
-$$N \gtrsim \frac{10}{0.5} = 20.$$
+\[
+N \gtrsim \frac{10}{0.5} = 20.
+\]
 
 Same physics story; the budget just got more honest about the load. That honesty is the point of the exercise.
 

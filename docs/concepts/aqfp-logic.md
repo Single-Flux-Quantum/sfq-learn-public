@@ -29,7 +29,9 @@ Both families are superconducting and cryogenic; they are **not** drop-in schema
 
 Public energy slogan (intent, not a measured promise):
 
-$$E_{\mathrm{switch}} \text{ tends to shrink when excitation changes slowly relative to intrinsic dynamics.}$$
+\[
+E_{\mathrm{switch}} \text{ tends to shrink when excitation changes slowly relative to intrinsic dynamics.}
+\]
 
 Faster AC clocks can raise dissipation — the speed–energy tension is part of the family’s identity.
 
@@ -117,7 +119,9 @@ Exact transformer turns ratios, $I_c$ values, and measured millivolts stay **pro
 
 A **majority** gate of three inputs outputs the value held by at least two inputs. In ordinary Boolean algebra:
 
-$$\mathrm{MAJ}(a,b,c) = ab + bc + ca.$$
+\[
+\mathrm{MAJ}(a,b,c) = ab + bc + ca.
+\]
 
 Boolean completeness comes from majority plus constants / inverters / buffers depending on the library. Why newcomers care:
 

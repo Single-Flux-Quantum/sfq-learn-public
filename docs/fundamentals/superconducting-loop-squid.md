@@ -15,7 +15,9 @@ If you only remember pulses from the previous page, storage will feel mysterious
 
 A frictionless circular water channel can keep water circulating forever once you give it a push. A superconducting loop can keep a **persistent current** circulating with essentially no DC voltage drop along the superconducting path. The “push unit” that matters for binary SFQ storage is about one flux quantum:
 
-$$L\,I_{\mathrm{circ}} \sim \Phi_0.$$
+\[
+L\,I_{\mathrm{circ}} \sim \Phi_0.
+\]
 
 You do not continuously “hold the bit up” with a voltage supply on that loop the way a CMOS static node is held by powered inverters. The supercurrent persists because the loop is superconducting and the fluxoid state is locked. Energy is spent when you **change** the state (write / readout switching), and in the bias networks that prepare junctions to switch — not in fighting loop resistance that is not there at DC.
 
@@ -71,11 +73,15 @@ flowchart TD
 
 For a first estimate, ignore junction phase drops and write the inductive flux as
 
-$$\Phi_{\mathrm{ind}} = L\,I_{\mathrm{circ}}.$$
+\[
+\Phi_{\mathrm{ind}} = L\,I_{\mathrm{circ}}.
+\]
 
 Setting $\Phi_{\mathrm{ind}} \approx \Phi_0$ for a stored quantum gives
 
-$$I_{\mathrm{circ}} \approx \frac{\Phi_0}{L}.$$
+\[
+I_{\mathrm{circ}} \approx \frac{\Phi_0}{L}.
+\]
 
 Using $\Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}$ and $L$ in pH yields currents in the hundreds of microamps for typical SFQ storage inductances — the same order as many junction critical currents. That matching is intentional: junctions must be able to **insert** or **remove** that circulating current when they switch.
 
@@ -121,7 +127,9 @@ Do not over-read the table: SFQ chips still consume bias power. The contrast is 
 
 Suppose a storage loop has $L = 10\,\text{pH}$ and you want $L I_{\mathrm{circ}} \approx \Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}$. Then
 
-$$I_{\mathrm{circ}} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{10\,\text{pH}} = 0.207\,\text{mA} \approx 207\,\mu\text{A}.$$
+\[
+I_{\mathrm{circ}} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{10\,\text{pH}} = 0.207\,\text{mA} \approx 207\,\mu\text{A}.
+\]
 
 If the escape junction in that cell has $I_c \approx 200\,\mu\text{A}$ and is biased near $I_c$, a clock pulse can push it over the edge when the circulating current is present, launching an output SFQ pulse and returning the loop toward empty. Exact bias fractions and margins are library-specific; the story is what matters here: **stored bit $\leftrightarrow$ circulating current $\leftrightarrow$ one flux quantum $\leftrightarrow$ junction-scale microamps**.
 
@@ -138,7 +146,9 @@ That is the DFF story in miniature. You will see it again on the RSFQ DFF concep
 
 Suppose someone proposes $L = 200\,\text{pH}$ for a “huge” storage loop to make layout easy. Then
 
-$$I_{\mathrm{circ}} \approx \frac{\Phi_0}{L} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{200\,\text{pH}} \approx 10\,\mu\text{A}.$$
+\[
+I_{\mathrm{circ}} \approx \frac{\Phi_0}{L} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{200\,\text{pH}} \approx 10\,\mu\text{A}.
+\]
 
 That circulating current may be awkwardly small compared with junction $I_c$ values and noise margins, and the large inductance slows dynamics. Conversely, tiny $L$ demands large $I_{\mathrm{circ}}$, stressing junctions and layout. SFQ libraries live in a **sweet band** of loop inductances matched to process $I_c$. Inductance is not a free decorative parameter.
 

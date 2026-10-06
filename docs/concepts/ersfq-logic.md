@@ -28,7 +28,9 @@ ERSFQ is **not** “a new Boolean algebra.” It is an **implementation family**
 
 Static resistor heat cartoon (classical):
 
-$$P_{\mathrm{static,\,R}} \sim I_b^2 R_{\mathrm{bias}}$$
+\[
+P_{\mathrm{static,\,R}} \sim I_b^2 R_{\mathrm{bias}}
+\]
 
 per biased path that still drops voltage across a resistor while idle. ERSFQ’s design intent is to drive that class of term toward negligible — without claiming zero switching energy.
 
@@ -151,7 +153,9 @@ You already know [JTL](jtl-interconnects.md), [splitter](splitter-and-confluence
 
 Classical resistive bias sets a working point by dropping part of a supply voltage across a resistor into a Josephson bias node. Even when **no** SFQ pulse fires, current still flows through that resistor, so heat continues:
 
-$$P_{\mathrm{static,\,R}} \sim I_b^2 R_{\mathrm{bias}}.$$
+\[
+P_{\mathrm{static,\,R}} \sim I_b^2 R_{\mathrm{bias}}.
+\]
 
 ERSFQ-style feeding replaces that continuous resistor drop with a network built from **inductors and feeding junctions** (exact topology is family- and paper-specific). The public intent:
 

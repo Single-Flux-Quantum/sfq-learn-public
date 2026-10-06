@@ -46,7 +46,9 @@ The analogies are about **amplitude and duration matching**, and about **leaving
 
 An SFQ pulse’s sacred invariant is area $\Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}$ (from [phase to pulse](phase-to-pulse.md)). That forces a harsh trade: if the event lasts only a few picoseconds, the voltage height is only millivolts.
 
-$$V_{\mathrm{avg}} \approx \frac{\Phi_0}{\Delta t}.$$
+\[
+V_{\mathrm{avg}} \approx \frac{\Phi_0}{\Delta t}.
+\]
 
 Narrower ⇒ taller average for fixed area. Wider ⇒ shorter average. CMOS and instruments often want **both** taller **and** wider. Fixed-area geometry alone cannot grant both wishes.
 
@@ -139,13 +141,17 @@ Gate-land speaks fluxons. Pad-land often speaks latched or stacked volt-level wa
 
 If a single-flux event lasts $\Delta t = 4\,\text{ps}$,
 
-$$V_{\mathrm{avg}} \approx \frac{\Phi_0}{\Delta t} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{4\,\text{ps}} \approx 0.5\,\text{mV}.$$
+\[
+V_{\mathrm{avg}} \approx \frac{\Phi_0}{\Delta t} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{4\,\text{ps}} \approx 0.5\,\text{mV}.
+\]
 
 A CMOS input that wants roughly $200\,\text{mV}$ for a few nanoseconds is not “a little pickier.” It is a different signal class. Something must amplify and stretch.
 
 **Gap factor cartoon (height only):**
 
-$$\frac{200\,\text{mV}}{0.5\,\text{mV}} = 400.$$
+\[
+\frac{200\,\text{mV}}{0.5\,\text{mV}} = 400.
+\]
 
 That factor is already large before you admit the sampler also wants nanoseconds, not $4\,\text{ps}$. Real thresholds and swings vary by library; the point is order-of-magnitude mismatch, not a recipe for one paper’s pad.
 
@@ -155,7 +161,9 @@ That factor is already large before you admit the sampler also wants nanoseconds
 
 Suppose you somehow held the same $\Phi_0$ area but stretched duration to $\Delta t = 2\,\text{ns} = 2000\,\text{ps}$:
 
-$$V_{\mathrm{avg}} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{2000\,\text{ps}} \approx 1\,\mu\text{V}.$$
+\[
+V_{\mathrm{avg}} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{2000\,\text{ps}} \approx 1\,\mu\text{V}.
+\]
 
 Stretching alone **while preserving only one $\Phi_0$ of area** makes the pulse **shorter in height**, not taller. That is the cruel geometry of a fixed area: wide and tall cannot both grow if area is fixed at one quantum.
 

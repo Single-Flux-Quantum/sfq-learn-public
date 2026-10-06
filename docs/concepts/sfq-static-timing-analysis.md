@@ -30,7 +30,9 @@ In RSFQ the same English words appear, but:
 
 Public timing sketch at a capturing cell:
 
-$$t_{\mathrm{data}} \;\text{vs}\; t_{\mathrm{clk}} \pm \text{(setup-/hold-like margins)}$$
+\[
+t_{\mathrm{data}} \;\text{vs}\; t_{\mathrm{clk}} \pm \text{(setup-/hold-like margins)}
+\]
 
 with $t_{\mathrm{data}}$ and $t_{\mathrm{clk}}$ built from library delays along their paths.
 
@@ -183,7 +185,9 @@ Borrowed CMOS words still help:
 
 Public setup-like cartoon at one capturing cell:
 
-$$t_{\mathrm{slack,setup}} \approx \bigl(t_{\mathrm{clk}} - t_{\mathrm{data}}\bigr) - t_{\mathrm{setup,req}}$$
+\[
+t_{\mathrm{slack,setup}} \approx \bigl(t_{\mathrm{clk}} - t_{\mathrm{data}}\bigr) - t_{\mathrm{setup,req}}
+\]
 
 (sign conventions vary by tool; learn the **idea**, not a universal equation). Hold-like checks flip the early-arrival worry. After any fix, re-check **both** families — shortening a path to help setup can create hold, and adding [JTL](jtl-interconnects.md) delay to help hold can create setup.
 

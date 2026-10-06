@@ -30,7 +30,9 @@ The Resistively and Capacitively Shunted Junction (RCSJ) picture places an ideal
 
 A standard definition is
 
-$$\beta_C = \frac{2\pi I_c R^2 C}{\Phi_0}.$$
+\[
+\beta_C = \frac{2\pi I_c R^2 C}{\Phi_0}.
+\]
 
 You do not need to memorize derivations for the core walk. You need the sorting rule:
 
@@ -119,7 +121,9 @@ CMOS does not have a McCumber parameter, but it does have an analogous design di
 
 Suppose a junction has $I_c = 200\,\mu\text{A}$, an effective parallel $R = 1\,\Omega$, and $C = 0.5\,\text{pF}$. Using
 
-$$\beta_C = \frac{2\pi I_c R^2 C}{\Phi_0},$$
+\[
+\beta_C = \frac{2\pi I_c R^2 C}{\Phi_0},
+\]
 
 plug in SI units carefully in a real calculator when you design. For learning, notice the **knobs**:
 

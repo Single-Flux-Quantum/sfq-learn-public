@@ -26,7 +26,9 @@ Take a moment to notice how radical that claim is. In CMOS you can slow a design
 
 Think of the Josephson phase $\phi$ as the angle of a wheel. The AC Josephson relation says that the **voltage** across the junction is proportional to how fast the wheel is spinning:
 
-$$V(t) = \frac{\Phi_0}{2\pi}\frac{d\phi}{dt}.$$
+\[
+V(t) = \frac{\Phi_0}{2\pi}\frac{d\phi}{dt}.
+\]
 
 - If the wheel sits still, $d\phi/dt = 0$ and $V = 0$ (the superconducting state at DC).
 - If the wheel turns steadily, you get a continuous voltage (the classic DC Josephson voltage–frequency link).
@@ -52,7 +54,9 @@ You already met the AC Josephson relation on the RCSJ and flux pages. Restate it
 
 Integrate over one complete $2\pi$ advance:
 
-$$\int V(t)\,dt = \frac{\Phi_0}{2\pi}\int_{0}^{2\pi} d\phi = \Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}.$$
+\[
+\int V(t)\,dt = \frac{\Phi_0}{2\pi}\int_{0}^{2\pi} d\phi = \Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}.
+\]
 
 That identity is the heart of this bridge:
 
@@ -87,7 +91,9 @@ sequenceDiagram
 
 Why write $\Phi_0$ as $\text{mV}\cdot\text{ps}$? Because $1\,\text{Wb} = 1\,\text{V}\cdot\text{s}$, so
 
-$$\Phi_0 \approx 2.07\times 10^{-15}\,\text{V}\cdot\text{s} = 2.07\,\text{mV}\cdot\text{ps}.$$
+\[
+\Phi_0 \approx 2.07\times 10^{-15}\,\text{V}\cdot\text{s} = 2.07\,\text{mV}\cdot\text{ps}.
+\]
 
 That unit conversion is how device physicists and circuit designers share the same number on a picosecond scope sketch. It is also why “millivolt × picosecond” appears everywhere in SFQ talk: it is the engineering face of a fundamental constant.
 
@@ -95,7 +101,9 @@ That unit conversion is how device physicists and circuit designers share the sa
 
 Suppose phase crept through $2\pi$ over one nanosecond. The area would still be $\Phi_0$, but the average height would be tiny:
 
-$$V_{\mathrm{avg}} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{1000\,\text{ps}} \approx 2\,\mu\text{V}.$$
+\[
+V_{\mathrm{avg}} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{1000\,\text{ps}} \approx 2\,\mu\text{V}.
+\]
 
 That is not an RSFQ token useful for gate-to-gate digital communication. RSFQ engineers choose damping and bias so that the slip is **fast** — few picoseconds — so the pulse is millivolt-scale and short enough to fit in high-rate logic timing. The constant does not change; the **dynamics** do.
 
@@ -146,7 +154,9 @@ You do not need the full Stewart–McCumber formula on this page. You need the d
 
 $\Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}$ already hints at the scale. If the entire slip dumps its area into a pulse only a few picoseconds wide, the average height is millivolts, not volts:
 
-$$V_{\mathrm{avg}} \approx \frac{\Phi_0}{\Delta t}.$$
+\[
+V_{\mathrm{avg}} \approx \frac{\Phi_0}{\Delta t}.
+\]
 
 | Rough duration $\Delta t$ | Rough average height $\Phi_0/\Delta t$ |
 |---------------------------|----------------------------------------|
@@ -162,7 +172,9 @@ Notice the cruel geometry hiding in the table: **narrower ⇒ taller average** f
 
 Suppose an entire $2\pi$ slip completes in roughly $\Delta t = 4\,\text{ps}$. A crude average voltage is
 
-$$V_{\mathrm{avg}} \approx \frac{\Phi_0}{\Delta t} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{4\,\text{ps}} \approx 0.52\,\text{mV}.$$
+\[
+V_{\mathrm{avg}} \approx \frac{\Phi_0}{\Delta t} \approx \frac{2.07\,\text{mV}\cdot\text{ps}}{4\,\text{ps}} \approx 0.52\,\text{mV}.
+\]
 
 **Interpretation.** On a scope sketch you might see a spike whose peak is higher than $0.5\,\text{mV}$ and whose base is a few picoseconds wide. Do not panic if the peak is not “exactly” $0.52\,\text{mV}$. Ask first: is the **area** near $2.07\,\text{mV}\cdot\text{ps}$?
 
@@ -172,7 +184,9 @@ $$V_{\mathrm{avg}} \approx \frac{\Phi_0}{\Delta t} \approx \frac{2.07\,\text{mV}
 
 Model a pulse as a triangle of base $\Delta t = 5\,\text{ps}$ and peak $V_p = 0.8\,\text{mV}$:
 
-$$A \approx \tfrac{1}{2}\,V_p\,\Delta t = \tfrac{1}{2}\times 0.8\,\text{mV}\times 5\,\text{ps} = 2.0\,\text{mV}\cdot\text{ps}.$$
+\[
+A \approx \tfrac{1}{2}\,V_p\,\Delta t = \tfrac{1}{2}\times 0.8\,\text{mV}\times 5\,\text{ps} = 2.0\,\text{mV}\cdot\text{ps}.
+\]
 
 Compare to $\Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}$. The sketch is already within a few percent of one flux quantum. That is the intended design ballpark for a single overdamped slip: **one click, one quantum**.
 
@@ -182,7 +196,9 @@ If instead someone drew a $1\,\text{ns}$-wide, $1\,\text{V}$ CMOS-like rectangle
 
 If a junction advanced by $4\pi$ in one uncontrolled event,
 
-$$\int V\,dt = \frac{\Phi_0}{2\pi}\int_{0}^{4\pi} d\phi = 2\Phi_0.$$
+\[
+\int V\,dt = \frac{\Phi_0}{2\pi}\int_{0}^{4\pi} d\phi = 2\Phi_0.
+\]
 
 In the ideal Josephson picture that is **two** flux quanta, not a “taller bit.” RSFQ cells are designed and timed so that normal operation produces controlled single ($2\pi$) slips. Multi-slip events are usually margin or timing failures, not a free way to invent multi-level logic.
 
@@ -192,11 +208,15 @@ In the ideal Josephson picture that is **two** flux quanta, not a “taller bit.
 
 Suppose pulse A is a triangle with base $4\,\text{ps}$ and peak $1.035\,\text{mV}$:
 
-$$A_A \approx \tfrac{1}{2}\times 1.035\times 4 = 2.07\,\text{mV}\cdot\text{ps}.$$
+\[
+A_A \approx \tfrac{1}{2}\times 1.035\times 4 = 2.07\,\text{mV}\cdot\text{ps}.
+\]
 
 Suppose pulse B is a crude rectangle of width $6\,\text{ps}$ and height $0.345\,\text{mV}$:
 
-$$A_B \approx 0.345\times 6 = 2.07\,\text{mV}\cdot\text{ps}.$$
+\[
+A_B \approx 0.345\times 6 = 2.07\,\text{mV}\cdot\text{ps}.
+\]
 
 They look different on a sketch. Idealized single-slip digital meaning is the same: one flux quantum of area. Real cells still care which shape couples better into the next inductor — margins are engineering — but newcomers should stop asking “which peak is the 1?” and start asking “did we deliver about one $\Phi_0$ in the right place at the right time?”
 

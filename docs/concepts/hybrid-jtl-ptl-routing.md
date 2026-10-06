@@ -28,7 +28,9 @@ Hybrid = walk to the gym door (JTL), throw the ball (PTL), then hand it again (J
 
 Public delay cartoon for a hybrid net:
 
-$$t_{\mathrm{net}} \approx t_{\mathrm{JTL,local}} + t_{\mathrm{driver}} + t_{\mathrm{flight}}(\ell) + t_{\mathrm{receiver}} + t_{\mathrm{JTL,far}}$$
+\[
+t_{\mathrm{net}} \approx t_{\mathrm{JTL,local}} + t_{\mathrm{driver}} + t_{\mathrm{flight}}(\ell) + t_{\mathrm{receiver}} + t_{\mathrm{JTL,far}}
+\]
 
 where $\ell$ is PTL length. Exact $t_{\mathrm{flight}}(\ell)$ models are process-specific; the **additive structure** is public.
 

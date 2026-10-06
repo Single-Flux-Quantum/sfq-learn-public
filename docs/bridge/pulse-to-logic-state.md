@@ -199,7 +199,9 @@ That is why SFQ design obsesses over [path balancing](../glossary.md), clock dis
 
 **Numeric sketch (order-of-magnitude only, not a chip claim).** If clock epochs are spaced by $T_{\mathrm{clk}} = 50\,\text{ps}$ (a $20\,\text{GHz}$ cartoon rate), a pulse that is $5\,\text{ps}$ late is not “almost on time” in a vague human sense — it is a **10% epoch error** and may violate the cell’s timing arc:
 
-$$\frac{5\,\text{ps}}{50\,\text{ps}} = 0.10.$$
+\[
+\frac{5\,\text{ps}}{50\,\text{ps}} = 0.10.
+\]
 
 Exact setup/hold numbers are library-specific; the lesson is qualitative: **windows are narrow because pulses are short and pipeline stages are deep**.
 

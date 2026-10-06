@@ -23,7 +23,9 @@ In ordinary CMOS digital logic, a wire holds a **voltage level**. In RSFQ:
 
 A single SFQ voltage spike is brief (picoseconds) and tiny in amplitude, but its time integral is fixed by flux quantization:
 
-$$\int V(t)\,dt = \Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}.$$
+\[
+\int V(t)\,dt = \Phi_0 \approx 2.07\,\text{mV}\cdot\text{ps}.
+\]
 
 That shared “token size” is why designers talk about **fluxons** as information tokens: ideal pulses are interchangeable in area; meaning comes from **which cell** and **which epoch**.
 
@@ -168,7 +170,9 @@ Notice: the *voltage height* of each spike is not the Boolean value. The Boolean
 
 A teaching bench often builds:
 
-$$\text{DC/SFQ} \rightarrow \text{JTL} \rightarrow \text{DFF} \rightarrow \text{JTL} \rightarrow \text{SFQ/DC}.$$
+\[
+\text{DC/SFQ} \rightarrow \text{JTL} \rightarrow \text{DFF} \rightarrow \text{JTL} \rightarrow \text{SFQ/DC}.
+\]
 
 Step sequence:
 
@@ -190,7 +194,9 @@ If path A has 2 stages and path B has 5 stages into the same gate, you insert pa
 
 Public pad cartoon:
 
-$$k \approx n_{\mathrm{long}} - n_{\mathrm{short}}.$$
+\[
+k \approx n_{\mathrm{long}} - n_{\mathrm{short}}.
+\]
 
 ## Worked example 4 — Place ERSFQ and AQFP without confusion
 

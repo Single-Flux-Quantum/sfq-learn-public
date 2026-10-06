@@ -101,11 +101,15 @@ If a talk slide says only “low power SFQ,” ask which of the three rows it me
 
 A tiny algebraic reminder helps the first row stick. For a single resistive tap carrying DC bias $I_b$ through $R_b$,
 
-$$P_{\mathrm{tap}} \approx I_b^2 R_b$$
+\[
+P_{\mathrm{tap}} \approx I_b^2 R_b
+\]
 
 is the static heat idea in one line. For $N$ similar parallel taps,
 
-$$P_{\mathrm{static}} \sim N\, I_b^2 R_b, \qquad I_{\mathrm{total}} \sim N\, I_b.$$
+\[
+P_{\mathrm{static}} \sim N\, I_b^2 R_b, \qquad I_{\mathrm{total}} \sim N\, I_b.
+\]
 
 Same $N$ and $I_b$ appear in both formulas — that is why people confuse watts and amperes — but the *problems* differ. One is heat in resistors; the other is how much current the plant must deliver. Removing $R_b$ from the cartoon (ERSFQ intent) attacks $P_{\mathrm{static}}$’s resistor term. It does not automatically rewrite $I_{\mathrm{total}} \sim N I_b$ unless the feed topology itself changes.
 
@@ -113,11 +117,15 @@ Same $N$ and $I_b$ appear in both formulas — that is why people confuse watts 
 
 Suppose a bias tap carries $I_b = 0.1\,\text{mA} = 10^{-4}\,\text{A}$ through $R_b = 10\,\Omega$ (illustrative numbers for arithmetic, not a PDK claim). A crude static power is
 
-$$P_{\mathrm{tap}} \approx I_b^2 R_b = (10^{-4})^2 \times 10 = 10^{-7}\,\text{W} = 0.1\,\mu\text{W}.$$
+\[
+P_{\mathrm{tap}} \approx I_b^2 R_b = (10^{-4})^2 \times 10 = 10^{-7}\,\text{W} = 0.1\,\mu\text{W}.
+\]
 
 Harmless alone. Now imagine $N = 10^{6}$ similar taps (order-of-magnitude cartoon for a large chip’s worth of bias points):
 
-$$P_{\mathrm{static}} \sim N \times P_{\mathrm{tap}} = 10^{6} \times 0.1\,\mu\text{W} = 0.1\,\text{W}.$$
+\[
+P_{\mathrm{static}} \sim N \times P_{\mathrm{tap}} = 10^{6} \times 0.1\,\mu\text{W} = 0.1\,\text{W}.
+\]
 
 At cryogenic temperatures, **tenths of a watt to many watts** of on-chip static heat is a serious budget conversation — and this sketch ignored wiring, margins, and that real libraries have many junctions per “cell.” The point is the **scaling shape**: static power grows with tap count if every tap is a hot resistor.
 
@@ -127,7 +135,9 @@ You can also account the same tap as $P \approx V_{\mathrm{bias}} I_b$ when the 
 
 Using the same $I_b = 0.1\,\text{mA}$ and $N = 100{,}000$ parallel taps:
 
-$$I_{\mathrm{total}} \approx N \times I_b = 100{,}000 \times 0.1\,\text{mA} = 10\,\text{A}.$$
+\[
+I_{\mathrm{total}} \approx N \times I_b = 100{,}000 \times 0.1\,\text{mA} = 10\,\text{A}.
+\]
 
 That is already an **ampere-class** delivery problem for cables and filters — even before you price resistor heat. Serial biasing / current recycling (later) reuses current through stacked [ground islands](../glossary.md). ERSFQ addresses **how** you feed without always-hot resistors; delivery topology addresses **how many amperes** cross the cryostat boundary.
 
