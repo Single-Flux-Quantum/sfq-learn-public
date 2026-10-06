@@ -63,7 +63,7 @@ Longer, story-first pages between fundamentals and compact SFQ concepts. **Do no
 Start here: [bridge/README.md](bridge/README.md)
 
 1. [Phase to pulse](bridge/phase-to-pulse.md)  
-2. [Pulse to logic state](bridge/pulse-to-logic-state.md)  
+2. [Pulse to logic state](bridge/pulse-to-logic-state.md) · [lab](labs/pulse-to-logic-state.html)  
 3. [Gate-level pipelining](bridge/gate-level-pipelining.md)  
 4. [Resistive bias to ERSFQ](bridge/resistive-bias-to-ersfq.md)  
 5. [DC bias current delivery](bridge/dc-bias-current-delivery.md)  

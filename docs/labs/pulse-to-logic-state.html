@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSFQ Windowed Encoding Lab</title>
+  <style>
+    :root {
+      --bg: #0c1222;
+      --panel: #151d2e;
+      --border: #2a3548;
+      --text: #e8eef7;
+      --muted: #8b9bb4;
+      --accent: #3d9cf0;
+      --ok: #3ecf8e;
+      --bad: #f07178;
+      --warn: #e6b450;
+      --window: rgba(61, 156, 240, 0.18);
+      --pulse: #f0c14d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px 24px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 1.35rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
+
+    .lede {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    button {
+      border: none;
+      border-radius: 6px;
+      padding: 9px 14px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    #runBtn {
+      background: var(--accent);
+      color: #061018;
+    }
+
+    #clearBtn {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+
+    button:hover { filter: brightness(1.06); }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.92rem;
+      cursor: pointer;
+      user-select: none;
+      color: var(--text);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat {
+      background: rgba(0, 0, 0, 0.22);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 1.35rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timeline-wrap {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.25);
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .timeline-label {
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 120px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      font-size: 0.85rem;
+      text-align: center;
+    }
+
+    th {
+      padding: 9px 8px;
+      font-weight: 500;
+      color: var(--muted);
+      background: rgba(0, 0, 0, 0.28);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 9px 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .ok { color: var(--ok); font-weight: 700; }
+    .bad { color: var(--bad); font-weight: 700; }
+    .muted { color: var(--muted); }
+    .warn { color: var(--warn); }
+
+    .hint {
+      margin-top: 14px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>RSFQ Windowed Encoding Lab</h1>
+    <p class="lede">
+      Logic <strong>1</strong> = an SFQ pulse present in the agreed clock window.
+      Logic <strong>0</strong> = absence in that same window.
+      A physically fine pulse in the <em>wrong</em> window is a timing error — not a free 1.
+    </p>
+
+    <div class="controls">
+      <button type="button" id="runBtn">Generate 8 epochs</button>
+      <button type="button" id="clearBtn">Reset</button>
+      <label class="toggle">
+        <input type="checkbox" id="skewToggle">
+        <span>Enable timing skew (pulse outside window)</span>
+      </label>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Epochs</div>
+        <div class="stat-value" id="statEpochs">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Decoded 1s</div>
+        <div class="stat-value" id="statOnes">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Decoded 0s</div>
+        <div class="stat-value" id="statZeros">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Timing errors</div>
+        <div class="stat-value" id="statErrors">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Error rate</div>
+        <div class="stat-value" id="statRate">0%</div>
+      </div>
+    </div>
+
+    <div class="timeline-wrap">
+      <div class="timeline-label">Latest batch — clock windows (shaded) vs data pulses (dots)</div>
+      <canvas id="timeline" width="880" height="120" aria-label="Epoch timeline"></canvas>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Epoch</th>
+            <th>Intended bit</th>
+            <th>Pulse landing</th>
+            <th>Decoded bit</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="resultsTable">
+          <tr>
+            <td colspan="5" class="muted" style="padding: 20px;">
+              Click “Generate 8 epochs” to run a short bitstream.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="hint">
+      <strong>Without skew:</strong> every intended 1 lands in-window; every intended 0 stays empty → 0% timing errors.
+      <strong>With skew:</strong> some pulses arrive early/late. The receiver still looks only inside the window, so the decoded bit can disagree with Alice’s intent — the RSFQ analogue of “wrong basis / wrong epoch.”
+    </p>
+  </div>
+
+  <script>
+    const EPOCHS_PER_CLICK = 8;
+    const SKEW_PROB = 0.35;
+
+    let totalEpochs = 0;
+    let totalOnes = 0;
+    let totalZeros = 0;
+    let totalErrors = 0;
+    /** @type {{ epoch: number, intended: number, landing: string, decoded: number|string, status: string, pulseNorm: number|null }[]} */
+    let lastBatch = [];
+
+    const runBtn = document.getElementById("runBtn");
+    const clearBtn = document.getElementById("clearBtn");
+    const skewToggle = document.getElementById("skewToggle");
+    const resultsTable = document.getElementById("resultsTable");
+    const canvas = document.getElementById("timeline");
+    const ctx = canvas.getContext("2d");
+
+    const statEpochs = document.getElementById("statEpochs");
+    const statOnes = document.getElementById("statOnes");
+    const statZeros = document.getElementById("statZeros");
+    const statErrors = document.getElementById("statErrors");
+    const statRate = document.getElementById("statRate");
+
+    function coin() {
+      return Math.random() < 0.5;
+    }
+
+    function resetLab() {
+      totalEpochs = 0;
+      totalOnes = 0;
+      totalZeros = 0;
+      totalErrors = 0;
+      lastBatch = [];
+      updateStats();
+      resultsTable.innerHTML =
+        '<tr><td colspan="5" class="muted" style="padding: 20px;">Click “Generate 8 epochs” to run a short bitstream.</td></tr>';
+      drawTimeline([]);
+    }
+
+    function updateStats() {
+      statEpochs.textContent = String(totalEpochs);
+      statOnes.textContent = String(totalOnes);
+      statZeros.textContent = String(totalZeros);
+      statErrors.textContent = String(totalErrors);
+      const rate = totalEpochs > 0 ? ((totalErrors / totalEpochs) * 100).toFixed(1) : "0";
+      statRate.textContent = rate + "%";
+      if (totalEpochs === 0) {
+        statRate.style.color = "var(--text)";
+      } else if (parseFloat(rate) > 0) {
+        statRate.style.color = "var(--bad)";
+      } else {
+        statRate.style.color = "var(--ok)";
+      }
+    }
+
+    /**
+     * Simulate one epoch.
+     * pulseNorm: position in [-0.15, 1.15] relative to window [0,1]; null = no pulse.
+     */
+    function simulateEpoch(epochId, skewOn) {
+      const intended = coin() ? 1 : 0;
+      let landing = "none";
+      let pulseNorm = null;
+      let decoded;
+      let status;
+
+      if (!skewOn) {
+        if (intended === 1) {
+          pulseNorm = 0.25 + Math.random() * 0.5;
+          landing = "in-window";
+          decoded = 1;
+          status = "ok";
+        } else {
+          landing = "none";
+          decoded = 0;
+          status = "ok";
+        }
+      } else {
+        const skewHits = Math.random() < SKEW_PROB;
+        if (intended === 1) {
+          if (!skewHits) {
+            pulseNorm = 0.25 + Math.random() * 0.5;
+            landing = "in-window";
+            decoded = 1;
+            status = "ok";
+          } else {
+            // Pulse escapes the window → receiver sees absence → wrong 0
+            pulseNorm = coin() ? -0.08 - Math.random() * 0.06 : 1.08 + Math.random() * 0.06;
+            landing = pulseNorm < 0 ? "early" : "late";
+            decoded = 0;
+            status = "timing-error";
+          }
+        } else {
+          if (!skewHits) {
+            landing = "none";
+            decoded = 0;
+            status = "ok";
+          } else {
+            // Spurious pulse lands in this window (leaked from neighbor) → false 1
+            pulseNorm = 0.2 + Math.random() * 0.6;
+            landing = "spurious in-window";
+            decoded = 1;
+            status = "timing-error";
+          }
+        }
+      }
+
+      return { epoch: epochId, intended, landing, decoded, status, pulseNorm };
+    }
+
+    function statusClass(status) {
+      return status === "ok" ? "ok" : "bad";
+    }
+
+    function statusLabel(status) {
+      return status === "ok" ? "OK" : "TIMING ERROR";
+    }
+
+    function appendRows(batch) {
+      if (totalEpochs === batch.length) {
+        resultsTable.innerHTML = "";
+      }
+      for (const row of batch) {
+        const tr = document.createElement("tr");
+        tr.innerHTML =
+          "<td>" + row.epoch + "</td>" +
+          "<td>" + row.intended + "</td>" +
+          "<td class=\"" + (row.landing.includes("window") && row.status === "ok" ? "ok" : row.landing === "none" ? "muted" : "warn") + "\">" +
+            row.landing +
+          "</td>" +
+          "<td>" + row.decoded + "</td>" +
+          "<td class=\"" + statusClass(row.status) + "\">" + statusLabel(row.status) + "</td>";
+        resultsTable.appendChild(tr);
+      }
+    }
+
+    function drawTimeline(batch) {
+      const dpr = window.devicePixelRatio || 1;
+      const cssW = canvas.clientWidth || 880;
+      const cssH = 120;
+      canvas.width = Math.floor(cssW * dpr);
+      canvas.height = Math.floor(cssH * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      ctx.clearRect(0, 0, cssW, cssH);
+      ctx.fillStyle = "#0a101c";
+      ctx.fillRect(0, 0, cssW, cssH);
+
+      const n = Math.max(batch.length, 1);
+      const pad = 16;
+      const usable = cssW - pad * 2;
+      const slotW = usable / n;
+      const midY = cssH * 0.55;
+
+      // Window bands
+      for (let i = 0; i < batch.length; i++) {
+        const x0 = pad + i * slotW + slotW * 0.12;
+        const w = slotW * 0.76;
+        ctx.fillStyle = "rgba(61, 156, 240, 0.16)";
+        ctx.fillRect(x0, 28, w, 56);
+        ctx.strokeStyle = "rgba(61, 156, 240, 0.45)";
+        ctx.strokeRect(x0 + 0.5, 28.5, w - 1, 55);
+
+        ctx.fillStyle = "#8b9bb4";
+        ctx.font = "11px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("T" + batch[i].epoch, pad + i * slotW + slotW / 2, 18);
+      }
+
+      if (batch.length === 0) {
+        ctx.fillStyle = "#8b9bb4";
+        ctx.font = "13px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("Timeline appears after you generate epochs", cssW / 2, cssH / 2);
+        return;
+      }
+
+      // Baseline
+      ctx.strokeStyle = "#2a3548";
+      ctx.beginPath();
+      ctx.moveTo(pad, midY);
+      ctx.lineTo(cssW - pad, midY);
+      ctx.stroke();
+
+      // Pulses
+      for (let i = 0; i < batch.length; i++) {
+        const row = batch[i];
+        if (row.pulseNorm == null) continue;
+        const x0 = pad + i * slotW + slotW * 0.12;
+        const w = slotW * 0.76;
+        const x = x0 + row.pulseNorm * w;
+        const inWindow = row.pulseNorm >= 0 && row.pulseNorm <= 1;
+
+        ctx.beginPath();
+        ctx.fillStyle = inWindow ? (row.status === "ok" ? "#f0c14d" : "#e6b450") : "#f07178";
+        ctx.arc(x, midY, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Spike stem
+        ctx.strokeStyle = ctx.fillStyle;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, midY - 18);
+        ctx.lineTo(x, midY + 4);
+        ctx.stroke();
+        ctx.lineWidth = 1;
+      }
+    }
+
+    runBtn.addEventListener("click", () => {
+      const skewOn = skewToggle.checked;
+      const batch = [];
+
+      for (let i = 0; i < EPOCHS_PER_CLICK; i++) {
+        totalEpochs += 1;
+        const row = simulateEpoch(totalEpochs, skewOn);
+        batch.push(row);
+
+        if (row.decoded === 1) totalOnes += 1;
+        else totalZeros += 1;
+        if (row.status === "timing-error") totalErrors += 1;
+      }
+
+      lastBatch = batch;
+      appendRows(batch);
+      updateStats();
+      drawTimeline(batch);
+    });
+
+    clearBtn.addEventListener("click", resetLab);
+    skewToggle.addEventListener("change", resetLab);
+    window.addEventListener("resize", () => drawTimeline(lastBatch));
+
+    drawTimeline([]);
+  </script>
+</body>
+</html>

@@ -98,6 +98,22 @@ Newcomers sometimes feel uneasy that logic 0 is “nothing happening.” In wind
 
 That is why clock distribution and timing arcs matter so much later. If the circuit cannot agree on where the slot boundaries are, “absence” stops being a crisp symbol and becomes an argument about measurement.
 
+## Interactive lab
+
+Try this in place (same idea as the text above). Prefer full-screen? Open the [lab page](../labs/pulse-to-logic-state.html).
+
+1. Leave **timing skew** off and generate epochs. When the intended bit is 1, the pulse lands in the shaded window; when it is 0, the window stays empty. Error rate should stay at **0%**.
+2. Enable **timing skew** and generate again. Some pulses arrive early/late (or a spurious pulse leaks into the window). The receiver still decodes only what is *inside* the window — so the decoded bit can disagree with the intended bit. That is a **timing error**, not a free bonus 1.
+
+<iframe
+  src="../labs/pulse-to-logic-state.html"
+  title="RSFQ windowed encoding lab"
+  style="width:100%;height:720px;border:1px solid #2a3548;border-radius:8px;background:#0c1222;"
+  loading="lazy"
+></iframe>
+
+Convention for more demos: [labs/README.md](../labs/README.md).
+
 ## Storage: circulating flux as a parked bit
 
 When you need memory between clock beats, RSFQ uses a superconducting loop that can hold a circulating current corresponding to about one flux quantum — the same physics as [flux quantization](../fundamentals/flux-quantization.md) and [loops / SQUIDs](../fundamentals/superconducting-loop-squid.md).

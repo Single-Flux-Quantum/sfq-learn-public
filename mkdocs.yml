@@ -62,6 +62,9 @@ nav:
       - Resistive Bias to ERSFQ: bridge/resistive-bias-to-ersfq.md
       - DC Bias Current Delivery: bridge/dc-bias-current-delivery.md
       - SFQ Pulse to Voltage Levels: bridge/sfq-pulse-to-volt-level.md
+  - Labs:
+      - Labs hub: labs/README.md
+      - Windowed encoding: labs/pulse-to-logic-state.html
   - Concepts:
       - CMOS vs SFQ: concepts/cmos-vs-sfq.md
       - RSFQ Overview: concepts/rsfq-logic.md

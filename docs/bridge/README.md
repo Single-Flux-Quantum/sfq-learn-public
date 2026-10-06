@@ -14,7 +14,7 @@ More wording is intentional so newcomers can follow with patience (same pedagogy
 ## Reading order
 
 1. [Phase to pulse](phase-to-pulse.md) — $2\pi$ slip → picosecond voltage pulse  
-2. [Pulse to logic state](pulse-to-logic-state.md) — windows, storage loops, clocked readout  
+2. [Pulse to logic state](pulse-to-logic-state.md) — windows, storage loops, clocked readout ([interactive lab](../labs/pulse-to-logic-state.html))  
 3. [Gate-level pipelining](gate-level-pipelining.md) — every gate is also a timing stage  
 4. [Resistive bias to ERSFQ](resistive-bias-to-ersfq.md) — static power in bias resistors  
 5. [DC bias current delivery](dc-bias-current-delivery.md) — why chips need amperes  
