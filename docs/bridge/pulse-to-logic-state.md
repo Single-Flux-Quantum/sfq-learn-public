@@ -59,7 +59,7 @@ RSFQ data lines do not park at a millivolt “high.” After a pulse passes, vol
 
 ```text
 Clock windows:     |   T1   |   T2   |   T3   |   T4   |
-Data pulses:           ★                 ★
+Data pulses:           ★                ★
 Encoding:              1        0        1        0
 
 Same physical pulse shape each time — meaning is "present in window?"
@@ -130,9 +130,9 @@ Writing a 1 means accepting an incoming pulse so that the loop’s fluxoid state
 
      empty (0)                 holds Φ0 (1)
    ┌──────────┐              ┌──────────┐
-   │         │              │    ↻     │  circulating current
-   │    ○    │              │   Φ0     │
-   │         │              │          │
+   │         │              │    ↻    │  circulating current
+   │    ○    │              │   Φ0    │
+   │         │              │         │
    └──────────┘              └──────────┘
         ↑ write pulse               │ clocked readout
         └---------------------------┘ → output pulse
