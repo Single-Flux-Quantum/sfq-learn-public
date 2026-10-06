@@ -75,6 +75,10 @@ nav:
       - Splitter & confluence: labs/splitter-and-confluence.html
       - RSFQ DFF: labs/rsfq-dff-and-retiming.html
       - Clock flow styles: labs/concurrent-and-counter-flow-clocking.html
+      - Path balancing overhead: labs/path-balancing-overhead.html
+      - Resistive bias → ERSFQ: labs/resistive-bias-to-ersfq.html
+      - Pulse → volt-level: labs/sfq-pulse-to-volt-level.html
+      - AQFP logic: labs/aqfp-logic.html
   - Concepts:
       - CMOS vs SFQ: concepts/cmos-vs-sfq.md
       - RSFQ Overview: concepts/rsfq-logic.md

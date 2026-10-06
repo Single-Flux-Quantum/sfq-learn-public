@@ -76,6 +76,20 @@ flowchart LR
   Long --> Merge
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/path-balancing-overhead.html).
+
+1. Set long/short depths (e.g. 5 vs 2). Read **k = nₗ − nₛ**. Click **Apply pads** — orange boxes are overhead, not Boolean logic.
+2. Watch the illustrative **f_pad** stack and cost counters (clock leaves, bias taps, latency). Numbers are teaching sketches, not paper percentages.
+
+<iframe
+  src="../../labs/path-balancing-overhead.html"
+  title="Path balancing overhead lab"
+  style="width:100%;height:820px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Public rule of thumb
 
 If path $B$ has $n_B$ clocked stages and path $A$ has $n_A$ stages into the same sink, with $n_B > n_A$, then the short path needs about

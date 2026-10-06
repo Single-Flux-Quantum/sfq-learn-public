@@ -86,6 +86,21 @@ sequenceDiagram
   P3->>C: excite / settle
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/aqfp-logic.html).
+
+1. **Phase handoff:** run φ1→φ2→φ3; try adiabatic (slow) vs slam (fast) and watch the energy cartoon.
+2. **Majority:** flip inputs; enable **misaligned phase** to see a buffer tax (cousin of DFF pads).
+3. **vs RSFQ:** keep the decoder ring straight — different family, not “three more clocks.”
+
+<iframe
+  src="../../labs/aqfp-logic.html"
+  title="AQFP logic lab"
+  style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ```text
 Majority cartoon (three inputs):
 

@@ -105,6 +105,20 @@ Say these out loud until they separate:
 
 If a talk slide says only “low power SFQ,” ask which of the three rows it means. Many slides mix them. Your job as a careful reader is to unmix them.
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/resistive-bias-to-ersfq.html).
+
+1. **Classical RSFQ** + raise tap count N + keep **idle** checked. Static resistor heat stays on; self-check says resistors do **not** cool to zero.
+2. Switch to **ERSFQ-style**. Static heat → ~0 (goal); amperes may still scale with N — different problem. Uncheck idle to see dynamic events return.
+
+<iframe
+  src="../../labs/resistive-bias-to-ersfq.html"
+  title="Resistive bias to ERSFQ lab"
+  style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 A tiny algebraic reminder helps the first row stick. For a single resistive tap carrying DC bias $I_b$ through $R_b$,
 
 \[

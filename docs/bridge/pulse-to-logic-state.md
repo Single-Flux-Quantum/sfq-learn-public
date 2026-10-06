@@ -130,9 +130,9 @@ Writing a 1 means accepting an incoming pulse so that the loop’s fluxoid state
 
      empty (0)                 holds Φ0 (1)
    ┌──────────┐              ┌──────────┐
-   │          │              │    ↻     │  circulating current
-   │    ○     │              │   Φ0     │
-   │          │              │          │
+   │         │              │    ↻     │  circulating current
+   │    ○    │              │   Φ0     │
+   │         │              │          │
    └──────────┘              └──────────┘
         ↑ write pulse               │ clocked readout
         └---------------------------┘ → output pulse

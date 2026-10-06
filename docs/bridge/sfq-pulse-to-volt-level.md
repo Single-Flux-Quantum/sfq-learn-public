@@ -89,6 +89,20 @@ flowchart LR
   Loud --> Ext[CMOS / DAC / scope / cable]
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/sfq-pulse-to-volt-level.html).
+
+1. **Raw SFQ** then **Stretch only** — width grows, height collapses (same Φ₀ ink).
+2. **Interface (amp+latch)** — taller and wider on purpose. Compare **On-chip JTL hop** (stays in pulse-land).
+
+<iframe
+  src="../../labs/sfq-pulse-to-volt-level.html"
+  title="SFQ pulse to volt-level lab"
+  style="width:100%;height:780px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ### Why both gaps matter
 
 Fix only **height** and a picosecond spike may still miss a slow sampler: the event ends before the instrument’s front end settles. Fix only **width** without gain and fixed-area geometry collapses the height (see worked example 2). Real interfaces attack **both**, usually by leaving the single-fluxon waveform class entirely — detecting or converting a fluxon event into a semiconductor-friendly waveform whose enclosed area is no longer forced to equal one $\Phi_0$.

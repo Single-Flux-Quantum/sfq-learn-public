@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SFQ Pulse → Volt-Level Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+      --sfq: #4051b5;
+      --cmos: #2e7d32;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .seg {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      overflow: hidden;
+    }
+
+    .seg button {
+      border: none;
+      background: var(--code-bg);
+      color: var(--md-primary);
+      padding: 0.45rem 0.65rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .seg button.active {
+      background: #4051b51a;
+      font-weight: 700;
+    }
+
+    button.primary {
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      background: var(--md-primary);
+      color: #fff;
+    }
+
+    button.primary:hover { background: var(--md-primary-light); }
+    button.primary:disabled { opacity: 0.55; cursor: wait; }
+
+    button.ghost {
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      background: transparent;
+      color: var(--md-primary);
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.55rem 0.4rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .stat-value {
+      font-size: 0.95rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.4rem 0.7rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 240px;
+      background: #fff;
+    }
+
+    .verdict {
+      font-size: 0.85rem;
+      padding: 0.55rem 0.7rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--border);
+      background: var(--code-bg);
+      margin-bottom: 0.75rem;
+    }
+
+    .verdict.bad { background: #ffebee; border-color: #ef9a9a; }
+    .verdict.ok { background: #e8f5e9; border-color: #a5d6a7; }
+    .verdict.warn { background: #fff3e0; border-color: #ffcc80; }
+
+    .hint {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>SFQ Pulse → Volt-Level Lab</h1>
+    <p class="lede">
+      One fluxon has fixed area <strong>Φ₀</strong>. CMOS wants <strong>taller and wider</strong>.
+      Stretching alone washes out height. Real I/O must <strong>amplify / latch / stack</strong> — leave the single-Φ₀ class.
+    </p>
+
+    <div class="controls">
+      <div class="seg" role="group">
+        <button type="button" class="active" data-mode="raw" id="btnRaw">Raw SFQ</button>
+        <button type="button" data-mode="stretch" id="btnStretch">Stretch only</button>
+        <button type="button" data-mode="iface" id="btnIface">Interface (amp+latch)</button>
+        <button type="button" data-mode="jtl" id="btnJtl">On-chip JTL hop</button>
+      </div>
+      <button type="button" class="primary" id="fireBtn">Fire event</button>
+      <button type="button" class="ghost" id="resetBtn">Reset</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Mode</div>
+        <div class="stat-value" id="statMode">raw SFQ</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Width</div>
+        <div class="stat-value" id="statW">~4 ps</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">V<sub>avg</sub> / swing</div>
+        <div class="stat-value" id="statV">~0.5 mV</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Area</div>
+        <div class="stat-value" id="statA">~Φ₀</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">CMOS-ready?</div>
+        <div class="stat-value bad" id="statOk">NO</div>
+      </div>
+    </div>
+
+    <div class="verdict bad" id="verdict">
+      Raw fluxon: millivolts × picoseconds — a whisper to CMOS / scopes.
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">Left: SFQ island · Right: semiconductor / instrument timescale (log-ish cartoon)</div>
+      <canvas id="ioCanvas" width="880" height="240"></canvas>
+    </div>
+
+    <p class="hint">
+      <strong>Voltage gap ~10² · time gap ~10³</strong> (order-of-magnitude).
+      JTL stays in pulse-land. I/O changes physics class (SQUID stacks, 4JL latching — next concept cards).
+    </p>
+  </div>
+
+  <script>
+    const PHI0 = 2.07; // mV·ps
+    let mode = "raw";
+    let animating = false;
+    let t = 0;
+
+    const fireBtn = document.getElementById("fireBtn");
+    const canvas = document.getElementById("ioCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const modes = {
+      raw: {
+        label: "raw SFQ",
+        wPs: 4,
+        vMv: PHI0 / 4,
+        area: "~Φ₀",
+        cmos: false,
+        verdict: "Raw fluxon: millivolts × picoseconds — a whisper to CMOS / scopes.",
+        vClass: "bad"
+      },
+      stretch: {
+        label: "stretch only",
+        wPs: 2000, // 2 ns
+        vMv: PHI0 / 2000,
+        area: "~Φ₀ (same ink)",
+        cmos: false,
+        verdict: "Stretch alone: width grows, V_avg collapses (~µV). Not a CMOS level — pale wash of one stamp.",
+        vClass: "warn"
+      },
+      iface: {
+        label: "interface",
+        wPs: 2000,
+        vMv: 200,
+        area: "≫ Φ₀ (new waveform)",
+        cmos: true,
+        verdict: "Interface: amplify + latch/stack — taller and wider. Leaves single-fluxon class on purpose.",
+        vClass: "ok"
+      },
+      jtl: {
+        label: "JTL hop",
+        wPs: 4,
+        vMv: PHI0 / 4,
+        area: "~Φ₀ each hop",
+        cmos: false,
+        verdict: "On-chip JTL: regenerates Φ₀ for the next SFQ cell — still pulse-land, not pad drive.",
+        vClass: "warn"
+      }
+    };
+
+    function setMode(m) {
+      mode = m;
+      ["raw", "stretch", "iface", "jtl"].forEach((id) => {
+        const map = { raw: "btnRaw", stretch: "btnStretch", iface: "btnIface", jtl: "btnJtl" };
+        document.getElementById(map[id]).classList.toggle("active", id === m);
+      });
+      updateStats();
+      draw(1);
+    }
+
+    function updateStats() {
+      const m = modes[mode];
+      document.getElementById("statMode").textContent = m.label;
+      document.getElementById("statW").textContent =
+        m.wPs >= 1000 ? "~" + (m.wPs / 1000) + " ns" : "~" + m.wPs + " ps";
+      document.getElementById("statV").textContent =
+        m.vMv >= 1 ? "~" + m.vMv.toFixed(0) + " mV" : "~" + (m.vMv * 1000).toFixed(1) + " µV";
+      document.getElementById("statA").textContent = m.area;
+      const ok = document.getElementById("statOk");
+      ok.textContent = m.cmos ? "YES" : "NO";
+      ok.className = "stat-value " + (m.cmos ? "ok" : "bad");
+      const v = document.getElementById("verdict");
+      v.textContent = m.verdict;
+      v.className = "verdict " + m.vClass;
+    }
+
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    async function fire() {
+      if (animating) return;
+      animating = true;
+      fireBtn.disabled = true;
+      const frames = 40;
+      for (let i = 0; i <= frames; i++) {
+        t = i / frames;
+        draw(t);
+        await sleep(28);
+      }
+      animating = false;
+      fireBtn.disabled = false;
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = 240;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function draw(progress) {
+      const { w, h } = resize();
+      const p = progress == null ? 1 : progress;
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const mid = w * 0.48;
+      // domains
+      ctx.fillStyle = "#4051b50a";
+      ctx.fillRect(0, 0, mid, h);
+      ctx.fillStyle = "#2e7d320a";
+      ctx.fillRect(mid, 0, w - mid, h);
+
+      ctx.fillStyle = "#4051b5";
+      ctx.font = "700 12px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("SFQ island (pulse-land)", 12, 20);
+      ctx.fillStyle = "#2e7d32";
+      ctx.fillText("Semiconductor / instrument", mid + 12, 20);
+
+      // divider
+      ctx.strokeStyle = "rgba(0,0,0,0.2)";
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(mid, 28);
+      ctx.lineTo(mid, h - 10);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      const m = modes[mode];
+      const y0 = h - 40;
+      const yTop = 40;
+
+      // reference CMOS band on right
+      const cmosTop = y0 - (200 / 220) * (y0 - yTop);
+      ctx.fillStyle = "rgba(46,125,50,0.08)";
+      ctx.fillRect(mid + 8, cmosTop, w - mid - 16, y0 - cmosTop);
+      ctx.strokeStyle = "rgba(46,125,50,0.35)";
+      ctx.strokeRect(mid + 8.5, cmosTop + 0.5, w - mid - 17, y0 - cmosTop - 1);
+      ctx.fillStyle = "rgba(46,125,50,0.7)";
+      ctx.font = "10px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("CMOS-ish band (~100–200 mV, ns)", mid + 14, cmosTop - 4);
+
+      // axes
+      ctx.strokeStyle = "rgba(0,0,0,0.15)";
+      ctx.beginPath();
+      ctx.moveTo(20, y0);
+      ctx.lineTo(mid - 10, y0);
+      ctx.moveTo(mid + 10, y0);
+      ctx.lineTo(w - 20, y0);
+      ctx.stroke();
+
+      if (mode === "jtl") {
+        drawJtl(p, mid, y0, yTop);
+      } else if (mode === "raw") {
+        drawPulse(p, 80, mid - 40, y0, yTop, 4, PHI0 / 4, "#4051b5", true);
+        // ghost fail on right
+        if (p > 0.5) {
+          ctx.globalAlpha = 0.35;
+          drawPulse((p - 0.5) * 2, mid + 40, w - 40, y0, yTop, 4, PHI0 / 4, "#c62828", false);
+          ctx.globalAlpha = 1;
+          ctx.fillStyle = "#c62828";
+          ctx.font = "600 11px Roboto, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("too short / too small", (mid + w) / 2, y0 + 24);
+        }
+      } else if (mode === "stretch") {
+        drawPulse(Math.min(1, p), 80, mid - 40, y0, yTop, 4, PHI0 / 4, "#4051b5", true);
+        // stretched pale on right — use display scale that shows tiny height
+        const vDisp = (PHI0 / 2000) * 80; // exaggerate visibility slightly but still tiny vs 200mV scale
+        drawRectWave(Math.min(1, p), mid + 40, w - 50, y0, yTop, 0.55, vDisp, "#ef6c00", false);
+        ctx.fillStyle = "#ef6c00";
+        ctx.font = "600 11px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("wide but tiny V_avg", (mid + w) / 2, y0 + 24);
+      } else {
+        // iface
+        drawPulse(Math.min(1, p * 1.2), 80, mid - 50, y0, yTop, 4, PHI0 / 4, "#4051b5", true);
+        if (p > 0.25) {
+          const u = Math.min(1, (p - 0.25) / 0.75);
+          drawRectWave(u, mid + 40, w - 50, y0, yTop, 0.5, 200, "#2e7d32", true);
+          // interface box
+          ctx.fillStyle = "#fff";
+          ctx.strokeStyle = "#4051b5";
+          ctx.lineWidth = 1.5;
+          const bx = mid - 36;
+          const by = h / 2 - 22;
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(bx, by, 72, 44, 5);
+          else ctx.rect(bx, by, 72, 44);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = "#4051b5";
+          ctx.font = "700 10px Roboto, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("IFACE", mid, by + 18);
+          ctx.font = "9px Roboto, sans-serif";
+          ctx.fillText("amp+latch", mid, by + 32);
+        }
+      }
+
+      // scale note
+      ctx.fillStyle = "rgba(0,0,0,0.4)";
+      ctx.font = "10px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Vertical: illustrative mV scale (not to PDK)", 12, h - 8);
+    }
+
+    function drawPulse(p, x0, x1, y0, yTop, wPs, vMv, color, fillArea) {
+      const maxV = 220;
+      const amp = Math.min(1, vMv / maxV) * (y0 - yTop);
+      const cx = x0 + (x1 - x0) * 0.45;
+      const half = Math.max(8, (x1 - x0) * 0.08);
+      ctx.beginPath();
+      ctx.moveTo(x0, y0);
+      const n = 40;
+      for (let i = 0; i <= n; i++) {
+        const u = i / n;
+        if (u > p) break;
+        const x = x0 + (x1 - x0) * u;
+        let v = 0;
+        const tloc = (x - (cx - half)) / (2 * half);
+        if (tloc > 0 && tloc < 1) v = Math.sin(Math.PI * tloc) * amp;
+        const y = y0 - v;
+        ctx.lineTo(x, y);
+      }
+      if (fillArea) {
+        const xEnd = x0 + (x1 - x0) * Math.min(1, p);
+        ctx.lineTo(xEnd, y0);
+        ctx.closePath();
+        ctx.fillStyle = color + "33";
+        ctx.fill();
+      }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+    }
+
+    function drawRectWave(p, x0, x1, y0, yTop, widthFrac, vMv, color, fill) {
+      const maxV = 220;
+      const amp = Math.min(1, vMv / maxV) * (y0 - yTop);
+      const left = x0 + (x1 - x0) * 0.15;
+      const right = left + (x1 - x0) * widthFrac;
+      const xEnd = left + (right - left) * p;
+      ctx.beginPath();
+      ctx.moveTo(left, y0);
+      ctx.lineTo(left, y0 - amp);
+      ctx.lineTo(xEnd, y0 - amp);
+      ctx.lineTo(xEnd, y0);
+      if (fill) {
+        ctx.closePath();
+        ctx.fillStyle = color + "33";
+        ctx.fill();
+      }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+    }
+
+    function drawJtl(p, mid, y0, yTop) {
+      const stages = 3;
+      const xs = [];
+      for (let i = 0; i < stages; i++) {
+        xs.push(40 + ((i + 0.5) / stages) * (mid - 60));
+      }
+      ctx.strokeStyle = "rgba(64,81,181,0.35)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(30, y0 - 40);
+      ctx.lineTo(mid - 20, y0 - 40);
+      ctx.stroke();
+      for (let i = 0; i < stages; i++) {
+        const x = xs[i];
+        ctx.fillStyle = "#4051b514";
+        ctx.strokeStyle = "#4051b5";
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(x - 20, y0 - 58, 40, 36, 4);
+        else ctx.rect(x - 20, y0 - 58, 40, 36);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#4051b5";
+        ctx.font = "600 10px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("JJ" + (i + 1), x, y0 - 36);
+      }
+      const idx = Math.min(stages - 1, Math.floor(p * stages));
+      const x = xs[idx];
+      ctx.beginPath();
+      ctx.fillStyle = "#4051b5";
+      ctx.arc(x, y0 - 40, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "rgba(0,0,0,0.5)";
+      ctx.font = "11px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("stays on this side — no class change", mid / 2, y0 + 20);
+      ctx.fillStyle = "#c62828";
+      ctx.fillText("not a pad driver", (mid + canvas.clientWidth) / 2 || mid + 200, y0 + 20);
+    }
+
+    document.getElementById("btnRaw").addEventListener("click", () => setMode("raw"));
+    document.getElementById("btnStretch").addEventListener("click", () => setMode("stretch"));
+    document.getElementById("btnIface").addEventListener("click", () => setMode("iface"));
+    document.getElementById("btnJtl").addEventListener("click", () => setMode("jtl"));
+    fireBtn.addEventListener("click", fire);
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      t = 0;
+      setMode(mode);
+    });
+    window.addEventListener("resize", () => draw(animating ? t : 1));
+
+    updateStats();
+    draw(1);
+  </script>
+</body>
+</html>

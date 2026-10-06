@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AQFP Logic Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+      --p1: #4051b5;
+      --p2: #00897b;
+      --p3: #6a1b9a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .tabs {
+      display: flex;
+      gap: 0.35rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .tabs button {
+      flex: 1;
+      border: 1px solid var(--border);
+      background: var(--code-bg);
+      color: var(--md-primary);
+      border-radius: 0.25rem;
+      padding: 0.45rem 0.5rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .tabs button.active {
+      background: #4051b51a;
+      border-color: var(--md-primary);
+      font-weight: 700;
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: flex-end;
+      margin-bottom: 0.65rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .field input[type="range"] {
+      width: 130px;
+      accent-color: var(--md-primary);
+    }
+
+    .bits {
+      display: flex;
+      gap: 0.45rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .bits label {
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      background: var(--md-primary);
+      color: #fff;
+    }
+
+    button.primary:hover { background: var(--md-primary-light); }
+    button.primary:disabled { opacity: 0.55; cursor: wait; }
+
+    button.ghost {
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      background: transparent;
+      color: var(--md-primary);
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.45rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.5rem 0.35rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.64rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .stat-value {
+      font-size: 1rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .ok { color: var(--ok); }
+    .warn { color: var(--warn); }
+    .bad { color: var(--bad); }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.65rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.35rem 0.65rem;
+      font-size: 0.76rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 220px;
+      background: #fff;
+    }
+
+    .hint {
+      margin: 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+
+    .note {
+      font-size: 0.82rem;
+      padding: 0.45rem 0.6rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      margin-bottom: 0.65rem;
+      color: var(--muted);
+    }
+
+    .note strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>AQFP Logic Lab</h1>
+    <p class="lede">
+      Not RSFQ batons — <strong>multiphase AC</strong> rocks parametron-like cells; bits are
+      <strong>left/right settle</strong> (circulating-current polarity). Adiabatic = gentle rocking (energy intent), not free.
+    </p>
+
+    <div class="tabs">
+      <button type="button" class="active" data-tab="phase">1 · Phase handoff</button>
+      <button type="button" data-tab="maj">2 · Majority + buffers</button>
+      <button type="button" data-tab="vs">3 · vs RSFQ</button>
+    </div>
+
+    <!-- PHASE -->
+    <div class="panel active" id="panel-phase">
+      <div class="controls">
+        <div class="field">
+          <label for="slowSlider">Excitation speed</label>
+          <input type="range" id="slowSlider" min="0" max="1" step="1" value="1">
+          <span id="slowLabel" style="font-size:0.8rem;font-weight:600;margin-left:0.3rem;">adiabatic (slow)</span>
+        </div>
+        <button type="button" class="primary" id="phaseBtn">Run φ1→φ2→φ3</button>
+        <button type="button" class="ghost" id="phaseReset">Reset</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">Active phase</div><div class="stat-value" id="statPhase">—</div></div>
+        <div class="stat"><div class="stat-label">Cell A / B / C</div><div class="stat-value" id="statCells">∅ ∅ ∅</div></div>
+        <div class="stat"><div class="stat-label">E cartoon</div><div class="stat-value" id="statE">low</div></div>
+      </div>
+      <div class="canvas-wrap">
+        <div class="canvas-label">See-saws settle L/R under multiphase AC (teaching cartoon)</div>
+        <canvas id="phaseCanvas" width="880" height="220"></canvas>
+      </div>
+      <p class="hint"><strong>Adiabatic:</strong> slow excite → lower switch energy intent. Slam (fast) → higher cartoon dissipation. Not zero energy.</p>
+    </div>
+
+    <!-- MAJORITY -->
+    <div class="panel" id="panel-maj">
+      <div class="controls">
+        <div class="bits">
+          <label><input type="checkbox" id="inA" checked> <span id="labA">a=1</span></label>
+          <label><input type="checkbox" id="inB" checked> <span id="labB">b=1</span></label>
+          <label><input type="checkbox" id="inC"> <span id="labC">c=0</span></label>
+        </div>
+        <label style="font-size:0.82rem;display:flex;align-items:center;gap:0.35rem;cursor:pointer;padding-bottom:0.35rem;">
+          <input type="checkbox" id="needBuf">
+          Misaligned phase (need buffer)
+        </label>
+        <button type="button" class="primary" id="majBtn">Evaluate MAJ</button>
+      </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-label">MAJ(a,b,c)</div><div class="stat-value" id="statMaj">1</div></div>
+        <div class="stat"><div class="stat-label">Buffers</div><div class="stat-value" id="statBuf">0</div></div>
+        <div class="stat"><div class="stat-label">Schedule</div><div class="stat-value" id="statSched">OK</div></div>
+      </div>
+      <div class="canvas-wrap">
+        <div class="canvas-label">Majority (≥2 of 3) · buffers = phase-alignment tax (cousin of DFF pads)</div>
+        <canvas id="majCanvas" width="880" height="220"></canvas>
+      </div>
+      <p class="hint"><strong>Phase scheduling</strong> is AQFP’s cousin of path balancing — insert buffers when inputs are not phase-ready.</p>
+    </div>
+
+    <!-- VS -->
+    <div class="panel" id="panel-vs">
+      <div class="note">
+        <strong>Keep families separate.</strong> Shared cryogenics ≠ shared cell library.
+        AQFP ≠ “ERSFQ with three clocks.”
+      </div>
+      <div class="canvas-wrap">
+        <div class="canvas-label">Decoder ring — RSFQ batons vs AQFP multiphase see-saws</div>
+        <canvas id="vsCanvas" width="880" height="220"></canvas>
+      </div>
+      <p class="hint">Energy claims need matched activity, temperature, AC frequency, and what was counted (logic vs AC plant).</p>
+    </div>
+  </div>
+
+  <script>
+    // Tabs
+    document.querySelectorAll(".tabs button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById("panel-" + btn.dataset.tab).classList.add("active");
+        if (btn.dataset.tab === "phase") drawPhase(0, [null, null, null], 1);
+        if (btn.dataset.tab === "maj") drawMaj();
+        if (btn.dataset.tab === "vs") drawVs();
+      });
+    });
+
+    function resize(canvas, ctx, hCss) {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = hCss || 220;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function sleep(ms) {
+      return new Promise((r) => setTimeout(r, ms));
+    }
+
+    // ——— Phase handoff ———
+    const phaseCanvas = document.getElementById("phaseCanvas");
+    const phaseCtx = phaseCanvas.getContext("2d");
+    const slowSlider = document.getElementById("slowSlider");
+    let phaseBusy = false;
+    let cells = [null, null, null]; // 0 left, 1 right
+    let activePhi = 0;
+
+    slowSlider.addEventListener("input", () => {
+      document.getElementById("slowLabel").textContent =
+        Number(slowSlider.value) === 1 ? "adiabatic (slow)" : "slam (fast)";
+      document.getElementById("statE").textContent =
+        Number(slowSlider.value) === 1 ? "low" : "HIGH";
+      document.getElementById("statE").className =
+        "stat-value " + (Number(slowSlider.value) === 1 ? "ok" : "warn");
+    });
+
+    function drawPhase(phi, states, excite) {
+      const { w, h } = resize(phaseCanvas, phaseCtx);
+      const ctx = phaseCtx;
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const colors = ["#4051b5", "#00897b", "#6a1b9a"];
+      const labels = ["φ1", "φ2", "φ3"];
+      const xs = [w * 0.2, w * 0.5, w * 0.8];
+      const y = h * 0.55;
+
+      // AC wave hint
+      ctx.strokeStyle = "rgba(0,0,0,0.12)";
+      ctx.beginPath();
+      for (let i = 0; i < w; i++) {
+        const yy = 28 + Math.sin(i * 0.04 + (phi || 0)) * 8;
+        if (i === 0) ctx.moveTo(i, yy);
+        else ctx.lineTo(i, yy);
+      }
+      ctx.stroke();
+      ctx.fillStyle = "rgba(0,0,0,0.45)";
+      ctx.font = "11px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("multiphase AC excitation", 12, 18);
+
+      for (let i = 0; i < 3; i++) {
+        const x = xs[i];
+        const on = phi === i + 1;
+        const ang = states[i] == null ? 0 : states[i] === 1 ? -0.35 : 0.35;
+        const rock = on ? (excite - 0.5) * 0.5 : 0;
+
+        // fulcrum
+        ctx.fillStyle = on ? colors[i] + "22" : "#f5f5f5";
+        ctx.strokeStyle = colors[i];
+        ctx.lineWidth = on ? 2.5 : 1.5;
+        ctx.beginPath();
+        ctx.arc(x, y + 36, 28, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // see-saw plank
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(ang + rock);
+        ctx.strokeStyle = colors[i];
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(-40, 0);
+        ctx.lineTo(40, 0);
+        ctx.stroke();
+        ctx.fillStyle = colors[i];
+        ctx.beginPath();
+        ctx.arc(-36, 0, 6, 0, Math.PI * 2);
+        ctx.arc(36, 0, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        ctx.fillStyle = colors[i];
+        ctx.font = "700 13px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(labels[i] + " · cell " + String.fromCharCode(65 + i), x, y + 70);
+        const bit = states[i] == null ? "—" : states[i] === 1 ? "R (1)" : "L (0)";
+        ctx.font = "600 12px Roboto Mono, monospace";
+        ctx.fillText(bit, x, y + 88);
+      }
+    }
+
+    async function runPhases() {
+      if (phaseBusy) return;
+      phaseBusy = true;
+      document.getElementById("phaseBtn").disabled = true;
+      const slow = Number(slowSlider.value) === 1;
+      const stepMs = slow ? 520 : 180;
+      cells = [null, null, null];
+      const bits = [1, 0, 1]; // demo settle pattern
+
+      for (let p = 1; p <= 3; p++) {
+        activePhi = p;
+        document.getElementById("statPhase").textContent = "φ" + p;
+        document.getElementById("statPhase").style.color = ["#4051b5", "#00897b", "#6a1b9a"][p - 1];
+        const frames = slow ? 16 : 6;
+        for (let f = 0; f <= frames; f++) {
+          drawPhase(p, cells, f / frames);
+          await sleep(stepMs / frames);
+        }
+        cells[p - 1] = bits[p - 1];
+        document.getElementById("statCells").textContent = cells
+          .map((c) => (c == null ? "∅" : c === 1 ? "R" : "L"))
+          .join(" ");
+        drawPhase(p, cells, 1);
+        await sleep(200);
+      }
+      activePhi = 0;
+      document.getElementById("statPhase").textContent = "done";
+      document.getElementById("statE").textContent = slow ? "low" : "HIGH";
+      document.getElementById("statE").className = "stat-value " + (slow ? "ok" : "warn");
+      phaseBusy = false;
+      document.getElementById("phaseBtn").disabled = false;
+    }
+
+    document.getElementById("phaseBtn").addEventListener("click", runPhases);
+    document.getElementById("phaseReset").addEventListener("click", () => {
+      cells = [null, null, null];
+      document.getElementById("statPhase").textContent = "—";
+      document.getElementById("statCells").textContent = "∅ ∅ ∅";
+      drawPhase(0, cells, 1);
+    });
+
+    // ——— Majority ———
+    const majCanvas = document.getElementById("majCanvas");
+    const majCtx = majCanvas.getContext("2d");
+
+    function majVal() {
+      const a = document.getElementById("inA").checked ? 1 : 0;
+      const b = document.getElementById("inB").checked ? 1 : 0;
+      const c = document.getElementById("inC").checked ? 1 : 0;
+      return a + b + c >= 2 ? 1 : 0;
+    }
+
+    function drawMaj() {
+      const { w, h } = resize(majCanvas, majCtx);
+      const ctx = majCtx;
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const a = document.getElementById("inA").checked ? 1 : 0;
+      const b = document.getElementById("inB").checked ? 1 : 0;
+      const c = document.getElementById("inC").checked ? 1 : 0;
+      const out = majVal();
+      const need = document.getElementById("needBuf").checked;
+
+      document.getElementById("statMaj").textContent = String(out);
+      document.getElementById("statBuf").textContent = need ? "1" : "0";
+      document.getElementById("statSched").textContent = need ? "insert buf" : "OK";
+      document.getElementById("statSched").className = "stat-value " + (need ? "warn" : "ok");
+
+      const xMaj = w * 0.55;
+      const yMaj = h / 2;
+      const inputs = [
+        { x: w * 0.18, y: h * 0.25, bit: a, label: "a" },
+        { x: w * 0.18, y: h * 0.5, bit: b, label: "b" },
+        { x: w * 0.18, y: h * 0.75, bit: c, label: "c" }
+      ];
+
+      inputs.forEach((inp, i) => {
+        let tx = xMaj - 50;
+        let ty = yMaj;
+        if (need && i === 2) {
+          // buffer on c
+          const bx = w * 0.35;
+          ctx.strokeStyle = "#ef6c00";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(inp.x + 16, inp.y);
+          ctx.lineTo(bx - 24, inp.y);
+          ctx.stroke();
+          ctx.fillStyle = "#ef6c001a";
+          ctx.strokeStyle = "#ef6c00";
+          ctx.beginPath();
+          if (ctx.roundRect) ctx.roundRect(bx - 24, inp.y - 16, 48, 32, 4);
+          else ctx.rect(bx - 24, inp.y - 16, 48, 32);
+          ctx.fill();
+          ctx.stroke();
+          ctx.fillStyle = "#ef6c00";
+          ctx.font = "700 10px Roboto, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("BUF", bx, inp.y + 4);
+          ctx.beginPath();
+          ctx.moveTo(bx + 24, inp.y);
+          ctx.lineTo(tx, ty);
+          ctx.stroke();
+        } else {
+          ctx.strokeStyle = "rgba(64,81,181,0.4)";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(inp.x + 16, inp.y);
+          ctx.lineTo(tx, ty);
+          ctx.stroke();
+        }
+
+        ctx.beginPath();
+        ctx.fillStyle = "#fff";
+        ctx.strokeStyle = "#4051b5";
+        ctx.lineWidth = 2;
+        ctx.arc(inp.x, inp.y, 14, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#4051b5";
+        ctx.font = "700 12px Roboto Mono, monospace";
+        ctx.textAlign = "center";
+        ctx.fillText(String(inp.bit), inp.x, inp.y + 4);
+        ctx.font = "11px Roboto, sans-serif";
+        ctx.fillText(inp.label, inp.x, inp.y + 28);
+      });
+
+      // MAJ box
+      ctx.fillStyle = "#4051b514";
+      ctx.strokeStyle = "#4051b5";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      if (ctx.roundRect) ctx.roundRect(xMaj - 40, yMaj - 28, 80, 56, 6);
+      else ctx.rect(xMaj - 40, yMaj - 28, 80, 56);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#4051b5";
+      ctx.font = "700 14px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("MAJ", xMaj, yMaj + 5);
+
+      // out
+      const xo = w * 0.82;
+      ctx.strokeStyle = "rgba(46,125,50,0.5)";
+      ctx.beginPath();
+      ctx.moveTo(xMaj + 40, yMaj);
+      ctx.lineTo(xo - 16, yMaj);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.fillStyle = "#fff";
+      ctx.strokeStyle = "#2e7d32";
+      ctx.lineWidth = 2;
+      ctx.arc(xo, yMaj, 16, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "#2e7d32";
+      ctx.font = "700 14px Roboto Mono, monospace";
+      ctx.fillText(String(out), xo, yMaj + 5);
+      ctx.font = "11px Roboto, sans-serif";
+      ctx.fillText("out", xo, yMaj + 32);
+    }
+
+    function syncBitLabs() {
+      document.getElementById("labA").textContent = "a=" + (document.getElementById("inA").checked ? "1" : "0");
+      document.getElementById("labB").textContent = "b=" + (document.getElementById("inB").checked ? "1" : "0");
+      document.getElementById("labC").textContent = "c=" + (document.getElementById("inC").checked ? "1" : "0");
+    }
+
+    ["inA", "inB", "inC", "needBuf"].forEach((id) => {
+      document.getElementById(id).addEventListener("change", () => {
+        syncBitLabs();
+        drawMaj();
+      });
+    });
+    document.getElementById("majBtn").addEventListener("click", drawMaj);
+
+    // ——— vs RSFQ ———
+    const vsCanvas = document.getElementById("vsCanvas");
+    const vsCtx = vsCanvas.getContext("2d");
+
+    function drawVs() {
+      const { w, h } = resize(vsCanvas, vsCtx);
+      const ctx = vsCtx;
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+      const mid = w / 2;
+
+      ctx.fillStyle = "#4051b50c";
+      ctx.fillRect(0, 0, mid, h);
+      ctx.fillStyle = "#00897b0c";
+      ctx.fillRect(mid, 0, mid, h);
+
+      ctx.fillStyle = "#4051b5";
+      ctx.font = "700 14px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("RSFQ / ERSFQ", mid / 2, 28);
+      ctx.fillStyle = "#00897b";
+      ctx.fillText("AQFP", mid + mid / 2, 28);
+
+      const rows = [
+        ["DC bias + pulse clocks", "Multiphase AC excitation"],
+        ["Bit = pulse in window / Φ₀ loop", "Bit = L/R circulating state"],
+        ["Gates: AND/OR/XOR/DFF…", "Majority + buffers"],
+        ["Path balance = DFF pads", "Phase schedule = buffers"],
+        ["JTL baton hops", "Transformer coupling (often)"]
+      ];
+      ctx.font = "12px Roboto, sans-serif";
+      rows.forEach((r, i) => {
+        const y = 58 + i * 28;
+        ctx.fillStyle = "rgba(0,0,0,0.75)";
+        ctx.textAlign = "center";
+        ctx.fillText(r[0], mid / 2, y);
+        ctx.fillText(r[1], mid + mid / 2, y);
+        ctx.strokeStyle = "rgba(0,0,0,0.06)";
+        ctx.beginPath();
+        ctx.moveTo(16, y + 10);
+        ctx.lineTo(w - 16, y + 10);
+        ctx.stroke();
+      });
+
+      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = "rgba(0,0,0,0.2)";
+      ctx.beginPath();
+      ctx.moveTo(mid, 36);
+      ctx.lineTo(mid, h - 12);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // init
+    document.getElementById("statE").textContent = "low";
+    document.getElementById("statE").className = "stat-value ok";
+    drawPhase(0, [null, null, null], 1);
+    drawMaj();
+    drawVs();
+    window.addEventListener("resize", () => {
+      drawPhase(activePhi, cells, 1);
+      drawMaj();
+      drawVs();
+    });
+  </script>
+</body>
+</html>

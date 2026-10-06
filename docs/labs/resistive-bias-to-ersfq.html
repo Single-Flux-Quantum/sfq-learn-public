@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resistive Bias → ERSFQ Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+      --heat: #c62828;
+      --amp: #ef6c00;
+      --dyn: #4051b5;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .seg {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      overflow: hidden;
+    }
+
+    .seg button {
+      border: none;
+      background: var(--code-bg);
+      color: var(--md-primary);
+      padding: 0.5rem 0.75rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .seg button.active {
+      background: #4051b51a;
+      font-weight: 700;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .field input[type="range"] {
+      width: 150px;
+      accent-color: var(--md-primary);
+    }
+
+    .field .val {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-left: 0.3rem;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.88rem;
+      cursor: pointer;
+      padding-bottom: 0.35rem;
+      user-select: none;
+    }
+
+    .toggle input { accent-color: var(--md-primary); }
+
+    .three {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    @media (max-width: 640px) {
+      .three { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.65rem 0.55rem;
+      background: var(--code-bg);
+      text-align: center;
+    }
+
+    .card h3 {
+      margin: 0 0 0.35rem;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .card .num {
+      font-size: 1.15rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .card .sub {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .card.heat .num { color: var(--heat); }
+    .card.amp .num { color: var(--amp); }
+    .card.dyn .num { color: var(--dyn); }
+
+    .canvas-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.4rem 0.7rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 210px;
+      background: #fff;
+    }
+
+    .check {
+      font-size: 0.85rem;
+      padding: 0.55rem 0.7rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--border);
+      background: var(--code-bg);
+      margin-bottom: 0.75rem;
+    }
+
+    .check.bad { background: #ffebee; border-color: #ef9a9a; color: var(--bad); }
+    .check.ok { background: #e8f5e9; border-color: #a5d6a7; color: var(--ok); }
+
+    .hint {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Resistive Bias → ERSFQ Lab</h1>
+    <p class="lede">
+      Separate three bills: <strong>static resistor heat</strong>, <strong>total amperes</strong>, and <strong>dynamic switching</strong>.
+      Classical RSFQ keeps the resistor meter running even when idle. ERSFQ aims to kill that static drip — not magic zero energy for every pulse.
+    </p>
+
+    <div class="controls">
+      <div class="seg">
+        <button type="button" class="active" data-mode="rsfq" id="btnRsfq">Classical RSFQ</button>
+        <button type="button" data-mode="ersfq" id="btnErsfq">ERSFQ-style</button>
+      </div>
+      <div class="field">
+        <label for="nTaps">Bias taps N</label>
+        <input type="range" id="nTaps" min="1" max="100" step="1" value="20">
+        <span class="val" id="nLabel">20</span>
+      </div>
+      <label class="toggle">
+        <input type="checkbox" id="idleToggle" checked>
+        <span>Freeze clocks/data (idle)</span>
+      </label>
+    </div>
+
+    <div class="check bad" id="selfCheck">
+      Self-check: freeze all activity — do bias resistors cool to zero? <strong>NO</strong> (classical cartoon).
+    </div>
+
+    <div class="three">
+      <div class="card heat">
+        <h3>1 · Static resistor heat</h3>
+        <div class="num" id="statP">—</div>
+        <div class="sub">∼ N · I<sub>b</sub>² · R<sub>b</sub> (illustrative)</div>
+      </div>
+      <div class="card amp">
+        <h3>2 · Total amperes</h3>
+        <div class="num" id="statI">—</div>
+        <div class="sub">∼ N · I<sub>b</sub> (delivery problem)</div>
+      </div>
+      <div class="card dyn">
+        <h3>3 · Dynamic events</h3>
+        <div class="num" id="statDyn">—</div>
+        <div class="sub">switching while busy</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">Forest of taps — red glow = static heat in R<sub>bias</sub> (classical) · ERSFQ removes the always-hot resistors</div>
+      <canvas id="biasCanvas" width="880" height="210"></canvas>
+    </div>
+
+    <p class="hint">
+      Illustrative constants: I<sub>b</sub>=0.1&nbsp;mA, R<sub>b</sub>=10&nbsp;Ω (not a PDK).
+      ERSFQ attacks row&nbsp;1; amperes need delivery / serial biasing later; pulses still cost dynamic energy.
+    </p>
+  </div>
+
+  <script>
+    // Illustrative teaching constants (same scale as bridge worked example)
+    const IB = 1e-4; // 0.1 mA
+    const RB = 10; // ohm
+    const P_TAP = IB * IB * RB; // watts per tap
+
+    let mode = "rsfq"; // rsfq | ersfq
+    let pulsePhase = 0;
+
+    const nTaps = document.getElementById("nTaps");
+    const nLabel = document.getElementById("nLabel");
+    const idleToggle = document.getElementById("idleToggle");
+    const canvas = document.getElementById("biasCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function formatPower(p) {
+      if (p < 1e-9) return "~0";
+      if (p < 1e-6) return (p * 1e9).toFixed(1) + " nW";
+      if (p < 1e-3) return (p * 1e6).toFixed(1) + " µW";
+      if (p < 1) return (p * 1e3).toFixed(2) + " mW";
+      return p.toFixed(2) + " W";
+    }
+
+    function formatCurrent(i) {
+      if (i < 1e-3) return (i * 1e6).toFixed(0) + " µA";
+      if (i < 1) return (i * 1e3).toFixed(1) + " mA";
+      return i.toFixed(2) + " A";
+    }
+
+    function refresh() {
+      const N = Number(nTaps.value);
+      nLabel.textContent = String(N);
+      const idle = idleToggle.checked;
+
+      let pStatic, iTotal, dyn;
+      if (mode === "rsfq") {
+        pStatic = N * P_TAP;
+        iTotal = N * IB;
+        dyn = idle ? 0 : Math.round(N * 0.35); // cartoon event count
+      } else {
+        pStatic = 0; // goal: near-zero static resistor heat
+        iTotal = N * IB; // ampere story not automatically erased
+        dyn = idle ? 0 : Math.round(N * 0.35);
+      }
+
+      document.getElementById("statP").textContent = formatPower(pStatic);
+      document.getElementById("statI").textContent = formatCurrent(iTotal);
+      document.getElementById("statDyn").textContent = dyn === 0 ? "0 (idle)" : "~" + dyn + " /beat";
+
+      const check = document.getElementById("selfCheck");
+      if (mode === "rsfq") {
+        check.className = "check bad";
+        check.innerHTML = idle
+          ? "Self-check: freeze activity — do bias resistors cool to zero? <strong>NO</strong> — static heat still " + formatPower(pStatic) + "."
+          : "Classical: resistors hot <em>and</em> switching adds dynamic cost on top.";
+      } else {
+        check.className = "check ok";
+        check.innerHTML = idle
+          ? "ERSFQ goal: near-zero <strong>static resistor</strong> heat when idle. Amperes may still flow — different problem."
+          : "ERSFQ: static resistor bill ~0; busy power tracks switching more honestly (still not free).";
+      }
+
+      draw(N, idle, pStatic > 0);
+    }
+
+    function setMode(m) {
+      mode = m;
+      document.getElementById("btnRsfq").classList.toggle("active", m === "rsfq");
+      document.getElementById("btnErsfq").classList.toggle("active", m === "ersfq");
+      refresh();
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = 210;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function draw(N, idle, hot) {
+      const { w, h } = resize();
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const railY = 36;
+      const show = Math.min(N, 12);
+      const padL = 50;
+      const padR = 50;
+      const gap = (w - padL - padR) / Math.max(show - 1, 1);
+
+      // bias rail
+      ctx.strokeStyle = "#4051b5";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(padL - 20, railY);
+      ctx.lineTo(w - padR + 20, railY);
+      ctx.stroke();
+      ctx.fillStyle = "#4051b5";
+      ctx.font = "700 12px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("V_bias", 8, railY + 4);
+
+      for (let i = 0; i < show; i++) {
+        const x = padL + i * gap;
+        const cellY = 150;
+
+        if (mode === "rsfq") {
+          // resistor
+          ctx.strokeStyle = hot ? "#c62828" : "#999";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(x, railY);
+          ctx.lineTo(x, railY + 18);
+          // zigzag
+          const zy = railY + 18;
+          ctx.lineTo(x - 6, zy + 6);
+          ctx.lineTo(x + 6, zy + 12);
+          ctx.lineTo(x - 6, zy + 18);
+          ctx.lineTo(x + 6, zy + 24);
+          ctx.lineTo(x, zy + 30);
+          ctx.lineTo(x, cellY - 18);
+          ctx.stroke();
+
+          if (hot) {
+            // heat glow
+            const g = ctx.createRadialGradient(x, zy + 15, 2, x, zy + 15, 22);
+            g.addColorStop(0, "rgba(198,40,40,0.35)");
+            g.addColorStop(1, "rgba(198,40,40,0)");
+            ctx.fillStyle = g;
+            ctx.beginPath();
+            ctx.arc(x, zy + 15, 22, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = "#c62828";
+            ctx.font = "9px Roboto, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("R", x, zy + 18);
+          } else {
+            ctx.fillStyle = "#999";
+            ctx.font = "9px Roboto, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText("R", x, zy + 18);
+          }
+        } else {
+          // inductive / JJ feed cartoon (no hot R)
+          ctx.strokeStyle = "#2e7d32";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(x, railY);
+          ctx.lineTo(x, cellY - 18);
+          ctx.stroke();
+          // small loop symbol
+          ctx.beginPath();
+          ctx.arc(x, railY + 28, 8, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.fillStyle = "#2e7d32";
+          ctx.font = "8px Roboto, sans-serif";
+          ctx.textAlign = "center";
+          ctx.fillText("L/JJ", x, railY + 48);
+        }
+
+        // cell
+        ctx.fillStyle = "#4051b514";
+        ctx.strokeStyle = "#4051b5";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        if (ctx.roundRect) ctx.roundRect(x - 18, cellY - 16, 36, 32, 4);
+        else ctx.rect(x - 18, cellY - 16, 36, 32);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#4051b5";
+        ctx.font = "600 10px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("cell", x, cellY + 4);
+
+        // activity sparkles when busy
+        if (!idle) {
+          const spark = (Math.sin(pulsePhase + i) + 1) / 2;
+          if (spark > 0.65) {
+            ctx.beginPath();
+            ctx.fillStyle = "#4051b5";
+            ctx.arc(x + 22, cellY - 8, 3, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+
+      if (N > show) {
+        ctx.fillStyle = "rgba(0,0,0,0.45)";
+        ctx.font = "12px Roboto, sans-serif";
+        ctx.textAlign = "right";
+        ctx.fillText("… +" + (N - show) + " more taps", w - 12, h - 12);
+      }
+
+      ctx.fillStyle = "rgba(0,0,0,0.5)";
+      ctx.font = "12px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText(
+        mode === "rsfq"
+          ? (idle ? "Idle but resistors still dissipating" : "Idle heat + switching")
+          : (idle ? "Idle: static R heat ≈ 0 (goal)" : "Busy: dynamic events, not resistor drip"),
+        12,
+        h - 12
+      );
+    }
+
+    document.getElementById("btnRsfq").addEventListener("click", () => setMode("rsfq"));
+    document.getElementById("btnErsfq").addEventListener("click", () => setMode("ersfq"));
+    nTaps.addEventListener("input", refresh);
+    idleToggle.addEventListener("change", refresh);
+    window.addEventListener("resize", refresh);
+
+    function tick() {
+      pulsePhase += 0.12;
+      if (!idleToggle.checked) draw(Number(nTaps.value), false, mode === "rsfq");
+      requestAnimationFrame(tick);
+    }
+
+    refresh();
+    requestAnimationFrame(tick);
+  </script>
+</body>
+</html>

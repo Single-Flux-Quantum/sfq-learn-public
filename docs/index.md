@@ -65,9 +65,9 @@ Start here: [bridge/README.md](bridge/README.md)
 1. [Phase to pulse](bridge/phase-to-pulse.md) · [lab](labs/phase-to-pulse.html)  
 2. [Pulse to logic state](bridge/pulse-to-logic-state.md) · [lab](labs/pulse-to-logic-state.html)  
 3. [Gate-level pipelining](bridge/gate-level-pipelining.md) · [lab](labs/gate-level-pipelining.html)  
-4. [Resistive bias to ERSFQ](bridge/resistive-bias-to-ersfq.md)  
+4. [Resistive bias to ERSFQ](bridge/resistive-bias-to-ersfq.md) · [lab](labs/resistive-bias-to-ersfq.html)  
 5. [DC bias current delivery](bridge/dc-bias-current-delivery.md)  
-6. [SFQ pulse to voltage levels](bridge/sfq-pulse-to-volt-level.md)  
+6. [SFQ pulse to voltage levels](bridge/sfq-pulse-to-volt-level.md) · [lab](labs/sfq-pulse-to-volt-level.html)  
 
 ## 3. Concepts
 
@@ -80,13 +80,13 @@ SFQ vocabulary cards. Best after the matching bridge pages.
 - [Splitter and confluence](concepts/splitter-and-confluence.md) · [lab](labs/splitter-and-confluence.html)  
 - [RSFQ DFF and retiming](concepts/rsfq-dff-and-retiming.md) · [lab](labs/rsfq-dff-and-retiming.html)  
 - [ERSFQ logic](concepts/ersfq-logic.md)  
-- [AQFP logic](concepts/aqfp-logic.md)  
+- [AQFP logic](concepts/aqfp-logic.md) · [lab](labs/aqfp-logic.html)  
 - [CMOS vs SFQ](concepts/cmos-vs-sfq.md)  
 
 **Clocking, bias, timing, routing**
 
 - [Concurrent / counter-flow clocking](concepts/concurrent-and-counter-flow-clocking.md) · [lab](labs/concurrent-and-counter-flow-clocking.html)  
-- [Path balancing overhead](concepts/path-balancing-overhead.md)  
+- [Path balancing overhead](concepts/path-balancing-overhead.md) · [lab](labs/path-balancing-overhead.html)  
 - [SFQ static timing analysis](concepts/sfq-static-timing-analysis.md)  
 - [Hybrid JTL–PTL routing](concepts/hybrid-jtl-ptl-routing.md)  
 - [Serial biasing / current recycling](concepts/serial-biasing-current-recycling.md)  

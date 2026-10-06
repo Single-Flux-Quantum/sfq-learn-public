@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Path Balancing Overhead Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5;
+      --md-primary-light: #5d6cc0;
+      --bg: #ffffff;
+      --border: #0000001f;
+      --text: #000000de;
+      --muted: #00000099;
+      --code-bg: #f5f5f5;
+      --ok: #2e7d32;
+      --bad: #c62828;
+      --warn: #ef6c00;
+      --logic: #4051b5;
+      --pad: #ef6c00;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px 4px 4px;
+      font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      font-size: 0.95rem;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 1rem 1.15rem 1.25rem;
+    }
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--md-primary);
+    }
+
+    .lede {
+      margin: 0 0 0.85rem;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .lede strong { color: var(--text); }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      align-items: flex-end;
+      margin-bottom: 0.75rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .field input[type="number"] {
+      width: 4.2rem;
+      padding: 0.4rem 0.45rem;
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.9rem;
+    }
+
+    button {
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    #balanceBtn {
+      background: var(--md-primary);
+      color: #fff;
+    }
+
+    #balanceBtn:hover { background: var(--md-primary-light); }
+
+    #clearBtn {
+      background: transparent;
+      color: var(--md-primary);
+      border: 1px solid var(--border);
+    }
+
+    #clearBtn:hover { background: var(--code-bg); }
+
+    .formula {
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+      font-size: 0.9rem;
+      padding: 0.5rem 0.7rem;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .formula strong { color: var(--md-primary); }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .stat {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      padding: 0.55rem 0.4rem;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.66rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+    }
+
+    .stat-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: "Roboto Mono", ui-monospace, Consolas, monospace;
+    }
+
+    .ok { color: var(--ok); }
+    .bad { color: var(--bad); }
+    .warn { color: var(--warn); }
+
+    .canvas-wrap, .bar-wrap {
+      border: 1px solid var(--border);
+      border-radius: 0.35rem;
+      overflow: hidden;
+      margin-bottom: 0.75rem;
+      background: var(--code-bg);
+    }
+
+    .canvas-label {
+      padding: 0.4rem 0.7rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 200px;
+      background: #fff;
+    }
+
+    .bar-inner {
+      padding: 0.75rem 1rem 1rem;
+      background: #fff;
+    }
+
+    .bar-track {
+      height: 28px;
+      border-radius: 0.25rem;
+      overflow: hidden;
+      display: flex;
+      border: 1px solid var(--border);
+      background: #eee;
+    }
+
+    .bar-logic {
+      background: #4051b5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      min-width: 0;
+      transition: width 0.25s;
+    }
+
+    .bar-pad {
+      background: #ef6c00;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      min-width: 0;
+      transition: width 0.25s;
+    }
+
+    .cost-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 0.45rem;
+      margin-top: 0.65rem;
+      font-size: 0.8rem;
+    }
+
+    .cost-item {
+      padding: 0.4rem 0.5rem;
+      background: var(--code-bg);
+      border-radius: 0.25rem;
+      border: 1px solid var(--border);
+    }
+
+    .cost-item span {
+      color: var(--muted);
+      display: block;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+    }
+
+    .hint {
+      margin: 0;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Path Balancing Overhead Lab</h1>
+    <p class="lede">
+      Pads synchronize epochs — they do <strong>not</strong> compute new Boolean function.
+      Public rule: <strong>k = n<sub>long</sub> − n<sub>short</sub></strong> on the short path.
+      Overhead costs area, bias, clock leaves, and latency.
+    </p>
+
+    <div class="controls">
+      <div class="field">
+        <label for="nLong">Long path stages (n<sub>l</sub>)</label>
+        <input type="number" id="nLong" min="1" max="12" value="5">
+      </div>
+      <div class="field">
+        <label for="nShort">Short path stages (n<sub>s</sub>)</label>
+        <input type="number" id="nShort" min="1" max="12" value="2">
+      </div>
+      <div class="field">
+        <label for="nLogic">“Logic” JJ (illustrative)</label>
+        <input type="number" id="nLogic" min="10" max="500" step="10" value="80">
+      </div>
+      <div class="field">
+        <label for="jjPerPad">JJ per pad (illustrative)</label>
+        <input type="number" id="jjPerPad" min="1" max="20" value="6">
+      </div>
+      <button type="button" id="balanceBtn">Apply pads (balance)</button>
+      <button type="button" id="clearBtn">Clear pads</button>
+    </div>
+
+    <div class="formula" id="formula">k = 5 − 2 = <strong>3</strong> pads on the short path</div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">k needed</div>
+        <div class="stat-value" id="statK">3</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Pads applied</div>
+        <div class="stat-value" id="statPads">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Balanced?</div>
+        <div class="stat-value bad" id="statBal">NO</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Pad JJ</div>
+        <div class="stat-value" id="statPadJJ">0</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">f<sub>pad</sub> sketch</div>
+        <div class="stat-value" id="statF">0%</div>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-label">Short vs long into merge — orange boxes = overhead pads (not Boolean logic)</div>
+      <canvas id="balCanvas" width="880" height="200"></canvas>
+    </div>
+
+    <div class="bar-wrap">
+      <div class="canvas-label">Illustrative junction stack (not a paper % — teaching sketch only)</div>
+      <div class="bar-inner">
+        <div class="bar-track">
+          <div class="bar-logic" id="barLogic" style="width:100%">logic</div>
+          <div class="bar-pad" id="barPad" style="width:0%"></div>
+        </div>
+        <div class="cost-grid">
+          <div class="cost-item"><span>Area / JJ</span><strong id="costJJ">80 logic + 0 pad</strong></div>
+          <div class="cost-item"><span>Clock leaves</span><strong id="costClk">+0 for pads</strong></div>
+          <div class="cost-item"><span>Bias taps</span><strong id="costBias">+0 (cartoon)</strong></div>
+          <div class="cost-item"><span>Latency</span><strong id="costLat">short path +0 epochs</strong></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="hint">
+      <strong>Clock style does not cancel k.</strong> Concurrent or counter-flow still needs matched epochs at the merge.
+      Recount depths after each merge — balancing is global, not a one-sticker fix.
+    </p>
+  </div>
+
+  <script>
+    const nLongEl = document.getElementById("nLong");
+    const nShortEl = document.getElementById("nShort");
+    const nLogicEl = document.getElementById("nLogic");
+    const jjPerPadEl = document.getElementById("jjPerPad");
+    const canvas = document.getElementById("balCanvas");
+    const ctx = canvas.getContext("2d");
+
+    let padsApplied = 0;
+
+    function clamp(el) {
+      let v = parseInt(el.value, 10);
+      if (Number.isNaN(v)) v = parseInt(el.min, 10);
+      v = Math.max(parseInt(el.min, 10), Math.min(parseInt(el.max, 10), v));
+      el.value = String(v);
+      return v;
+    }
+
+    function depths() {
+      let nl = clamp(nLongEl);
+      let ns = clamp(nShortEl);
+      if (ns > nl) {
+        // swap mentally: long is max
+        const t = nl; nl = ns; ns = t;
+      }
+      return {
+        nl: clamp(nLongEl),
+        ns: clamp(nShortEl),
+        nLogic: clamp(nLogicEl),
+        jjPerPad: clamp(jjPerPadEl)
+      };
+    }
+
+    function kNeeded() {
+      const d = depths();
+      return Math.max(0, d.nl - d.ns);
+    }
+
+    function refresh() {
+      const d = depths();
+      const k = kNeeded();
+      // if user set short > long, formula still uses |diff| on shorter input
+      const shortIsA = d.ns <= d.nl;
+      const nL = Math.max(d.nl, d.ns);
+      const nS = Math.min(d.nl, d.ns);
+      const kTrue = nL - nS;
+
+      document.getElementById("formula").innerHTML =
+        "k = n<sub>long</sub> − n<sub>short</sub> = " + nL + " − " + nS + " = <strong>" + kTrue + "</strong> pads on the short path";
+
+      document.getElementById("statK").textContent = String(kTrue);
+
+      // clamp applied pads if depths changed
+      if (padsApplied > kTrue) padsApplied = kTrue;
+
+      document.getElementById("statPads").textContent = String(padsApplied);
+      const balanced = padsApplied >= kTrue && kTrue >= 0;
+      const balEl = document.getElementById("statBal");
+      balEl.textContent = balanced ? "YES" : "NO";
+      balEl.className = "stat-value " + (balanced ? "ok" : "bad");
+
+      const padJJ = padsApplied * d.jjPerPad;
+      document.getElementById("statPadJJ").textContent = String(padJJ);
+
+      const total = d.nLogic + padJJ;
+      const f = total > 0 ? (padJJ / total) * 100 : 0;
+      document.getElementById("statF").textContent = f.toFixed(0) + "%";
+      document.getElementById("statF").className = "stat-value " + (f > 35 ? "warn" : "");
+
+      const logicPct = total > 0 ? (d.nLogic / total) * 100 : 100;
+      const padPct = total > 0 ? (padJJ / total) * 100 : 0;
+      const barLogic = document.getElementById("barLogic");
+      const barPad = document.getElementById("barPad");
+      barLogic.style.width = logicPct + "%";
+      barPad.style.width = padPct + "%";
+      barLogic.textContent = logicPct > 12 ? "logic " + d.nLogic : "";
+      barPad.textContent = padPct > 12 ? "pads " + padJJ : padPct > 0 ? "…" : "";
+
+      document.getElementById("costJJ").textContent = d.nLogic + " logic + " + padJJ + " pad";
+      document.getElementById("costClk").textContent = "+" + padsApplied + " leaves for pads";
+      document.getElementById("costBias").textContent = "+" + padsApplied + " taps (cartoon)";
+      document.getElementById("costLat").textContent = "short path +" + padsApplied + " epochs";
+
+      draw(nL, nS, padsApplied, balanced);
+    }
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth || 880;
+      const h = 200;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { w, h };
+    }
+
+    function draw(nL, nS, pads, balanced) {
+      const { w, h } = resize();
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, w, h);
+
+      const shortDepth = nS + pads;
+      const maxD = Math.max(nL, shortDepth, 1);
+      const padL = 50;
+      const padR = 70;
+      const usable = w - padL - padR;
+      const slot = usable / maxD;
+      const yShort = h * 0.32;
+      const yLong = h * 0.68;
+      const yMerge = h / 2;
+      const xMerge = padL + maxD * slot;
+
+      // paths
+      ctx.strokeStyle = "rgba(239,108,0,0.4)";
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(padL, yMerge);
+      ctx.lineTo(padL + 16, yShort);
+      for (let i = 1; i <= shortDepth; i++) {
+        ctx.lineTo(padL + i * slot, yShort);
+      }
+      ctx.lineTo(xMerge, yMerge);
+      ctx.stroke();
+
+      ctx.strokeStyle = "rgba(64,81,181,0.4)";
+      ctx.beginPath();
+      ctx.moveTo(padL, yMerge);
+      ctx.lineTo(padL + 16, yLong);
+      for (let i = 1; i <= nL; i++) {
+        ctx.lineTo(padL + i * (usable / nL), yLong);
+      }
+      ctx.lineTo(xMerge, yMerge);
+      ctx.stroke();
+
+      // short path stages: first nS logic-colored, then pads orange
+      for (let i = 1; i <= shortDepth; i++) {
+        const x = padL + i * slot - slot * 0.35;
+        const bw = slot * 0.55;
+        const isPad = i > nS;
+        ctx.fillStyle = isPad ? "#ef6c001a" : "#4051b514";
+        ctx.strokeStyle = isPad ? "#ef6c00" : "#4051b5";
+        ctx.lineWidth = 1.5;
+        roundRect(x, yShort - 14, bw, 28, 4);
+        ctx.fillStyle = isPad ? "#ef6c00" : "#4051b5";
+        ctx.font = "600 10px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(isPad ? "pad" : "S" + i, x + bw / 2, yShort + 4);
+      }
+
+      for (let i = 1; i <= nL; i++) {
+        const x = padL + i * (usable / nL) - (usable / nL) * 0.35;
+        const bw = (usable / nL) * 0.55;
+        ctx.fillStyle = "#4051b514";
+        ctx.strokeStyle = "#4051b5";
+        ctx.lineWidth = 1.5;
+        roundRect(x, yLong - 14, bw, 28, 4);
+        ctx.fillStyle = "#4051b5";
+        ctx.font = "600 10px Roboto, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("L" + i, x + bw / 2, yLong + 4);
+      }
+
+      // fork / merge
+      node(padL, yMerge, "ref", "#4051b5");
+      node(xMerge, yMerge, "merge", balanced ? "#2e7d32" : "#c62828");
+
+      ctx.fillStyle = "rgba(0,0,0,0.5)";
+      ctx.font = "12px Roboto, sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Short (nₛ=" + nS + (pads ? " +" + pads + " pads" : "") + ")", 12, 18);
+      ctx.fillText("Long (nₗ=" + nL + ")", 12, h - 10);
+    }
+
+    function node(x, y, label, color) {
+      ctx.beginPath();
+      ctx.fillStyle = "#fff";
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.arc(x, y, 12, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = "rgba(0,0,0,0.7)";
+      ctx.font = "600 10px Roboto, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(label, x, y + 26);
+    }
+
+    function roundRect(x, y, w, h, r) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.arcTo(x + w, y, x + w, y + h, r);
+      ctx.arcTo(x + w, y + h, x, y + h, r);
+      ctx.arcTo(x, y + h, x, y, r);
+      ctx.arcTo(x, y, x + w, y, r);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+    }
+
+    document.getElementById("balanceBtn").addEventListener("click", () => {
+      padsApplied = kNeeded();
+      // fix if short>long in inputs
+      const d = depths();
+      padsApplied = Math.abs(d.nl - d.ns);
+      refresh();
+    });
+
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      padsApplied = 0;
+      refresh();
+    });
+
+    [nLongEl, nShortEl, nLogicEl, jjPerPadEl].forEach((el) => {
+      el.addEventListener("input", () => {
+        padsApplied = 0;
+        refresh();
+      });
+      el.addEventListener("change", refresh);
+    });
+
+    window.addEventListener("resize", refresh);
+    refresh();
+  </script>
+</body>
+</html>
