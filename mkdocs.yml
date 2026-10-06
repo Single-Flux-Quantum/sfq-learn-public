@@ -36,7 +36,6 @@ extra_javascript:
 nav:
   - Home: index.md
   - Glossary: glossary.md
-  - Paper map: paper-map.md
   - Fundamentals:
       - Why superconducting electronics: fundamentals/why-superconducting-electronics.md
       - History of the field: fundamentals/history-of-superconducting-electronics.md

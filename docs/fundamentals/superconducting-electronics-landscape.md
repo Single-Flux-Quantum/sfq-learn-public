@@ -193,7 +193,7 @@ You now know **SFQ digital is a branch**, not the whole tree. Next:
 1. Open the [fields hub](fields/README.md) and skim each terminal guide (especially [qubits](fields/superconducting-qubits-and-quantum-computing.md)).  
 2. Then [logic families](sfq-among-logic-families.md) → [cryogenics](cryogenics-for-electronics.md) → [notation](reading-sfq-notation.md).
 
-When you later open a paper from the [paper map](../paper-map.md), classify its terminal before drowning in equations.
+When you later open an SFQ paper, classify its terminal before drowning in equations.
 
 ## Check yourself
 

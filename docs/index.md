@@ -5,7 +5,7 @@
 
 A guided path from **field orientation** through **device fundamentals**, **bridge** pages, and **concept** cards into curated **tracks**. Written so newcomers can follow with patience --- no prior superconductivity course assumed.
 
-**Lookup:** [Glossary](glossary.md) · [Symbol card (5 symbols)](fundamentals/sfq-symbol-card.md) · [Paper map](paper-map.md) · [CMOS vs SFQ](concepts/cmos-vs-sfq.md) (preview anytime)
+**Lookup:** [Glossary](glossary.md) · [Symbol card (5 symbols)](fundamentals/sfq-symbol-card.md) · [CMOS vs SFQ](concepts/cmos-vs-sfq.md) (preview anytime)
 
 More pages and more wording are **intentional**. Prefer clarity over compression --- but use the **express lane** so you are not forced to read every field guide before symbols.
 
@@ -112,5 +112,3 @@ SFQ vocabulary cards. Best after the matching bridge pages.
 ## Interactive labs
 
 In-browser click-and-watch demos (not SPICE). Full list: **[Labs hub](labs/README.md)**. Each lab also embeds on its matching chapter.
-
-Maintained by skill: `research-sfq-learn`.
