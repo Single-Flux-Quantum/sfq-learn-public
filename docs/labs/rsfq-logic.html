@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RSFQ Logic Overview Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5; --md-primary-light: #5d6cc0;
+      --bg: #fff; --border: #0000001f; --text: #000000de; --muted: #00000099;
+      --code-bg: #f5f5f5; --ok: #2e7d32; --bad: #c62828; --warn: #ef6c00;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 12px 4px 4px; font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 0.95rem; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 920px; margin: 0 auto; border: 1px solid var(--border); border-radius: 0.35rem; padding: 1rem 1.15rem 1.25rem; }
+    h1 { margin: 0 0 0.35rem; font-size: 1.2rem; font-weight: 700; color: var(--md-primary); }
+    .lede { margin: 0 0 0.85rem; color: var(--muted); font-size: 0.92rem; }
+    .lede strong { color: var(--text); }
+    .controls { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; }
+    button.primary, button.ghost, .cellBtn { border-radius: 0.25rem; padding: 0.45rem 0.75rem; font-size: 0.85rem; font-weight: 500; font-family: inherit; cursor: pointer; }
+    button.primary { border: none; background: var(--md-primary); color: #fff; }
+    button.primary:hover { background: var(--md-primary-light); }
+    button.ghost { border: 1px solid var(--border); background: transparent; color: var(--md-primary); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
+    .cellBtn { border: 1px solid var(--border); background: var(--code-bg); color: var(--md-primary); text-align: left; }
+    .cellBtn.active { background: #4051b51a; border-color: var(--md-primary); font-weight: 700; }
+    .formula { font-family: "Roboto Mono", ui-monospace, Consolas, monospace; font-size: 0.82rem; padding: 0.5rem 0.7rem; background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.25rem; margin-bottom: 0.75rem; min-height: 2.6em; }
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem; margin-bottom: 0.75rem; }
+    .stat { background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.35rem; padding: 0.45rem; text-align: center; }
+    .stat-label { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .stat-value { font-size: 0.95rem; font-weight: 700; font-family: "Roboto Mono", ui-monospace, Consolas, monospace; }
+    .ok { color: var(--ok); }
+    .canvas-wrap { border: 1px solid var(--border); border-radius: 0.35rem; overflow: hidden; margin-bottom: 0.65rem; }
+    .canvas-label { padding: 0.35rem 0.65rem; font-size: 0.76rem; color: var(--muted); background: #fff; border-bottom: 1px solid var(--border); }
+    canvas { display: block; width: 100%; height: 200px; background: #fff; }
+    .hint { margin: 0; font-size: 0.8rem; color: var(--muted); }
+    .hint strong { color: var(--text); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>RSFQ Logic Overview Lab</h1>
+    <p class="lede">Pulse automaton family: <strong>Φ₀ tokens in epochs</strong>, not rails. Map the four plumbing cells, then fire a 3-window encoding cartoon.</p>
+    <div class="grid" id="cells">
+      <button type="button" class="cellBtn active" data-cell="jtl">JTL</button>
+      <button type="button" class="cellBtn" data-cell="split">Splitter</button>
+      <button type="button" class="cellBtn" data-cell="conf">Confluence</button>
+      <button type="button" class="cellBtn" data-cell="dff">DFF</button>
+    </div>
+    <div class="formula" id="formula">…</div>
+    <div class="controls">
+      <button type="button" class="primary" id="genBtn">Generate 3 epochs</button>
+      <button type="button" class="ghost" id="clearBtn">Clear</button>
+      <span style="font-size:0.85rem;color:var(--muted)">Bits (1=pulse):</span>
+      <label><input type="checkbox" id="b0" checked> T1</label>
+      <label><input type="checkbox" id="b1"> T2</label>
+      <label><input type="checkbox" id="b2" checked> T3</label>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Encoding</div><div class="stat-value" id="statEnc">—</div></div>
+      <div class="stat"><div class="stat-label">≠ ERSFQ/AQFP?</div><div class="stat-value ok">still pulse / different families</div></div>
+      <div class="stat"><div class="stat-label">Pipelined?</div><div class="stat-value ok">YES (typical)</div></div>
+    </div>
+    <div class="canvas-wrap">
+      <div class="canvas-label">Three clock windows · ★ = Φ₀ pulse · empty window = 0</div>
+      <canvas id="c" width="880" height="200"></canvas>
+    </div>
+    <p class="hint">ERSFQ keeps this pulse language with different bias heat. AQFP is an <strong>AC multiphase</strong> family — do not paste RSFQ cell maps onto it blindly.</p>
+  </div>
+  <script>
+    const INFO = {
+      jtl: "JTL — move & regenerate the Φ₀ pulse stage by stage (active interconnect).",
+      split: "Splitter — fanout: one pulse in → copies out (not a CMOS wired-OR).",
+      conf: "Confluence — merge pulses with timing rules / hazard awareness.",
+      dff: "DFF — store circulating Φ₀ until clocked destructive readout.",
+    };
+    let cell = "jtl", bits = [1, 0, 1];
+    const canvas = document.getElementById("c"), ctx = canvas.getContext("2d");
+
+    function refreshInfo() {
+      document.getElementById("formula").textContent = INFO[cell];
+      document.querySelectorAll(".cellBtn").forEach((b) => b.classList.toggle("active", b.dataset.cell === cell));
+    }
+    function resize() {
+      const dpr = window.devicePixelRatio || 1, w = canvas.clientWidth || 880, h = 200;
+      canvas.width = Math.floor(w * dpr); canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); return { w, h };
+    }
+    function draw() {
+      const { w, h } = resize();
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+      const pad = 40, usable = w - 2 * pad;
+      const enc = bits.map((b) => (b ? "1" : "0")).join("");
+      document.getElementById("statEnc").textContent = enc;
+      for (let i = 0; i < 3; i++) {
+        const x0 = pad + (i / 3) * usable;
+        const x1 = pad + ((i + 1) / 3) * usable;
+        ctx.fillStyle = "#4051b514";
+        ctx.fillRect(x0 + 6, 40, x1 - x0 - 12, h - 80);
+        ctx.strokeStyle = "#4051b566"; ctx.strokeRect(x0 + 6, 40, x1 - x0 - 12, h - 80);
+        ctx.fillStyle = "#4051b5"; ctx.font = "700 12px Roboto, sans-serif"; ctx.textAlign = "center";
+        ctx.fillText("T" + (i + 1), (x0 + x1) / 2, 28);
+        ctx.fillStyle = "rgba(0,0,0,0.45)"; ctx.font = "11px Roboto, sans-serif";
+        ctx.fillText(bits[i] ? "1 (pulse)" : "0 (empty)", (x0 + x1) / 2, h - 18);
+        if (bits[i]) {
+          const cx = (x0 + x1) / 2, cy = h * 0.48;
+          ctx.beginPath(); ctx.fillStyle = "#4051b5"; ctx.arc(cx, cy, 10, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = "#fff"; ctx.font = "700 14px sans-serif"; ctx.fillText("★", cx, cy + 5);
+        }
+      }
+    }
+    document.querySelectorAll(".cellBtn").forEach((b) => b.addEventListener("click", () => {
+      cell = b.dataset.cell; refreshInfo();
+    }));
+    document.getElementById("genBtn").addEventListener("click", () => {
+      bits = [
+        document.getElementById("b0").checked ? 1 : 0,
+        document.getElementById("b1").checked ? 1 : 0,
+        document.getElementById("b2").checked ? 1 : 0,
+      ];
+      draw();
+    });
+    document.getElementById("clearBtn").addEventListener("click", () => {
+      bits = [0, 0, 0];
+      ["b0", "b1", "b2"].forEach((id) => { document.getElementById(id).checked = false; });
+      draw();
+    });
+    window.addEventListener("resize", draw);
+    refreshInfo(); draw();
+  </script>
+</body>
+</html>

@@ -66,6 +66,20 @@ flowchart LR
   end
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/cmos-vs-sfq.html).
+
+1. Answer each CMOS→SFQ translation question; wrong picks highlight false analogies.
+2. Aim for a clean run — the one-sentence contrast should feel automatic afterward.
+
+<iframe
+  src="../../labs/cmos-vs-sfq.html"
+  title="CMOS vs SFQ lab"
+  style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ## Storage mechanisms
 
 | Aspect | CMOS SRAM | CMOS DRAM | SFQ loop storage |

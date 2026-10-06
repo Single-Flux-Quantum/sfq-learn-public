@@ -49,7 +49,7 @@ Then jump to [Symbol card](fundamentals/sfq-symbol-card.md) → [Notation](funda
 
 ### Device path (core walk)
 
-1. [Symbol card](fundamentals/sfq-symbol-card.md) — five-symbol cheatsheet  
+1. [Symbol card](fundamentals/sfq-symbol-card.md) — five-symbol cheatsheet · [lab](labs/sfq-symbol-card.html)  
 2. [How to read SFQ notation](fundamentals/reading-sfq-notation.md)  
 3. [Superconductivity intuition](fundamentals/superconductivity-intuition.md)  
 4. [Josephson junction (RCSJ)](fundamentals/josephson-junction-rcsj.md) · [lab](labs/josephson-junction-rcsj.html)  
@@ -76,13 +76,13 @@ SFQ vocabulary cards. Best after the matching bridge pages.
 
 **Logic & interconnects**
 
-- [RSFQ overview](concepts/rsfq-logic.md)  
+- [RSFQ overview](concepts/rsfq-logic.md) · [lab](labs/rsfq-logic.html)  
 - [JTL interconnects](concepts/jtl-interconnects.md) · [lab](labs/jtl-interconnects.html)  
 - [Splitter and confluence](concepts/splitter-and-confluence.md) · [lab](labs/splitter-and-confluence.html)  
 - [RSFQ DFF and retiming](concepts/rsfq-dff-and-retiming.md) · [lab](labs/rsfq-dff-and-retiming.html)  
 - [ERSFQ logic](concepts/ersfq-logic.md) · [lab](labs/ersfq-logic.html)  
 - [AQFP logic](concepts/aqfp-logic.md) · [lab](labs/aqfp-logic.html)  
-- [CMOS vs SFQ](concepts/cmos-vs-sfq.md)  
+- [CMOS vs SFQ](concepts/cmos-vs-sfq.md) · [lab](labs/cmos-vs-sfq.html)  
 
 **Clocking, bias, timing, routing**
 

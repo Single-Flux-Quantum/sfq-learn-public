@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SFQ Symbol Card Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5; --md-primary-light: #5d6cc0;
+      --bg: #fff; --border: #0000001f; --text: #000000de; --muted: #00000099;
+      --code-bg: #f5f5f5; --ok: #2e7d32; --bad: #c62828;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 12px 4px 4px; font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 0.95rem; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 920px; margin: 0 auto; border: 1px solid var(--border); border-radius: 0.35rem; padding: 1rem 1.15rem 1.25rem; }
+    h1 { margin: 0 0 0.35rem; font-size: 1.2rem; font-weight: 700; color: var(--md-primary); }
+    .lede { margin: 0 0 0.85rem; color: var(--muted); font-size: 0.92rem; }
+    .lede strong { color: var(--text); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 0.75rem; }
+    .stat { background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.35rem; padding: 0.5rem; text-align: center; }
+    .stat-label { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .stat-value { font-size: 1rem; font-weight: 700; font-family: "Roboto Mono", ui-monospace, Consolas, monospace; }
+    .ok { color: var(--ok); } .bad { color: var(--bad); }
+    .flash { border: 1px solid var(--border); border-radius: 0.35rem; padding: 1.25rem 1rem; background: var(--code-bg); text-align: center; margin-bottom: 0.75rem; min-height: 150px; cursor: pointer; user-select: none; }
+    .flash:hover { background: #4051b50a; }
+    .sym { font-size: 2.4rem; font-weight: 700; color: var(--md-primary); font-family: "Roboto Mono", ui-monospace, Consolas, monospace; margin: 0.4rem 0; }
+    .say { color: var(--muted); font-size: 0.9rem; }
+    .mean { margin-top: 0.75rem; font-size: 1rem; font-weight: 500; }
+    .not { margin-top: 0.35rem; font-size: 0.85rem; color: var(--bad); }
+    .tap { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+    .choices { display: grid; gap: 0.4rem; margin-bottom: 0.75rem; }
+    .choices button { text-align: left; border: 1px solid var(--border); border-radius: 0.25rem; padding: 0.5rem 0.7rem; background: #fff; color: var(--md-primary); font-family: inherit; font-size: 0.88rem; cursor: pointer; }
+    .choices button:hover { background: #4051b51a; }
+    .choices button.correct { border-color: var(--ok); color: var(--ok); background: #2e7d3214; }
+    .choices button.wrong { border-color: var(--bad); color: var(--bad); background: #c6282814; }
+    .controls { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    button.primary, button.ghost { border-radius: 0.25rem; padding: 0.5rem 0.85rem; font-size: 0.85rem; font-weight: 500; font-family: inherit; cursor: pointer; }
+    button.primary { border: none; background: var(--md-primary); color: #fff; }
+    button.ghost { border: 1px solid var(--border); background: transparent; color: var(--md-primary); }
+    .hint { margin: 0.75rem 0 0; font-size: 0.8rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>SFQ Symbol Card Lab</h1>
+    <p class="lede">Drill the <strong>five symbols</strong>: Φ₀, I<sub>c</sub>, φ, β<sub>C</sub>, ∫V dt. Tap the card to peek; then pick the meaning.</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Card</div><div class="stat-value" id="statProg">1/5</div></div>
+      <div class="stat"><div class="stat-label">Correct</div><div class="stat-value ok" id="statOk">0</div></div>
+      <div class="stat"><div class="stat-label">Missed</div><div class="stat-value bad" id="statBad">0</div></div>
+    </div>
+    <div class="flash" id="flash" title="Tap to reveal">
+      <div class="tap" id="tapHint">tap to reveal · then answer below</div>
+      <div class="sym" id="sym">Φ₀</div>
+      <div class="say" id="say">“phi-zero”</div>
+      <div class="mean" id="mean" hidden></div>
+      <div class="not" id="not" hidden></div>
+    </div>
+    <div class="choices" id="choices"></div>
+    <div class="controls">
+      <button type="button" class="primary" id="nextBtn" disabled>Next symbol</button>
+      <button type="button" class="ghost" id="resetBtn">Reset</button>
+    </div>
+    <p class="hint">Airport / telegraph / music-hall analogies are for field orientation — not new physics.</p>
+  </div>
+  <script>
+    const CARDS = [
+      { sym: "Φ₀", say: "“phi-zero”", mean: "One flux packet / pulse token size (≈ 2.07 mV·ps)", not: "Not a CMOS voltage rail", ok: "Flux quantum — the SFQ information packet size", bad: ["Supply voltage like V_DD", "Transistor current gain", "Magnetic field in tesla only"] },
+      { sym: "I_c", say: "“I-sub-c”", mean: "Max supercurrent before the junction switches", not: "Not supply voltage V_DD", ok: "Critical current of the Josephson junction", bad: ["Clock frequency", "Pulse area Φ₀", "McCumber damping"] },
+      { sym: "φ", say: "“phi”", mean: "Josephson phase across the junction; 2π slip ↔ one packet", not: "Not the same letter as flux Φ (related but different)", ok: "Josephson phase — 2π slip launches one Φ₀ pulse", bad: ["Magnetic flux Φ through a loop only", "Bias resistor value", "CMOS logic level"] },
+      { sym: "β_C", say: "“beta-C”", mean: "Damping personality: small → short pulse; large → can latch", not: "Not transistor gain β", ok: "McCumber parameter — overdamped vs underdamped", bad: ["Flux quantum size", "Number of pipeline stages", "Critical temperature T_c"] },
+      { sym: "∫V dt", say: "“integral V dt”", mean: "Voltage–time area of a pulse; one slip → area = Φ₀", not: "Peak millivolts alone are not the token", ok: "Pulse area — invariant equal to Φ₀ for one slip", bad: ["Only the peak height in mV", "Loop inductance L", "Clock period T"] },
+    ];
+    let i = 0, okN = 0, badN = 0, revealed = false, answered = false;
+    const flash = document.getElementById("flash");
+    const mean = document.getElementById("mean");
+    const not = document.getElementById("not");
+    const choices = document.getElementById("choices");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function shuffle(a) {
+      const b = a.slice();
+      for (let k = b.length - 1; k > 0; k--) {
+        const j = Math.floor(Math.random() * (k + 1));
+        [b[k], b[j]] = [b[j], b[k]];
+      }
+      return b;
+    }
+
+    function show() {
+      revealed = false; answered = false; nextBtn.disabled = true;
+      document.getElementById("statProg").textContent = Math.min(i + 1, CARDS.length) + "/" + CARDS.length;
+      document.getElementById("statOk").textContent = String(okN);
+      document.getElementById("statBad").textContent = String(badN);
+      if (i >= CARDS.length) {
+        document.getElementById("sym").textContent = "✓";
+        document.getElementById("say").textContent = okN + " / " + CARDS.length + " correct";
+        mean.hidden = false; mean.textContent = "Five symbols locked. Continue to notation / superconductivity.";
+        not.hidden = true; choices.innerHTML = "";
+        document.getElementById("tapHint").textContent = "done";
+        return;
+      }
+      const c = CARDS[i];
+      document.getElementById("sym").textContent = c.sym;
+      document.getElementById("say").textContent = c.say;
+      mean.hidden = true; mean.textContent = c.mean;
+      not.hidden = true; not.textContent = c.not;
+      document.getElementById("tapHint").textContent = "tap to reveal · then answer below";
+      const opts = shuffle([c.ok, ...c.bad]);
+      choices.innerHTML = "";
+      opts.forEach((t) => {
+        const b = document.createElement("button");
+        b.type = "button"; b.textContent = t;
+        b.addEventListener("click", () => pick(b, t, c));
+        choices.appendChild(b);
+      });
+    }
+
+    flash.addEventListener("click", () => {
+      if (i >= CARDS.length) return;
+      revealed = true;
+      mean.hidden = false; not.hidden = false;
+      document.getElementById("tapHint").textContent = "revealed";
+    });
+
+    function pick(btn, t, c) {
+      if (answered) return;
+      answered = true;
+      mean.hidden = false; not.hidden = false; revealed = true;
+      [...choices.querySelectorAll("button")].forEach((b) => {
+        b.disabled = true;
+        if (b.textContent === c.ok) b.classList.add("correct");
+      });
+      if (t === c.ok) okN++; else { badN++; btn.classList.add("wrong"); }
+      document.getElementById("statOk").textContent = String(okN);
+      document.getElementById("statBad").textContent = String(badN);
+      nextBtn.disabled = false;
+    }
+
+    nextBtn.addEventListener("click", () => { i++; show(); });
+    document.getElementById("resetBtn").addEventListener("click", () => { i = 0; okN = 0; badN = 0; show(); });
+    show();
+  </script>
+</body>
+</html>

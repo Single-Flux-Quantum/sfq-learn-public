@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CMOS vs SFQ Lab</title>
+  <style>
+    :root {
+      --md-primary: #4051b5; --md-primary-light: #5d6cc0;
+      --bg: #fff; --border: #0000001f; --text: #000000de; --muted: #00000099;
+      --code-bg: #f5f5f5; --ok: #2e7d32; --bad: #c62828;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 12px 4px 4px; font-family: "Roboto", -apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; font-size: 0.95rem; -webkit-font-smoothing: antialiased; }
+    .wrap { max-width: 920px; margin: 0 auto; border: 1px solid var(--border); border-radius: 0.35rem; padding: 1rem 1.15rem 1.25rem; }
+    h1 { margin: 0 0 0.35rem; font-size: 1.2rem; font-weight: 700; color: var(--md-primary); }
+    .lede { margin: 0 0 0.85rem; color: var(--muted); font-size: 0.92rem; }
+    .lede strong { color: var(--text); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 0.75rem; }
+    .stat { background: var(--code-bg); border: 1px solid var(--border); border-radius: 0.35rem; padding: 0.5rem; text-align: center; }
+    .stat-label { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+    .stat-value { font-size: 1rem; font-weight: 700; font-family: "Roboto Mono", ui-monospace, Consolas, monospace; }
+    .ok { color: var(--ok); } .bad { color: var(--bad); }
+    .card { border: 1px solid var(--border); border-radius: 0.35rem; padding: 1rem; background: var(--code-bg); margin-bottom: 0.75rem; min-height: 120px; }
+    .prompt { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin-bottom: 0.35rem; }
+    .q { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.75rem; }
+    .choices { display: grid; gap: 0.45rem; }
+    .choices button { text-align: left; border: 1px solid var(--border); border-radius: 0.25rem; padding: 0.55rem 0.75rem; background: #fff; color: var(--md-primary); font-family: inherit; font-size: 0.9rem; cursor: pointer; }
+    .choices button:hover { background: #4051b51a; }
+    .choices button.correct { border-color: var(--ok); background: #2e7d3214; color: var(--ok); }
+    .choices button.wrong { border-color: var(--bad); background: #c6282814; color: var(--bad); }
+    .choices button:disabled { cursor: default; }
+    .feedback { margin: 0.5rem 0 0; font-size: 0.88rem; color: var(--muted); min-height: 1.4em; }
+    .feedback strong { color: var(--text); }
+    .controls { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    button.primary, button.ghost { border-radius: 0.25rem; padding: 0.5rem 0.85rem; font-size: 0.85rem; font-weight: 500; font-family: inherit; cursor: pointer; }
+    button.primary { border: none; background: var(--md-primary); color: #fff; }
+    button.primary:hover { background: var(--md-primary-light); }
+    button.ghost { border: 1px solid var(--border); background: transparent; color: var(--md-primary); }
+    .hint { margin: 0.75rem 0 0; font-size: 0.8rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>CMOS vs SFQ Lab</h1>
+    <p class="lede">Translate CMOS intuitions into SFQ pulse/loop language. <strong>One-sentence contrast:</strong> CMOS = voltage levels; RSFQ = Φ₀ pulses in windows / circulating flux.</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-label">Progress</div><div class="stat-value" id="statProg">1/8</div></div>
+      <div class="stat"><div class="stat-label">Correct</div><div class="stat-value ok" id="statOk">0</div></div>
+      <div class="stat"><div class="stat-label">Missed</div><div class="stat-value bad" id="statBad">0</div></div>
+    </div>
+    <div class="card">
+      <div class="prompt" id="prompt">CMOS → SFQ</div>
+      <div class="q" id="q">…</div>
+      <div class="choices" id="choices"></div>
+      <p class="feedback" id="fb"></p>
+    </div>
+    <div class="controls">
+      <button type="button" class="primary" id="nextBtn" disabled>Next</button>
+      <button type="button" class="ghost" id="resetBtn">Reset quiz</button>
+    </div>
+    <p class="hint">Wrong answers highlight false analogies the chapter warns about.</p>
+  </div>
+  <script>
+    const ITEMS = [
+      { q: "In CMOS a wire’s bit is mainly…", ok: "A held voltage level vs thresholds", bad: ["A picosecond Φ₀ pulse in a window", "Circulating supercurrent only"], why: "SFQ wires carry brief pulses (or empty windows), not rails." },
+      { q: "RSFQ logic “1” most often means…", ok: "Pulse in the timing window and/or stored Φ₀ in a loop", bad: ["V near V_DD for half a cycle", "Any tall millivolt spike regardless of window"], why: "Meaning is window + cell, not peak height alone." },
+      { q: "Deep unsynchronized combinational clouds are…", ok: "Normal in CMOS; rare in RSFQ (gate-level pipelined)", bad: ["Identical in both families", "Forbidden in CMOS"], why: "Almost every RSFQ cell is a timed stage." },
+      { q: "Fanout in RSFQ is typically done by…", ok: "Splitter cells that copy pulses", bad: ["Just tying wires together like CMOS loads", "Raising V_DD"], why: "Passive multi-drop is not the default SFQ fanout story." },
+      { q: "Power delivery mental model…", ok: "CMOS: V_DD grids · SFQ: DC bias current networks", bad: ["Both are purely capacitive CV²f stories", "SFQ needs no bias because loops are lossless"], why: "Bias networks are first-class in SFQ." },
+      { q: "A CMOS flip-flop’s closest RSFQ cousin is…", ok: "DFF storing circulating Φ₀ until clocked escape", bad: ["A passive RC wire", "An underdamped latching I/O stack inside every gate"], why: "Storage is flux in a loop, not cross-coupled voltage." },
+      { q: "Measuring a bit on an SFQ wire means asking…", ok: "Did a pulse arrive in the legal clock window?", bad: ["Is voltage above V_DD/2 right now?", "How many millivolts is the peak?"], why: "Window membership is the symbol." },
+      { q: "False analogy to unlearn first…", ok: "“SFQ is just CMOS with colder transistors”", bad: ["“Pulses are discrete tokens”", "“Path balance matters at reconvergence”"], why: "Different encoding physics, not a temperature knob." },
+    ];
+    let i = 0, okN = 0, badN = 0, answered = false;
+    const qEl = document.getElementById("q");
+    const choices = document.getElementById("choices");
+    const fb = document.getElementById("fb");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function shuffle(a) {
+      const b = a.slice();
+      for (let k = b.length - 1; k > 0; k--) {
+        const j = Math.floor(Math.random() * (k + 1));
+        [b[k], b[j]] = [b[j], b[k]];
+      }
+      return b;
+    }
+
+    function show() {
+      answered = false;
+      nextBtn.disabled = true;
+      fb.textContent = "";
+      document.getElementById("statProg").textContent = (i + 1) + "/" + ITEMS.length;
+      document.getElementById("statOk").textContent = String(okN);
+      document.getElementById("statBad").textContent = String(badN);
+      if (i >= ITEMS.length) {
+        qEl.textContent = "Done — " + okN + " / " + ITEMS.length + " correct.";
+        choices.innerHTML = "";
+        fb.innerHTML = okN === ITEMS.length
+          ? "<strong>Perfect.</strong> Keep the one-sentence contrast handy on later cards."
+          : "Re-run misses: reopen Reset. Review the master table on the chapter.";
+        nextBtn.disabled = true;
+        return;
+      }
+      const item = ITEMS[i];
+      qEl.textContent = item.q;
+      const opts = shuffle([item.ok, ...item.bad]);
+      choices.innerHTML = "";
+      opts.forEach((t) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = t;
+        b.addEventListener("click", () => pick(b, t, item));
+        choices.appendChild(b);
+      });
+    }
+
+    function pick(btn, t, item) {
+      if (answered) return;
+      answered = true;
+      const buttons = [...choices.querySelectorAll("button")];
+      buttons.forEach((b) => {
+        b.disabled = true;
+        if (b.textContent === item.ok) b.classList.add("correct");
+      });
+      if (t === item.ok) {
+        okN++;
+        fb.innerHTML = "<strong>Correct.</strong> " + item.why;
+      } else {
+        badN++;
+        btn.classList.add("wrong");
+        fb.innerHTML = "<strong>Not that.</strong> " + item.why;
+      }
+      document.getElementById("statOk").textContent = String(okN);
+      document.getElementById("statBad").textContent = String(badN);
+      nextBtn.disabled = false;
+    }
+
+    nextBtn.addEventListener("click", () => { i++; show(); });
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      i = 0; okN = 0; badN = 0; show();
+    });
+    show();
+  </script>
+</body>
+</html>

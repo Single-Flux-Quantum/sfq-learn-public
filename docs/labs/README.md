@@ -1,7 +1,7 @@
 # Interactive labs
 
 **Prereqs:** none (index for demos)  
-**Next:** [Phase to pulse lab](phase-to-pulse.html) · [Pulse to logic state lab](pulse-to-logic-state.html) · [Gate-level pipelining lab](gate-level-pipelining.html) · [JTL hop lab](jtl-interconnects.html) · [Splitter & confluence lab](splitter-and-confluence.html) · [DFF lab](rsfq-dff-and-retiming.html) · [Clock-flow lab](concurrent-and-counter-flow-clocking.html) · [Path-balancing lab](path-balancing-overhead.html) · [Bias → ERSFQ lab](resistive-bias-to-ersfq.html) · [Pulse → volt lab](sfq-pulse-to-volt-level.html) · [AQFP lab](aqfp-logic.html) · [RCSJ washboard lab](josephson-junction-rcsj.html) · [DC bias delivery lab](dc-bias-current-delivery.html) · [Serial biasing lab](serial-biasing-current-recycling.html) · [SFQ STA lab](sfq-static-timing-analysis.html) · [I/O megaphone lab](squid-stack-and-four-jl-driver.html) · [Flux / SQUID loop lab](flux-quantization-squid-loop.html) · [Overdamped / underdamped lab](overdamped-vs-underdamped-jj.html) · [Hybrid JTL–PTL lab](hybrid-jtl-ptl-routing.html) · [ERSFQ lab](ersfq-logic.html) · [VT-RAM lab](vortex-transitional-ram.html) · [Hybrid memory lab](josephson-cmos-hybrid-memory.html) · [Bridge hub](../bridge/README.md)
+**Next:** [Phase to pulse lab](phase-to-pulse.html) · [Pulse to logic state lab](pulse-to-logic-state.html) · [Gate-level pipelining lab](gate-level-pipelining.html) · [JTL hop lab](jtl-interconnects.html) · [Splitter & confluence lab](splitter-and-confluence.html) · [DFF lab](rsfq-dff-and-retiming.html) · [Clock-flow lab](concurrent-and-counter-flow-clocking.html) · [Path-balancing lab](path-balancing-overhead.html) · [Bias → ERSFQ lab](resistive-bias-to-ersfq.html) · [Pulse → volt lab](sfq-pulse-to-volt-level.html) · [AQFP lab](aqfp-logic.html) · [RCSJ washboard lab](josephson-junction-rcsj.html) · [DC bias delivery lab](dc-bias-current-delivery.html) · [Serial biasing lab](serial-biasing-current-recycling.html) · [SFQ STA lab](sfq-static-timing-analysis.html) · [I/O megaphone lab](squid-stack-and-four-jl-driver.html) · [Flux / SQUID loop lab](flux-quantization-squid-loop.html) · [Overdamped / underdamped lab](overdamped-vs-underdamped-jj.html) · [Hybrid JTL–PTL lab](hybrid-jtl-ptl-routing.html) · [ERSFQ lab](ersfq-logic.html) · [VT-RAM lab](vortex-transitional-ram.html) · [Hybrid memory lab](josephson-cmos-hybrid-memory.html) · [CMOS vs SFQ lab](cmos-vs-sfq.html) · [RSFQ overview lab](rsfq-logic.html) · [Symbol card lab](sfq-symbol-card.html) · [Bridge hub](../bridge/README.md)
 
 Self-contained HTML labs that let newcomers **click, watch events, and read stats** — the same teaching pattern as a small in-browser simulator, not SPICE or netlists.
 
@@ -67,6 +67,9 @@ Use height ≥ 700px so controls, stats, and the table fit without clipping.
 | [ersfq-logic.html](ersfq-logic.html) | [ERSFQ logic](../concepts/ersfq-logic.md) | Static I²R vs ERSFQ feed; activity still costs switching |
 | [vortex-transitional-ram.html](vortex-transitional-ram.html) | [Vortex transitional RAM](../concepts/vortex-transitional-ram.md) | Flux-state cells; write/hold/read; NDRO vs DRO |
 | [josephson-cmos-hybrid-memory.html](josephson-cmos-hybrid-memory.html) | [Josephson–CMOS hybrid memory](../concepts/josephson-cmos-hybrid-memory.md) | Pulse↔volt embassy; write/read across domains |
+| [cmos-vs-sfq.html](cmos-vs-sfq.html) | [CMOS vs SFQ](../concepts/cmos-vs-sfq.md) | Translate CMOS intuitions; catch false analogies |
+| [rsfq-logic.html](rsfq-logic.html) | [RSFQ overview](../concepts/rsfq-logic.md) | Plumbing cell map + 3-window pulse encoding |
+| [sfq-symbol-card.html](sfq-symbol-card.html) | [SFQ symbol card](../fundamentals/sfq-symbol-card.md) | Flash drill: Φ₀, I_c, φ, β_C, ∫V dt |
 
 ## Adding a lab
 

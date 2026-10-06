@@ -83,6 +83,20 @@ Minimal one-bit pipeline (field cartoon):
               └── regenerates Φ0 along the way
 ```
 
+## Interactive lab
+
+Try this in place. Prefer full-screen? Open the [lab page](../labs/rsfq-logic.html).
+
+1. Click each plumbing cell (JTL / splitter / confluence / DFF) and read its job.
+2. Toggle epoch bits and **Generate 3 epochs** — presence/absence in windows is the encoding.
+
+<iframe
+  src="../../labs/rsfq-logic.html"
+  title="RSFQ logic overview lab"
+  style="width:100%;height:720px;border:1px solid rgba(0,0,0,0.12);border-radius:0.35rem;background:#fff;"
+  loading="lazy"
+></iframe>
+
 ```mermaid
 sequenceDiagram
   participant D as Data pulse

@@ -90,6 +90,9 @@ nav:
       - ERSFQ feeding: labs/ersfq-logic.html
       - VT-RAM: labs/vortex-transitional-ram.html
       - Josephson–CMOS memory: labs/josephson-cmos-hybrid-memory.html
+      - CMOS vs SFQ quiz: labs/cmos-vs-sfq.html
+      - RSFQ overview: labs/rsfq-logic.html
+      - Symbol card drill: labs/sfq-symbol-card.html
   - Concepts:
       - CMOS vs SFQ: concepts/cmos-vs-sfq.md
       - RSFQ Overview: concepts/rsfq-logic.md
